@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConsumerShield IL | מחולל מכתבי ביטול עסקה, פיצוי 10,000 ₪ וביטול דו"חות | גרסה מלאה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe7dc;
+    --ink: #141413;
+    --muted: #595750;
+    --line: #d5cfc1;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --emerald: #146341;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; padding-bottom: 50px; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 10px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .pro-pill { background: rgba(16,185,129,0.2); color: #34d399; padding: 3px 10px; border-radius: 99px; font-weight: 700; font-size: 11.5px; border: 1px solid rgba(16,185,129,0.4); }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 7px 15px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.primary { background: var(--accent); color: #fff; border-color: #8f2a09; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0d452c; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 20px; }
+  .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  @media (max-width: 860px) { .split-grid { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 24px; }
+  .panel h2 { font-family: var(--serif); font-size: 22px; font-weight: 900; margin-bottom: 12px; }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .input-row { margin-bottom: 12px; }
+  .input-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .input-row input, .input-row select, .input-row textarea { width: 100%; padding: 8px 10px; border: 1.5px solid var(--line-strong); background: var(--surface-alt); color: var(--ink); font-family: var(--sans); font-size: 13.5px; outline: none; }
+  .input-row input:focus, .input-row textarea:focus { background: #fff; border-color: var(--accent); }
+
+  .letter-box {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    min-height: 320px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .studio-bar, .no-print, .input-panel { display: none !important; }
+    .container { max-width: 100%; padding: 0; }
+    .split-grid { display: block; }
+    .panel { border: none; box-shadow: none; padding: 0; }
+    .letter-box { border: 1px solid #141413; background: #fff; padding: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <strong>ConsumerShield IL | מחולל מכתבים משפטיים צרכניים</strong>
+    <span class="pro-pill">גרסה מלאה לשימוש עצמאי</span>
+  </div>
+  <div class="no-print">
+    <button class="tactile-btn emerald" onclick="window.print()">🖨️ הדפס / שמור כ-PDF רשמי</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="split-grid">
+    <div class="panel input-panel">
+      <h2>הגדרת סוג הפנייה והעובדות</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">
+        בחרו את העילה המשפטית להפקת מכתב מנומק לפי סעיפי החוק הישראלי הרלוונטיים.
+      </p>
+
+      <div class="input-row">
+        <label>בחר סוג פנייה משפטית:</label>
+        <select id="docType" onchange="renderLegalDoc()">
+          <option value="cancel" selected>1. הודעת ביטול עסקה והשבה כספית (חוק הגנת הצרכן)</option>
+          <option value="statutory10k">2. התראה לפני תביעה ודרישת פיצוי 10,000 ₪ (סעיף 31א)</option>
+          <option value="parking">3. בקשה לביטול דו״ח חניה עירוני או המרה באזהרה</option>
+          <option value="tenant">4. דרישה לתיקון ליקויים דחופים במושכר (חוק שכירות הוגנת)</option>
+        </select>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-row">
+          <label>שמך המלא (הפונה):</label>
+          <input type="text" id="senderName" value="ישראל ישראלי" oninput="renderLegalDoc()" />
+        </div>
+        <div class="input-row">
+          <label>שם הנמען (חברה / עירייה / משכיר):</label>
+          <input type="text" id="targetEntity" value="חברת תקשורת / רשת חנויות בע״מ" oninput="renderLegalDoc()" />
+        </div>
+      </div>
+
+      <div class="input-row">
+        <label>סכום העסקה / הקנס / הדרישה (₪):</label>
+        <input type="number" id="claimAmount" value="1490" step="50" oninput="renderLegalDoc()" />
+      </div>
+
+      <div class="input-row">
+        <label>תיאור עובדתי קצר (תאריכים, מספר הזמנה/דו״ח, נסיבות):</label>
+        <textarea id="caseDetails" rows="4" oninput="renderLegalDoc()">רכישה שבוצעה מרחוק באתר האינטרנט ביום 15/10/2026 (מספר הזמנה 48920). פנייתי מיום 18/10 לביטול העסקה נדחתה שלא כדין למרות עמידה בתנאי 14 הימים הקבועים בחוק.</textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2 id="docTitleOut">הודעת ביטול עסקה ודרישת השבה מיידית</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">
+        נוסח משפטי רשמי עם ציטוט סעיפי חוק מדויקים, מוכן לשליחה בדואר רשום או במייל.
+      </p>
+
+      <div class="letter-box" id="docBodyOut">
+        <!-- נטען אוטומטית -->
+      </div>
+
+      <div class="no-print" style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="tactile-btn emerald" onclick="window.print()">🖨️ הדפס / ייצא כ-PDF</button>
+        <button class="tactile-btn" onclick="copyLegalText()">📋 העתק נוסח מכתב</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function renderLegalDoc() {
+  const type = document.getElementById('docType').value;
+  const sender = document.getElementById('senderName').value.trim() || 'הפונה';
+  const target = document.getElementById('targetEntity').value.trim() || 'הנמען';
+  const amount = Number(document.getElementById('claimAmount').value || 0).toLocaleString();
+  const details = document.getElementById('caseDetails').value.trim();
+
+  const titles = {
+    cancel: 'הודעת ביטול עסקה ודרישת השבה מיידית (חוק הגנת הצרכן)',
+    statutory10k: 'התראה לפני נקיטת הליכים ודרישת פיצוי לדוגמה (סעיף 31א)',
+    parking: 'בקשה לביטול הודעת תשלום קנס / המרה באזהרה',
+    tenant: 'דרישה לתיקון פגמים וליקויים במושכר (חוק שכירות הוגנת)'
+  };
+  document.getElementById('docTitleOut').textContent = titles[type] || titles.cancel;
+
+  let clauses = [];
+  if (type === 'cancel') {
+    clauses = [
+      `1. הריני להודיעכם באופן רשמי ומתועד על ביטול העסקה בהתאם להוראות סעיפים 13ד ו-14ג לחוק הגנת הצרכן, התשמ"א-1981.`,
+      `2. <strong>נסיבות המקרה:</strong> ${details}`,
+      `3. בהתאם להוראות החוק, הנכם נדרשים להפסיק לאלתר כל חיוב עתידי ולהשיב לידי את מלוא התמורה ששולמה בסך <strong>${amount} ₪</strong> בתוך המועד הקבוע בחוק (14 ימים).`,
+      `4. ככל שלא יבוצע ההחזר הכספי במועד, שמורה לי הזכות לעתור לבית המשפט לתביעות קטנות לפיצויים לדוגמה ללא הוכחת נזק בסך של עד <strong>10,000 ₪</strong> בהתאם לסעיף 31א(א)(2ב) לחוק הגנת הצרכן.`
+    ];
+  } else if (type === 'statutory10k') {
+    clauses = [
+      `1. למרות פניותיי המפורשות והמתועדות לביטול העסקה/החיוב, המשכתם לחייב את אמצעי התשלום שלי בסך ${amount} ₪ בניגוד גמור להוראות חוק הגנת הצרכן.`,
+      `2. <strong>פירוט ההפרה:</strong> ${details}`,
+      `3. בהתאם לסעיף 31א לחוק הגנת הצרכן, מוקנית לבית המשפט הסמכות לפסוק פיצויים שאינם תלויים בנזק בסך של עד <strong>10,000 ₪</strong> בגין סירוב להשיב תמורה בעסקה שבוטלה כחוק.`,
+      `4. ניתנת לכם בזאת התראה אחרונה של 7 ימי עסקים להשבת מלוא הסכום בצירוף פיצוי הולם, בטרם הגשת כתב תביעה לבית המשפט לתביעות קטנות בצירוף דרישה להוצאות משפט.`
+    ];
+  } else if (type === 'parking') {
+    clauses = [
+      `1. הריני להגיש בקשה לביטול הודעת תשלום קנס בסך <strong>${amount} ₪</strong> בהתאם לסעיף 229 לחוק סדר הדין הפלילי [נוסח משולב], התשמ"ב-1982.`,
+      `2. <strong>נימוקי הבקשה והנסיבות המיוחדות:</strong> ${details}`,
+      `3. לחלופין, ולאור עברי הנקי והעובדה כי מדובר במקרה חריג ללא הפרעה לתנועה, אבקש לפנים משורת הדין להמיר את הדו״ח באזהרה בלבד בהתאם להנחיות היועץ המשפטי לממשלה.`
+    ];
+  } else {
+    clauses = [
+      `1. בהתאם להוראות סעיף 7 לחוק השכירות והשאילה (תיקון מס' 1 — שכירות הוגנת), התשע"ז-2017, חלה על המשכיר החובה לתקן על חשבונו כל פגם השולל או מגביל שימוש סביר במושכר.`,
+      `2. <strong>פירוט הליקויים בדירה:</strong> ${details}`,
+      `3. הנך נדרש לתאם תיקון מקצועי של הליקוי בתוך 3 ימים מקבלת מכתב זה. ככל שלא יתוקן הליקוי, אפעל לתיקונו באופן עצמאי ואקזז את העלות בסך <strong>${amount} ₪</strong> מתשלום דמי השכירות הבא בהתאם להוראות סעיף 9 לחוק.`
+    ];
+  }
+
+  document.getElementById('docBodyOut').innerHTML = `
+    <strong>לכבוד: ${target}</strong><br>
+    <strong>תאריך: ${new Date().toLocaleDateString('he-IL')}</strong><br>
+    <strong>הנדון: ${document.getElementById('docTitleOut').textContent}</strong><br><br>
+    ${clauses.join('<br><br>')}<br><br>
+    <em>בכבוד רב ובלי לפגוע בזכויות,<br><strong>${sender}</strong></em>
+  `;
+}
+
+function copyLegalText() {
+  const text = document.getElementById('docBodyOut').innerText;
+  navigator.clipboard.writeText(text);
+  alert('נוסח המכתב הועתק ללוח בהצלחה!');
+}
+
+renderLegalDoc();
+</script>
+</body>
+</html>

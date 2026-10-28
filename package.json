@@ -1,0 +1,25 @@
+{
+  "name": "project-100nis",
+  "version": "1.0.0",
+  "description": "Project #4: 100 NIS Daily Challenge - Autonomous Monetization & Standalone Digital Products",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "daemon": "node daemon.js",
+    "status": "node daemon.js --status",
+    "test": "node --test tests/test_suite.mjs"
+  },
+  "keywords": [
+    "100nis",
+    "monetization",
+    "autonomous",
+    "digital-products",
+    "israel-business"
+  ],
+  "author": "CodeCraft Studio IL",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

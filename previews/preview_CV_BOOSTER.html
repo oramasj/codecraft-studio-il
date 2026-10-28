@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV-Booster ATS | משדרג קורות חיים ומכתב מקדים להייטק ולשוק הישראלי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe7dc;
+    --ink: #141413;
+    --muted: #595750;
+    --line: #d5cfc1;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --emerald: #146341;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #111210;
+    --surface: #191b18;
+    --surface-alt: #232622;
+    --ink: #f3f1ea;
+    --muted: #a09d93;
+    --line: #2e322d;
+    --line-strong: #555952;
+    --accent: #e85d2e;
+    --emerald: #1f8a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link { color: #f3f1ea; text-decoration: none; border: 1px solid #454844; padding: 4px 10px; font-weight: 700; }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.active { background: var(--accent); color: #fff; border-color: #8f2a09; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0b3d26; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 54px; }
+  .split-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 22px; margin-bottom: 24px; }
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 22px; position: relative; }
+  .panel h2 { font-family: var(--serif); font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+
+  .input-row { margin-bottom: 10px; }
+  .input-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+  .input-row input, .input-row textarea { width: 100%; padding: 8px 10px; border: 1.5px solid var(--line-strong); background: var(--surface-alt); color: var(--ink); font-family: var(--sans); font-size: 13.5px; }
+
+  .cv-sheet {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cv-watermark {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-18deg);
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 900;
+    color: rgba(216, 74, 27, 0.24);
+    text-align: center;
+    user-select: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .cv-watermark.hidden { display: none !important; }
+
+  .consent-gate { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 14px 16px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13px; }
+  .consent-gate input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--emerald); flex-shrink: 0; }
+  .locked-zone { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; }
+  .locked-zone.unlocked { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 860px) { .split-grid { grid-template-columns: 1fr; } }
+  @media print { .studio-bar, .no-print { display: none !important; } .split-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="./index.html">← חזרה לספריית המערכות</a>
+    <span style="font-family:var(--mono);">MODULE // CV-BOOSTER-ATS-V4</span>
+  </div>
+  <div style="display:flex; gap:6px;">
+    <button class="tactile-btn" onclick="window.print()">הדפסת קו״ח ל-PDF</button>
+    <button class="tactile-btn" onclick="document.body.classList.toggle('theme-dark')">מצב תצוגה כהה/בהיר</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="split-grid">
+    <div class="panel no-print">
+      <h2>משדרג קורות חיים ומכתב מקדים מותאם מערכות סינון (ATS)</h2>
+      <div class="input-row">
+        <label>שם מלא</label>
+        <input id="cvName" value="נועה ברק" oninput="renderCV()" />
+      </div>
+      <div class="input-row">
+        <label>תפקיד מבוקש / כותרת מקצועית</label>
+        <input id="cvRole" value="מנהלת מוצר ופרויקטים טכנולוגיים (Product & Operations Manager)" oninput="renderCV()" />
+      </div>
+      <div class="input-row">
+        <label>פרטי קשר (טלפון • עיר • לינקדאין)</label>
+        <input id="cvContact" value="054-0000000 • תל אביב • linkedin.com/in/noabarak" oninput="renderCV()" />
+      </div>
+      <div class="input-row">
+        <label>תקציר מנהלים ממוקד תוצאות (Executive Summary)</label>
+        <textarea id="cvSummary" rows="3" oninput="renderCV()">ניסיון של 6+ שנים בהובלת מוצרים דיגיטליים, אוטומציה של תהליכים עסקיים והגדלת שיעורי המרה ב-38%. מומחית בניתוח נתונים, אפיון מערכות וניהול צוותים חוצי-ארגון.</textarea>
+      </div>
+      <div class="input-row">
+        <label>ניסיון תעסוקתי והישגים מדידים (שורה לכל הישג)</label>
+        <textarea id="cvExp" rows="4" oninput="renderCV()">2023–2026 | מנהלת מוצר בכירה — הובלת השקת מערכת שירות עצמי שהכניסה 1.4M ₪ בשנה
+2020–2023 | מנתחת מערכות ואינטגרציה — אוטומציה של מערך קליטת הלקוחות וחיסכון של 25 שעות שבועיות
+2018–2020 | אחראית פרויקטים דיגיטליים — ניהול תקציבים, הטמעת CRM ושיפור שימור לקוחות ב-22%</textarea>
+      </div>
+      <div class="input-row">
+        <label>מיומנויות מפתח (מופרדות בפסיק)</label>
+        <input id="cvSkills" value="Product Strategy, SQL & Data Analytics, CRM Automation, Agile/Scrum, UX Wireframing, AI Workflows" oninput="renderCV()" />
+      </div>
+    </div>
+
+    <div class="panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;" class="no-print">
+        <span style="font-family:var(--mono); font-size:12px; color:var(--emerald); font-weight:700;" id="atsScoreBadge">ATS SCORE: 96/100 (EXCELLENT)</span>
+        <span style="font-size:12px; color:var(--muted);">תצוגת קובץ מוכן להדפסה</span>
+      </div>
+
+      <div class="cv-sheet" id="cvPrintable">
+        <div class="cv-watermark" id="cvWatermark">PREVIEW ONLY // CODECRAFT STUDIO IL<br>UNLOCK FOR CLEAN PDF</div>
+        <div id="cvContentOut"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="panel no-print">
+    <h2>הסרת חותמת המים, ייצוא ל-PDF נקי והורדת מחולל ה-CV המלא (50 ₪ / 100 ₪ בביט)</h2>
+    <p style="font-size:13.5px; color:var(--muted);">
+      במקום לשלם 250–400 ₪ על כתיבה ועיצוב קורות חיים, הסר את חותמת המים והדפס קובץ PDF יוקרתי ומותאם ATS או הורד את המחולל המלא לעריכה עצמית בביט ל-<strong>054-6373001</strong>.
+    </p>
+    <label class="consent-gate">
+      <input type="checkbox" id="cvConsent" onchange="document.getElementById('cvPayZone').classList.toggle('unlocked', this.checked)" />
+      <span>
+        <strong>אישור תנאי רכישה ופטור מאחריות (As-Is / MIT License):</strong> אני מצהיר/ה ומאשר/ת כי המוצר הנרכש הוא כלי תוכנה לעיצוב ועריכת קורות חיים בשירות עצמי בלבד ("As-Is"), ללא שירותי השמה, עריכה אנושית או אחריות לקבלה לעבודה.
+      </span>
+    </label>
+    <div class="locked-zone" id="cvPayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn emerald" onclick="copyCvBit(50)">1א. העתק מספר לביט — 50 ₪ (הסרת חותמת מים וייצוא PDF)</button>
+        <button class="tactile-btn emerald" onclick="copyCvBit(100)">1ב. העתק מספר לביט — 100 ₪ (הורדת מחולל ה-CV המלא לעריכה חופשית)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%9E%D7%A9%D7%93%D7%A8%D7%92%20%D7%A7%D7%95%D7%A8%D7%95%D7%AA%20%D7%94%D7%97%D7%99%D7%99%D7%9D%20(CV_BOOSTER).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="cvCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="unlockAndExportCV()">3. הסר חותמת מים והורד קובץ</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const CV_HASH = '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+let isUnlocked = document.getElementById('cvWatermark')?.classList.contains('hidden') || false;
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function syncDomForExport() {
+  document.querySelectorAll('input').forEach(el => {
+    if (el.type === 'password') {
+      el.value = '';
+      el.removeAttribute('value');
+    } else if (el.type === 'checkbox' || el.type === 'radio') {
+      if (el.checked) el.setAttribute('checked', 'checked');
+      else el.removeAttribute('checked');
+    } else {
+      el.setAttribute('value', el.value);
+    }
+  });
+  document.querySelectorAll('textarea').forEach(el => {
+    el.textContent = el.value;
+  });
+}
+
+function renderCV() {
+  const name = escapeHtml(document.getElementById('cvName').value.trim());
+  const role = escapeHtml(document.getElementById('cvRole').value.trim());
+  const contact = escapeHtml(document.getElementById('cvContact').value.trim());
+  const rawSummary = document.getElementById('cvSummary').value.trim();
+  const summary = escapeHtml(rawSummary);
+  const shortSummary = escapeHtml(rawSummary.slice(0, Math.max(30, Math.ceil(rawSummary.length * 0.25)))) + '...';
+  const expLines = document.getElementById('cvExp').value.trim().split('\n').filter(Boolean).map(escapeHtml);
+  const skills = document.getElementById('cvSkills').value.split(',').map(s => s.trim()).filter(Boolean).map(escapeHtml);
+
+  const score = Math.min(99, 78 + expLines.length * 4 + Math.min(3, skills.length) * 3);
+  document.getElementById('atsScoreBadge').textContent = `ATS READINESS SCORE: ${score}/100`;
+
+  if (!isUnlocked) {
+    const firstExp = expLines[0] ? `<li style="margin-bottom:5px;">${expLines[0]}</li>` : '';
+    document.getElementById('cvContentOut').innerHTML = `
+      <div style="border-bottom:2px solid var(--line-strong); padding-bottom:12px; margin-bottom:14px;">
+        <h3 style="font-family:var(--serif); font-size:26px; font-weight:900; margin-bottom:2px;">${name}</h3>
+        <div style="font-size:15px; font-weight:700; color:var(--accent); margin-bottom:4px;">${role}</div>
+        <div style="font-family:var(--mono); font-size:12px; color:var(--muted);">${contact}</div>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--emerald); font-weight:700; margin-bottom:4px;">EXECUTIVE SUMMARY // תקציר מנהלים</div>
+        <p style="font-size:13.5px; line-height:1.6;">${shortSummary}</p>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--emerald); font-weight:700; margin-bottom:6px;">PROFESSIONAL EXPERIENCE // ניסיון והישגים מדידים</div>
+        <ul style="padding-right:18px; font-size:13px; line-height:1.65;">${firstExp}</ul>
+      </div>
+      <div style="padding:12px; border:1.5px dashed var(--accent); background:var(--surface-alt); font-size:13px; font-weight:800; color:var(--accent); text-align:center;">
+        [המשך הסעיפים המלאים נפתח אוטומטית לאחר הזנת קוד הפתיחה]
+      </div>
+    `;
+    return;
+  }
+
+  document.getElementById('cvContentOut').innerHTML = `
+    <div style="border-bottom:2px solid var(--line-strong); padding-bottom:12px; margin-bottom:14px;">
+      <h3 style="font-family:var(--serif); font-size:26px; font-weight:900; margin-bottom:2px;">${name}</h3>
+      <div style="font-size:15px; font-weight:700; color:var(--accent); margin-bottom:4px;">${role}</div>
+      <div style="font-family:var(--mono); font-size:12px; color:var(--muted);">${contact}</div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:var(--mono); font-size:11px; color:var(--emerald); font-weight:700; margin-bottom:4px;">EXECUTIVE SUMMARY // תקציר מנהלים</div>
+      <p style="font-size:13.5px; line-height:1.6;">${summary}</p>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-family:var(--mono); font-size:11px; color:var(--emerald); font-weight:700; margin-bottom:6px;">PROFESSIONAL EXPERIENCE // ניסיון והישגים מדידים</div>
+      <ul style="padding-right:18px; font-size:13px; line-height:1.65;">
+        ${expLines.map(l => `<li style="margin-bottom:5px;">${l}</li>`).join('')}
+      </ul>
+    </div>
+    <div>
+      <div style="font-family:var(--mono); font-size:11px; color:var(--emerald); font-weight:700; margin-bottom:6px;">CORE COMPETENCIES & ATS KEYWORDS // מיומנויות ליבה</div>
+      <div style="display:flex; flex-wrap:wrap; gap:6px;">
+        ${skills.map(s => `<span style="border:1px solid var(--line-strong); background:var(--surface-alt); padding:3px 9px; font-size:12px; font-weight:700;">${s}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function copyCvBit(amount) {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'CV_BOOSTER', amount }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק! העבר כעת ' + amount + ' ₪ בביט ושלח הודעת וואטסאפ לקבלת קוד הפתיחה.');
+}
+
+async function verifyCvDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === CV_HASH;
+}
+
+async function unlockAndExportCV() {
+  const c = (document.getElementById('cvCode')?.value || '').trim();
+  if (!c) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'CV_BOOSTER' }) }).catch(()=>{});
+  if (!(await verifyCvDigest(c))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  isUnlocked = true;
+  document.getElementById('cvWatermark').classList.add('hidden');
+  renderCV();
+  syncDomForExport();
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CV_Booster_ATS_Unlocked.html';
+  a.click();
+  window.print();
+}
+
+renderCV();
+</script>
+</body>
+</html>

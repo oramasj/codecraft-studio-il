@@ -306,9 +306,10 @@
     </label>
     <div class="locked-zone" id="syncPayZone">
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <button class="tactile-btn active" onclick="navigator.clipboard.writeText('054-6373001'); alert('המספר 054-6373001 הועתק לביט!');">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
-        <input id="syncCodeInput" placeholder="הזן קוד פתיחה (2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:180px;" />
-        <button class="tactile-btn orange" onclick="downloadSyncBundle()">2. הורדת קובץ המקור המלא</button>
+        <button class="tactile-btn active" onclick="copySyncBit()">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%AA%D7%91%D7%A0%D7%99%D7%AA%20LeadSync.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="syncCodeInput" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn orange" onclick="downloadSyncBundle()">3. הורדת קובץ המקור המלא</button>
       </div>
     </div>
   </section>
@@ -320,6 +321,45 @@ let ledgerRows = [
   { id: "ROW-103", time: "09:42", name: "נועה פרידמן", phone: "054-8821034", email: "noa@architecture.co.il", channel: "דף נחיתה ראשי", status: "DISPATCHED_OK" },
   { id: "ROW-102", time: "10:08", name: "גיא שפירא", phone: "050-7192831", email: "guy@commerce.co.il", channel: "וואטסאפ עסקי", status: "DISPATCHED_OK" }
 ];
+try {
+  const savedRowsAttr = document.body.getAttribute('data-saved-rows');
+  if (savedRowsAttr) {
+    const parsedRows = JSON.parse(savedRowsAttr);
+    if (Array.isArray(parsedRows) && parsedRows.length > 0) ledgerRows = parsedRows;
+  }
+} catch {}
+
+let currentTab = 'live';
+
+function escapeSyncHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function syncDomForExport() {
+  document.querySelectorAll('input').forEach(el => {
+    if (el.type === 'password') {
+      el.value = '';
+      el.removeAttribute('value');
+    } else if (el.type === 'checkbox' || el.type === 'radio') {
+      if (el.checked) el.setAttribute('checked', 'checked');
+      else el.removeAttribute('checked');
+    } else {
+      el.setAttribute('value', el.value);
+    }
+  });
+  document.body.setAttribute('data-saved-rows', JSON.stringify(ledgerRows));
+}
+
+function copySyncBit() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'XPLACE_216327', amount:100 }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק לביט!');
+}
 
 function playTone(f = 600) {
   try {
@@ -393,13 +433,13 @@ function renderLiveWorkspace() {
             <tbody>
               ${ledgerRows.map(r => `
                 <tr>
-                  <td style="font-family:var(--mono); font-weight:700;">${r.id}</td>
-                  <td style="font-family:var(--mono);">${r.time}</td>
-                  <td><strong>${r.name}</strong></td>
-                  <td style="font-family:var(--mono);">${r.phone}</td>
-                  <td>${r.email}</td>
-                  <td>${r.channel}</td>
-                  <td><span class="badge-sent">${r.status}</span></td>
+                  <td style="font-family:var(--mono); font-weight:700;">${escapeSyncHtml(r.id)}</td>
+                  <td style="font-family:var(--mono);">${escapeSyncHtml(r.time)}</td>
+                  <td><strong>${escapeSyncHtml(r.name)}</strong></td>
+                  <td style="font-family:var(--mono);">${escapeSyncHtml(r.phone)}</td>
+                  <td>${escapeSyncHtml(r.email)}</td>
+                  <td>${escapeSyncHtml(r.channel)}</td>
+                  <td><span class="badge-sent">${escapeSyncHtml(r.status)}</span></td>
                 </tr>
               `).join('')}
             </tbody>
@@ -409,10 +449,10 @@ function renderLiveWorkspace() {
         <div class="mail-dispatch-box">
           <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-family:var(--mono); font-size:11.5px; color:var(--sheet-green);">
             <span>SMTP AUTO-RESPONDER // TRIGGERED IMMEDIATELY</span>
-            <span>TO: ${latest.email}</span>
+            <span>TO: ${escapeSyncHtml(latest.email)}</span>
           </div>
-          <strong>נושא המייל שנשלח:</strong> שלום ${latest.name}, פנייתך נקלטה במערכת<br>
-          <span style="color:var(--muted);">תוכן ההודעה: תודה שפנית אלינו דרך ${latest.channel}. הפרטים נשמרו בגליון המעקב ונציג יחזור אליך למספר ${latest.phone}.</span>
+          <strong>נושא המייל שנשלח:</strong> שלום ${escapeSyncHtml(latest.name)}, פנייתך נקלטה במערכת<br>
+          <span style="color:var(--muted);">תוכן ההודעה: תודה שפנית אלינו דרך ${escapeSyncHtml(latest.channel)}. הפרטים נשמרו בגליון המעקב ונציג יחזור אליך למספר ${escapeSyncHtml(latest.phone)}.</span>
         </div>
       </div>
     </div>
@@ -421,9 +461,9 @@ function renderLiveWorkspace() {
 
 function submitLeadRow() {
   playTone(680);
-  const name = document.getElementById('fName').value || 'לקוח חדש';
-  const phone = document.getElementById('fPhone').value || '050-0000000';
-  const email = document.getElementById('fEmail').value || 'client@mail.co.il';
+  const name = (document.getElementById('fName').value || '').trim() || 'לקוח חדש';
+  const phone = (document.getElementById('fPhone').value || '').trim() || '050-0000000';
+  const email = (document.getElementById('fEmail').value || '').trim() || 'client@mail.co.il';
   const channel = document.getElementById('fChannel').value;
   const time = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
   const nextNum = 101 + ledgerRows.length + 1;
@@ -439,15 +479,10 @@ function submitLeadRow() {
   renderLiveWorkspace();
 }
 
+let isUnlocked = document.body.getAttribute('data-unlocked') === 'true';
+
 function renderScriptView() {
-  document.getElementById('tabViewport').innerHTML = `
-    <div class="module-box" style="margin-bottom:24px;">
-      <div class="module-header">
-        <h2>קוד ה-Webhook המוכן להדבקה ב-Google Apps Script</h2>
-        <span class="module-tag">SERVERLESS APPS SCRIPT</span>
-      </div>
-      <pre style="background:#111312; color:#86efac; padding:18px; border:1.5px solid var(--line-strong); direction:ltr; text-align:left; overflow-x:auto; font-family:var(--mono); font-size:12.5px;">
-function doPost(e) {
+  const fullScript = `function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.tryLock(10000);
   try {
@@ -464,15 +499,42 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
-}</pre>
+}`;
+  const maskedScript = `function doPost(e) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Leads');
+    const data = JSON.parse(e.postData.contents);
+    // 🔒 [המשך קוד ה-Webhook, שליחת המייל האוטומטי והחזרת ה-JSON נפתחים אוטומטית לאחר הזנת קוד הפתיחה למטה]
+  } finally {
+    lock.releaseLock();
+  }
+}`;
+  document.getElementById('tabViewport').innerHTML = `
+    <div class="module-box" style="margin-bottom:24px;">
+      <div class="module-header">
+        <h2>קוד ה-Webhook המוכן להדבקה ב-Google Apps Script</h2>
+        <span class="module-tag">SERVERLESS APPS SCRIPT</span>
+      </div>
+      <pre style="background:#111312; color:#86efac; padding:18px; border:1.5px solid var(--line-strong); direction:ltr; text-align:left; overflow-x:auto; font-family:var(--mono); font-size:12.5px;">${isUnlocked ? fullScript : maskedScript}</pre>
     </div>
   `;
 }
 
+function escapeCsvCell(val) {
+  const s = String(val ?? '');
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+
 function exportToCSV() {
   playTone(620);
+  if (!isUnlocked) {
+    alert('לייצוא קובץ ה-CSV המלא ולפתיחת קוד ה-Webhook המלא, אנא הזן קוד פתיחה לאחר תשלום 100 ₪ בביט למטה.');
+    return;
+  }
   const rows = [["מזהה", "שעה", "שם מלא", "טלפון", "אימייל", "מקור", "סטטוס"], ...ledgerRows.map(r => [r.id, r.time, r.name, r.phone, r.email, r.channel, r.status])];
-  const csv = "\uFEFF" + rows.map(r => r.join(",")).join("\n");
+  const csv = "\uFEFF" + rows.map(r => r.map(escapeCsvCell).join(",")).join("\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -487,12 +549,29 @@ function toggleSyncPay() {
   if (z) z.classList.toggle('unlocked', !!ok);
 }
 
-function downloadSyncBundle() {
-  const code = document.getElementById('syncCodeInput')?.value.trim();
-  if (code !== '2800') {
-    alert('יש להזין את קוד הפתיחה 2800 לאחר ההעברה.');
+async function verifySyncUnlockDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+}
+
+async function downloadSyncBundle() {
+  const code = (document.getElementById('syncCodeInput')?.value || '').trim();
+  if (!code) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
     return;
   }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'XPLACE_216327' }) }).catch(()=>{});
+  if (!(await verifySyncUnlockDigest(code))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  isUnlocked = true;
+  document.body.setAttribute('data-unlocked', 'true');
+  if (currentTab === 'script') renderScriptView();
+  else renderLiveWorkspace();
+  syncDomForExport();
   const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -502,6 +581,7 @@ function downloadSyncBundle() {
 
 function switchTab(t, btn) {
   playTone(580);
+  currentTab = t;
   document.querySelectorAll('.studio-bar .tactile-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   if (t === 'live') renderLiveWorkspace();

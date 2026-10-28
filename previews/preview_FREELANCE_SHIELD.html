@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סורק הוצאות מוכרות ומע״מ (חוק 2026 — 18%) לעוסקים ופרילנסרים | CodeCraft Studio IL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe7dc;
+    --ink: #141413;
+    --muted: #595750;
+    --line: #d5cfc1;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --emerald: #146341;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #111210;
+    --surface: #191b18;
+    --surface-alt: #232622;
+    --ink: #f3f1ea;
+    --muted: #a09d93;
+    --line: #2e322d;
+    --line-strong: #555952;
+    --accent: #e85d2e;
+    --emerald: #1f8a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link { color: #f3f1ea; text-decoration: none; border: 1px solid #454844; padding: 4px 10px; font-weight: 700; }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.active { background: var(--accent); color: #fff; border-color: #8f2a09; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0b3d26; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 54px; }
+  .split-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 22px; margin-bottom: 24px; }
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 22px; }
+  .panel h2 { font-family: var(--serif); font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .input-row { margin-bottom: 10px; }
+  .input-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+  .input-row input, .input-row select { width: 100%; padding: 8px 10px; border: 1.5px solid var(--line-strong); background: var(--surface-alt); color: var(--ink); font-family: var(--sans); font-size: 13.5px; }
+
+  .kpi-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+  .kpi-box { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 10px 12px; }
+  .kpi-box span { font-size: 11.5px; color: var(--muted); display: block; }
+  .kpi-box strong { font-family: var(--mono); font-size: 18px; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12.5px; }
+  th { background: var(--surface-alt); border: 1px solid var(--line-strong); padding: 7px 8px; text-align: right; }
+  td { border: 1px solid var(--line); padding: 7px 8px; font-variant-numeric: tabular-nums; }
+
+  .letter-box {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.65;
+    position: relative;
+    overflow: hidden;
+  }
+  .watermark-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(246, 244, 238, 0.84);
+    backdrop-filter: blur(2.5px);
+    text-align: center;
+    padding: 16px;
+    font-weight: 800;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body.theme-dark .watermark-overlay { background: rgba(17, 18, 16, 0.84); }
+  .watermark-overlay.hidden { display: none !important; }
+
+  .consent-gate { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 14px 16px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13px; }
+  .consent-gate input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--emerald); flex-shrink: 0; }
+  .locked-zone { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; }
+  .locked-zone.unlocked { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 860px) { .split-grid, .input-grid, .kpi-strip { grid-template-columns: 1fr; } }
+  @media print { .studio-bar, .no-print { display: none !important; } .split-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="./index.html">← חזרה לספריית המערכות</a>
+    <span style="font-family:var(--mono);">MODULE // FREELANCE-VAT-2026 (30% FLAT vs ITEMIZED AUDITOR)</span>
+  </div>
+  <div style="display:flex; gap:6px;">
+    <button class="tactile-btn" onclick="window.print()">הדפסת דוח הוצאות ומס ל-PDF</button>
+    <button class="tactile-btn" onclick="document.body.classList.toggle('theme-dark')">מצב תצוגה כהה/בהיר</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="split-grid">
+    <div class="panel no-print">
+      <h2>מחשבון הוצאות מוכרות, עבודה מהבית ומסלול עוסק זעיר (30%) מול רגיל</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">
+        לעוסקים פטורים/זעירים ועוסקים מורשים: בדקו האם משתלם לכם לבחור במסלול "עוסק זעיר" (ניכוי אוטומטי של 30% הוצאות ללא קבלות) או לדרוש הוצאות מפורטות (עבודה מהבית, רכב, תקשורת, קרן השתלמות 4.5% ומע״מ תשומות 18%).
+      </p>
+      <div class="input-grid">
+        <div class="input-row">
+          <label>שם העסק / העוסק</label>
+          <input id="bizName" value="סטודיו לעיצוב וייעוץ דיגיטלי" oninput="recalcFreelance()" />
+        </div>
+        <div class="input-row">
+          <label>מחזור הכנסות שנתי ברוטו (₪)</label>
+          <input id="annualRevenue" type="number" value="118000" oninput="recalcFreelance()" />
+        </div>
+        <div class="input-row">
+          <label>הוצאות עבודה מהבית בחודש (חשמל, ארנונה, אינטרנט, ₪)</label>
+          <input id="homeOfficeMonthly" type="number" value="1600" oninput="recalcFreelance()" />
+        </div>
+        <div class="input-row">
+          <label>הוצאות רכב, דלק ונסיעות בחודש (מוכר 45%, ₪)</label>
+          <input id="carMonthly" type="number" value="1800" oninput="recalcFreelance()" />
+        </div>
+        <div class="input-row">
+          <label>ציוד, תוכנות, AI, שיווק וקבלני משנה בשנה (₪)</label>
+          <input id="directExpensesAnnual" type="number" value="16500" oninput="recalcFreelance()" />
+        </div>
+        <div class="input-row">
+          <label>הפקדה שנתית לקרן השתלמות לעצמאים (עד 4.5% מוכר, ₪)</label>
+          <input id="kerenAnnual" type="number" value="12000" oninput="recalcFreelance()" />
+        </div>
+        <div class="input-row">
+          <label>אחוז מס שולי + ביטוח לאומי משוקלל (%)</label>
+          <input id="taxBracketPct" type="number" value="28" oninput="recalcFreelance()" />
+        </div>
+        <div class="input-row">
+          <label>סוג התאגדות (עוסק פטור/זעיר או עוסק מורשה 18%)</label>
+          <select id="dealerType" onchange="recalcFreelance()">
+            <option value="exempt">עוסק פטור / עוסק זעיר (עד 120,000 ₪)</option>
+            <option value="authorized">עוסק מורשה (קיזוז מע״מ תשומות 18%)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="printableBizReport">
+      <div style="display:flex; justify-content:space-between; border-bottom:2px solid var(--line-strong); padding-bottom:10px; margin-bottom:12px;">
+        <div>
+          <span style="font-family:var(--mono); font-size:11px; color:var(--accent);">SELF-EMPLOYED TAX & VAT OPTIMIZER</span>
+          <h2 style="margin-bottom:2px;">תחשיב אופטימיזציית מס, הוצאות מוכרות ומע״מ 18%</h2>
+          <span id="bizHeaderSub" style="font-size:13px; color:var(--muted);"></span>
+        </div>
+        <div style="text-align:left; font-family:var(--mono); font-size:12px;">
+          <div>REF #BZ-2026</div>
+          <div>רפורמת עוסק זעיר</div>
+        </div>
+      </div>
+
+      <div class="kpi-strip">
+        <div class="kpi-box">
+          <span>סה״כ חיסכון מס ומע״מ שנתי:</span>
+          <strong id="kpiTotalTaxSaved">0 ₪</strong>
+        </div>
+        <div class="kpi-box">
+          <span>המסלול המשתלם ביותר עבורך:</span>
+          <strong id="kpiBestTrack" style="color:var(--emerald); font-size:14.5px;">-</strong>
+        </div>
+        <div class="kpi-box">
+          <span>סה״כ הוצאות וניכויים מוכרים:</span>
+          <strong id="kpiRecognizedExp">0 ₪</strong>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>סעיף הוצאה / ניכוי מוכר</th><th>תחשיב הכרה במס הכנסה ומע״מ תשומות (18%)</th><th>סכום מוכר (₪)</th></tr>
+        </thead>
+        <tbody id="bizTableBody"></tbody>
+      </table>
+
+      <div class="letter-box" id="bizLetterBox">
+        <div id="bizLetterContent"></div>
+        <div class="watermark-overlay" id="bizWatermark">
+          <div style="font-size:16px; color:var(--accent); margin-bottom:6px;">🔒 פירוט סעיפי ההוצאות המוכרות ונספח הדיווח השנתי נעולים</div>
+          <p style="font-size:13px; max-width:420px; color:var(--ink);">
+            פתחו את טבלת ההוצאות המוכרות המלאה (עבודה מהבית, רכב 45%, קרן השתלמות ופנסיה) + השוואת מסלול עוסק זעיר מול דיווח רגיל להדפסה ל-PDF ב-50 ₪ בלבד בביט.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="panel no-print">
+    <h2>פתיחת דוח אופטימיזציית המס לעצמאים + נספח ריכוז הוצאות שנתי + קובץ המערכת (50 ₪ / 100 ₪ בביט)</h2>
+    <p style="font-size:13.5px; color:var(--muted);">
+      הוצאה מוכרת ב-100% לצורכי מס. פתיחה מיידית בביט למספר <strong>054-6373001</strong>.
+    </p>
+    <label class="consent-gate">
+      <input type="checkbox" id="bizConsent" onchange="document.getElementById('bizPayZone').classList.toggle('unlocked', this.checked)" />
+      <span>
+        <strong>אישור תנאי שימוש ופטור מאחריות (As-Is / Non-Accounting Waiver):</strong> אני מצהיר/ה ומאשר/ת כי המחשבון ודוח הריכוז הם כלי עזר חישובי גנרי בלבד המסופקים כמות שהם ("As-Is" תחת רישיון MIT) ואינם מהווים ייעוץ מס או הנהלת חשבונות מוסמכת.
+      </span>
+    </label>
+    <div class="locked-zone" id="bizPayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn emerald" onclick="copyBizBit(50)">1א. העתק מספר לביט — 50 ₪ (פתיחת הדוח המלא ל-PDF)</button>
+        <button class="tactile-btn emerald" onclick="copyBizBit(100)">1ב. העתק מספר לביט — 100 ₪ (פתיחה + הורדת קובץ המערכת המלא)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%A1%D7%95%D7%A8%D7%A7%20%D7%94%D7%94%D7%95%D7%A6%D7%90%D7%95%D7%AA%20%D7%9C%D7%A2%D7%A6%D7%9E%D7%90%D7%99%D7%9D%20(FREELANCE_SHIELD).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="bizCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="unlockBizAudit()">3. הסר חסימה, הדפס PDF והורד קובץ</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const BIZ_HASH = '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+let isUnlocked = false;
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function syncDomForExport() {
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    if (el.type === 'password') {
+      el.value = '';
+      el.removeAttribute('value');
+    } else if (el.type === 'checkbox') {
+      if (el.checked) el.setAttribute('checked', 'checked');
+      else el.removeAttribute('checked');
+    } else if (el.tagName === 'SELECT') {
+      Array.from(el.options).forEach(opt => {
+        if (opt.value === el.value) opt.setAttribute('selected', 'selected');
+        else opt.removeAttribute('selected');
+      });
+    } else if (el.tagName === 'TEXTAREA') {
+      el.textContent = el.value;
+    } else {
+      el.setAttribute('value', el.value);
+    }
+  });
+}
+
+function safeNumber(val, fallback = 0) {
+  const n = Number(val);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function recalcFreelance() {
+  const rawBiz = document.getElementById('bizName').value || 'עוסק עצמאי';
+  const safeBiz = escapeHtml(rawBiz);
+  const rev = Math.max(0, safeNumber(document.getElementById('annualRevenue').value, 0));
+  const home = Math.max(0, safeNumber(document.getElementById('homeOfficeMonthly').value, 0));
+  const car = Math.max(0, safeNumber(document.getElementById('carMonthly').value, 0));
+  const direct = Math.max(0, safeNumber(document.getElementById('directExpensesAnnual').value, 0));
+  const keren = Math.max(0, safeNumber(document.getElementById('kerenAnnual').value, 0));
+  const taxPct = Math.max(10, Math.min(50, safeNumber(document.getElementById('taxBracketPct').value, 25))) / 100;
+  const dealer = document.getElementById('dealerType').value;
+
+  const flat30Deduction = Math.round(Math.min(rev, 120000) * 0.30);
+  const homeRec = Math.round(home * 12 * 0.25); // 25% הכרה בעבודה מהבית
+  const carRec = Math.round(car * 12 * 0.45); // 45% הכרה ברכב
+  const kerenRec = Math.round(Math.min(keren, rev * 0.045)); // עד 4.5% מההכנסה הקובעת
+  const itemizedTotal = direct + homeRec + carRec + kerenRec;
+
+  const bestDeduction = Math.max(flat30Deduction, itemizedTotal);
+  const bestTrackTitle = itemizedTotal > flat30Deduction
+    ? 'דיווח הוצאות מפורט (+' + (itemizedTotal - flat30Deduction).toLocaleString() + ' ₪ ניכוי)'
+    : 'מסלול עוסק זעיר 30% (+' + (flat30Deduction - itemizedTotal).toLocaleString() + ' ₪ ניכוי)';
+
+  const vatSaved = dealer === 'authorized'
+    ? Math.round((direct + car * 12 * 0.66 + home * 12 * 0.25) * (0.18 / 1.18))
+    : 0;
+  const incomeTaxSaved = Math.round(bestDeduction * taxPct);
+  const totalTaxSaved = incomeTaxSaved + vatSaved;
+
+  document.getElementById('bizHeaderSub').textContent = `עבור: ${rawBiz} | מחזור שנתי: ${rev.toLocaleString()} ₪`;
+  document.getElementById('kpiTotalTaxSaved').textContent = totalTaxSaved.toLocaleString() + ' ₪';
+  document.getElementById('kpiBestTrack').textContent = bestTrackTitle;
+  document.getElementById('kpiRecognizedExp').textContent = bestDeduction.toLocaleString() + ' ₪';
+
+  const row1 = `
+    <tr>
+      <td><strong>הוצאות שוטפות ישירות (ציוד, תוכנות, שיווק וקבלני משנה)</strong></td>
+      <td>מוכר ב-100% לצורכי מס הכנסה ${dealer === 'authorized' ? '+ קיזוז מע״מ תשומות 18%' : ''}</td>
+      <td><strong>${direct.toLocaleString()} ₪</strong></td>
+    </tr>
+  `;
+  const unlockedRows = `
+    ${row1}
+    <tr>
+      <td><strong>הוצאות אחזקת משרד ביתי (25% מחשמל, ארנונה, ועד בית ואינטרנט)</strong></td>
+      <td>${home.toLocaleString()} ₪/חודש × 12 חודשים × 25% הכרה</td>
+      <td><strong>${homeRec.toLocaleString()} ₪</strong></td>
+    </tr>
+    <tr>
+      <td><strong>הוצאות אחזקת רכב ודלק (תקנות מס הכנסה — 45% מוכר)</strong></td>
+      <td>${car.toLocaleString()} ₪/חודש × 12 חודשים × 45%</td>
+      <td><strong>${carRec.toLocaleString()} ₪</strong></td>
+    </tr>
+    <tr>
+      <td><strong>ניכוי הפקדה לקרן השתלמות לעצמאים (סעיף 17(5א) — עד 4.5%)</strong></td>
+      <td>מתוך הפקדה של ${keren.toLocaleString()} ₪ (היתרה פטורה ממס רווחי הון)</td>
+      <td><strong>${kerenRec.toLocaleString()} ₪</strong></td>
+    </tr>
+    <tr>
+      <td><strong>השוואה למסלול "עוסק זעיר" (ניכוי נורמטיבי של 30% ללא קבלות)</strong></td>
+      <td>30% ממחזור של עד 120,000 ₪ לפי רפורמת 2025/2026</td>
+      <td><strong>${flat30Deduction.toLocaleString()} ₪</strong></td>
+    </tr>
+  `;
+  const lockedRows = `
+    ${row1}
+    <tr>
+      <td colspan="3" style="text-align:center; color:var(--accent); font-weight:800; background:var(--surface-alt);">
+        🔒 [פירוט סעיפי משרד ביתי (25%), רכב (45%), קרן השתלמות והשוואת עוסק זעיר 30% נפתח לאחר הזנת קוד הפתיחה]
+      </td>
+    </tr>
+  `;
+
+  document.getElementById('bizTableBody').innerHTML = isUnlocked ? unlockedRows : lockedRows;
+
+  const clause1 = `1. דוח מרכז הוצאות מוכרות ותחשיב אופטימיזציית מס לשנת המס עבור ${safeBiz} (מחזור הכנסות: ${rev.toLocaleString()} ₪).`;
+  const fullClauses = `
+    ${clause1}<br>
+    2. סך ההוצאות המפורטות המוכרות לקיזוז עומד על <strong>${itemizedTotal.toLocaleString()} ₪</strong> (הוצאות ישירות: ${direct.toLocaleString()} ₪, משרד ביתי 25%: ${homeRec.toLocaleString()} ₪, רכב 45%: ${carRec.toLocaleString()} ₪, ניכוי קרן השתלמות: ${kerenRec.toLocaleString()} ₪), לעומת ניכוי נורמטיבי של <strong>${flat30Deduction.toLocaleString()} ₪</strong> במסלול עוסק זעיר (30%).<br>
+    3. המלצת המודל החישובי: בחירה ב<strong>${bestTrackTitle}</strong> מביאה לחיסכון מס וביטוח לאומי של ${incomeTaxSaved.toLocaleString()} ₪ ${vatSaved > 0 ? `בתוספת החזר מע״מ תשומות (18%) של ${vatSaved.toLocaleString()} ₪` : ''}, ובסה״כ <strong>${totalTaxSaved.toLocaleString()} ₪</strong> לשנה.<br><br>
+    <em>הופק אוטומטית עבור תיק הנהלת החשבונות — ${safeBiz}</em>
+  `;
+  const truncatedClauses = `
+    ${clause1}<br><br>
+    <strong>[המשך הסעיפים המלאים נפתח אוטומטית לאחר הזנת קוד הפתיחה]</strong>
+  `;
+
+  document.getElementById('bizLetterContent').innerHTML = `
+    <strong>נספח ריכוז הוצאות מוכרות ובחירת מסלול שומה שנתי — ${safeBiz}</strong><br><br>
+    ${isUnlocked ? fullClauses : truncatedClauses}
+  `;
+}
+
+function copyBizBit(amount) {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'FREELANCE_SHIELD', amount }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק! העבר כעת ' + amount + ' ₪ בביט ושלח הודעת וואטסאפ לקבלת קוד הפתיחה.');
+}
+
+async function verifyBizDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === BIZ_HASH;
+}
+
+async function unlockBizAudit() {
+  const c = (document.getElementById('bizCode')?.value || '').trim();
+  if (!c) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'FREELANCE_SHIELD' }) }).catch(()=>{});
+  if (!(await verifyBizDigest(c))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  isUnlocked = true;
+  document.getElementById('bizWatermark').classList.add('hidden');
+  recalcFreelance();
+  syncDomForExport();
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Freelance_Tax_VAT_Unlocked_Report.html';
+  a.click();
+  if (typeof window.print === 'function') window.print();
+}
+
+recalcFreelance();
+</script>
+</body>
+</html>

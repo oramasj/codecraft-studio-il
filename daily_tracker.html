@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מסך בקרה חי | אתגר 100 השקלים היומי (Project #4)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800;900&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #090d16;
+    --card: #111827;
+    --card-alt: #1f2937;
+    --primary: #38bdf8;
+    --accent: #10b981;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --gold: #f59e0b;
+    --danger: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Heebo', sans-serif; }
+  body { background: var(--bg); color: var(--text); padding: 20px 16px; line-height: 1.5; }
+  .wrap { max-width: 960px; margin: 0 auto; }
+
+  header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+  .title-group h1 { font-size: 24px; font-weight: 900; color: #fff; }
+  .title-group p { font-size: 13px; color: var(--text-muted); }
+
+  .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); }
+  .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+  .goal-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid var(--primary); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.15); }
+  .goal-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .goal-header h2 { font-size: 18px; font-weight: 800; color: var(--primary); }
+  .goal-nums { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 900; color: #fff; }
+  .progress-bar-bg { width: 100%; height: 16px; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 10px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 0.6s ease; }
+  .goal-sub { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-muted); }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
+  .kpi-card span { display: block; font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px; }
+  .kpi-card strong { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 800; color: #fff; }
+
+  .orders-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+  .orders-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #0f172a; padding: 10px 12px; text-align: right; color: var(--text-muted); font-size: 12px; border-bottom: 1px solid var(--border); }
+  td { padding: 12px; border-bottom: 1px solid var(--border); }
+
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer; text-decoration: none; border: none; }
+  .btn-primary { background: var(--primary); color: #090d16; }
+  .btn-success { background: var(--accent); color: #fff; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title-group">
+        <h1>💰 אתגר 100 השקלים היומי (Project #4)</h1>
+        <p>מנוע אוטונומי, שירות עצמי דיגיטלי וסליקת ביט/PayBox ישירה (054-6373001)</p>
+      </div>
+      <div>
+        <span class="status-badge" id="liveBadge">
+          <span class="pulse"></span>
+          <span id="liveStatusText">מתחבר לשרת מקומי...</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- כרטיס יעד 100 ש"ח -->
+    <div class="goal-card">
+      <div class="goal-header">
+        <h2>יעד יומי: 100 ₪ ראשונים במזומן בביט</h2>
+        <div class="goal-nums"><span id="currCollected">0</span> / 100 ₪</div>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-fill" id="goalBar"></div>
+      </div>
+      <div class="goal-sub">
+        <span id="percentText">0% מהיעד הושלם</span>
+        <span>מספר להעברות: 054-6373001 (ביט / PayBox)</span>
+      </div>
+    </div>
+
+    <!-- מדדי מפתח -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span>צפיות בדפי מוצר (Traffic)</span>
+        <strong id="kpiViews">0</strong>
+      </div>
+      <div class="kpi-card">
+        <span>העתקת ביט / PayBox (Intent)</span>
+        <strong id="kpiBitCopies" style="color:var(--gold);">0</strong>
+      </div>
+      <div class="kpi-card">
+        <span>פניות והזמנות מותאמות</span>
+        <strong id="kpiOrders" style="color:var(--primary);">0</strong>
+      </div>
+      <div class="kpi-card">
+        <span>לידים לארביטראז' (Lead Gen)</span>
+        <strong id="kpiLeads" style="color:#a855f7;">0</strong>
+      </div>
+      <div class="kpi-card">
+        <span>פתיחות קוד מאומתות</span>
+        <strong id="kpiUnlocks" style="color:var(--accent);">0</strong>
+      </div>
+    </div>
+
+    <!-- הזמנות נכנסות ולידים -->
+    <div class="orders-card">
+      <h3>
+        <span>📬 פניות, הזמנות קוד ולידים חמים (Arbitrage Pipeline)</span>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn" style="background:#334155; color:#fff;" onclick="exportOrdersToCSV()">📊 ייצוא CSV</button>
+          <a class="btn btn-primary" href="/" target="_blank">🌐 קטלוג מקומי</a>
+          <a class="btn btn-success" href="https://oramasj.github.io/codecraft-studio-il/" target="_blank">🚀 GitHub Pages חי</a>
+        </div>
+      </h3>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>מזהה פנייה</th>
+              <th>שם הלקוח</th>
+              <th>טלפון ליצירת קשר</th>
+              <th>סוג / תיאור משימה</th>
+              <th>שווי משוער</th>
+              <th>פעולות ביצוע</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody">
+            <tr>
+              <td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">טוען נתונים מהשרת המקומי...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentOrders = [];
+
+    async function refreshStatus() {
+      try {
+        const res = await fetch('/api/status');
+        if (!res.ok) throw new Error('Offline');
+        const data = await res.json();
+
+        document.getElementById('liveStatusText').textContent = `שרת פעיל (פורט ${data.port} | Uptime: ${data.uptimeSeconds}s)`;
+        document.getElementById('liveBadge').style.borderColor = 'rgba(16, 185, 129, 0.4)';
+
+        const prog = data.progress || { currentCollectedNIS: 0, percentComplete: 0 };
+        document.getElementById('currCollected').textContent = prog.currentCollectedNIS;
+        document.getElementById('goalBar').style.width = `${prog.percentComplete}%`;
+        document.getElementById('percentText').textContent = `${prog.percentComplete}% הושלמו לעבר 100 ₪ ראשונים`;
+
+        const tel = data.telemetry || {};
+        document.getElementById('kpiViews').textContent = tel.pageViews || 0;
+        document.getElementById('kpiBitCopies').textContent = tel.bitCopyClicks || 0;
+        document.getElementById('kpiOrders').textContent = data.totalOrders || 0;
+        document.getElementById('kpiUnlocks').textContent = tel.successfulUnlocks || 0;
+        document.getElementById('kpiLeads').textContent = tel.leadCaptureCount || 0;
+
+        // טעינת רשימת פניות ישירות מה-API
+        loadOrdersTable();
+      } catch (err) {
+        document.getElementById('liveStatusText').textContent = 'שרת לא זמין — הדיימון מבצע ריפוי עצמי';
+        document.getElementById('liveBadge').style.borderColor = 'rgba(239, 68, 68, 0.4)';
+        document.getElementById('liveBadge').style.color = '#ef4444';
+      }
+    }
+
+    async function loadOrdersTable() {
+      try {
+        const res = await fetch('/api/orders');
+        if (res.ok) {
+          const orders = await res.json();
+          currentOrders = orders || [];
+          const tbody = document.getElementById('ordersBody');
+          if (!orders || orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">אין עדיין פניות ממתינות. המערכת זמינה לקליטת פניות.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = orders.slice().reverse().map(ord => {
+            const isLead = ord.category === 'lead_arbitrage' || ord.isLead === true;
+            const cleanPhone = (ord.phone || '').replace(/[^0-9]/g, '').replace(/^0/, '');
+            const intlPhone = cleanPhone ? '972' + cleanPhone : '';
+            const previewBtn = ord.previewUrl
+              ? `<a class="btn btn-primary" style="padding:4px 8px; font-size:11px; margin-left:4px;" href="${ord.previewUrl}" target="_blank">👁 צפה בפתרון</a>`
+              : '';
+            const waMsg = ord.previewUrl
+              ? `היי ${ord.name || ''}, הכנתי עבורך את הפתרון מראש לבדיקה מיידית! ניתן לפתוח כאן: http://127.0.0.1:8800${ord.previewUrl}`
+              : `היי ${ord.name || ''}, ראיתי שפנית לגבי ${ord.taskDescription || 'המשימה'}. המערכת מוכנה לאספקה!`;
+            const waUrl = intlPhone ? `https://wa.me/${intlPhone}?text=${encodeURIComponent(waMsg)}` : '#';
+
+            return `
+              <tr>
+                <td style="font-family:'JetBrains Mono',monospace; font-size:12px;">${ord.id}</td>
+                <td>
+                  <strong>${ord.name || 'לא צוין'}</strong>
+                  ${isLead ? '<span style="display:block; font-size:10.5px; color:#a855f7; font-weight:700;">🤝 ליד ארביטראז\'</span>' : ''}
+                </td>
+                <td>
+                  ${intlPhone ? `<a href="https://wa.me/${intlPhone}" target="_blank" style="color:var(--accent); text-decoration:none;">${ord.phone} 💬</a>` : (ord.phone || 'אין טלפון')}
+                </td>
+                <td style="max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                  ${ord.taskDescription || '—'}
+                </td>
+                <td style="font-weight:800; color:var(--gold);">
+                  ${ord.estimatedValue ? `${Number(ord.estimatedValue).toLocaleString()} ₪` : `${ord.budgetNIS || 100} ₪`}
+                </td>
+                <td style="white-space:nowrap;">
+                  ${previewBtn}
+                  ${intlPhone ? `<a class="btn btn-success" style="padding:4px 8px; font-size:11px;" href="${waUrl}" target="_blank">וואטסאפ ללקוח</a>` : ''}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (e) {}
+    }
+
+    function exportOrdersToCSV() {
+      if (!currentOrders || currentOrders.length === 0) {
+        alert('אין נתונים לייצוא');
+        return;
+      }
+      const headers = ['ID', 'Date', 'Name', 'Phone', 'Category', 'Description', 'BudgetNIS', 'EstimatedValue', 'PreviewUrl'];
+      const rows = currentOrders.map(o => [
+        o.id,
+        o.receivedAt,
+        `"${(o.name||'').replace(/"/g, '""')}"`,
+        `"${o.phone||''}"`,
+        o.category || 'custom_order',
+        `"${(o.taskDescription||'').replace(/"/g, '""')}"`,
+        o.budgetNIS || 100,
+        o.estimatedValue || '',
+        o.previewUrl || ''
+      ]);
+      const csv = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `project100nis_pipeline_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
+    setInterval(refreshStatus, 4000);
+    refreshStatus();
+  </script>
+</body>
+</html>

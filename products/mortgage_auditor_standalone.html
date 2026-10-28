@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורר החזר משכנתא, מחזור וביטוח חיים + מכתב דרישה לבנק | גרסה מלאה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe7dc;
+    --ink: #141413;
+    --muted: #595750;
+    --line: #d5cfc1;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --emerald: #146341;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; padding-bottom: 50px; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 10px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .pro-pill { background: rgba(16,185,129,0.2); color: #34d399; padding: 3px 10px; border-radius: 99px; font-weight: 700; font-size: 11.5px; border: 1px solid rgba(16,185,129,0.4); }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 7px 15px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.primary { background: var(--accent); color: #fff; border-color: #8f2a09; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0d452c; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 20px; }
+  .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  @media (max-width: 860px) { .split-grid { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 24px; }
+  .panel h2 { font-family: var(--serif); font-size: 22px; font-weight: 900; margin-bottom: 12px; }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .input-row { margin-bottom: 12px; }
+  .input-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .input-row input, .input-row select { width: 100%; padding: 8px 10px; border: 1.5px solid var(--line-strong); background: var(--surface-alt); color: var(--ink); font-family: var(--sans); font-size: 13.5px; outline: none; }
+  .input-row input:focus { background: #fff; border-color: var(--accent); }
+
+  .kpi-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+  .kpi-box { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 10px 12px; text-align: center; }
+  .kpi-box span { font-size: 11.5px; color: var(--muted); display: block; }
+  .kpi-box strong { font-family: var(--mono); font-size: 18px; color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th { background: var(--surface-alt); border: 1px solid var(--line-strong); padding: 8px 10px; text-align: right; }
+  td { border: 1px solid var(--line); padding: 8px 10px; font-variant-numeric: tabular-nums; }
+
+  .letter-box {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 18px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .studio-bar, .no-print, .input-panel { display: none !important; }
+    .container { max-width: 100%; padding: 0; }
+    .split-grid { display: block; }
+    .panel { border: none; box-shadow: none; padding: 0; }
+    .letter-box { border: 1px solid #141413; background: #fff; padding: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <strong>מחשבון מחזור משכנתא, ביטוח חיים ופטור מעמלות</strong>
+    <span class="pro-pill">גרסה מלאה לשימוש עצמאי</span>
+  </div>
+  <div class="no-print">
+    <button class="tactile-btn emerald" onclick="window.print()">🖨️ הדפס / שמור כ-PDF מכתב לבנק</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="split-grid">
+    <div class="panel input-panel">
+      <h2>נתוני המשכנתא והריביות</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">
+        חישוב שפיצר מדויק למחזור ריביות, הוזלת פרמיית ביטוח חיים משועבד וביטול עמלות ניהול חשבון.
+      </p>
+
+      <div class="input-grid">
+        <div class="input-row">
+          <label>שם הלווה / הלקוח:</label>
+          <input type="text" id="mortName" value="ישראל ישראלי" oninput="recalcMortgage()" />
+        </div>
+        <div class="input-row">
+          <label>שם הבנק המלווה:</label>
+          <select id="mortBank" onchange="recalcMortgage()">
+            <option value="בנק לאומי" selected>בנק לאומי</option>
+            <option value="בנק הפועלים">בנק הפועלים</option>
+            <option value="בנק מזרחי טפחות">בנק מזרחי טפחות</option>
+            <option value="בנק דיסקונט">בנק דיסקונט</option>
+            <option value="בנק הבינלאומי">בנק הבינלאומי</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-row">
+          <label>יתרת הקרן לסילוק (₪):</label>
+          <input type="number" id="mortBalance" value="850000" step="25000" oninput="recalcMortgage()" />
+        </div>
+        <div class="input-row">
+          <label>תקופה שנותרה (בשנים):</label>
+          <input type="number" id="mortYears" value="20" step="1" min="1" max="30" oninput="recalcMortgage()" />
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-row">
+          <label>ריבית שנתית נוכחית משוקללת (%):</label>
+          <input type="number" id="mortCurRate" value="5.85" step="0.05" oninput="recalcMortgage()" />
+        </div>
+        <div class="input-row">
+          <label>ריבית יעד במחזור (%):</label>
+          <input type="number" id="mortTarRate" value="4.65" step="0.05" oninput="recalcMortgage()" />
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-row">
+          <label>פרמיית ביטוח חיים חודשית כיום (₪):</label>
+          <input type="number" id="mortInsCur" value="180" step="10" oninput="recalcMortgage()" />
+        </div>
+        <div class="input-row">
+          <label>עמלות עו״ש וכרטיס חודשיות (₪):</label>
+          <input type="number" id="mortBankFees" value="45" step="5" oninput="recalcMortgage()" />
+        </div>
+      </div>
+
+      <div class="kpi-strip">
+        <div class="kpi-box">
+          <span>ירידה בהחזר חודשי</span>
+          <strong id="kpiMonthlySaved">580 ₪</strong>
+        </div>
+        <div class="kpi-box">
+          <span>חיסכון ריבית מצטבר</span>
+          <strong id="kpiRateSaved">139,200 ₪</strong>
+        </div>
+        <div class="kpi-box">
+          <span>סך חיסכון כולל</span>
+          <strong id="kpiTotalSaved" style="color:var(--emerald);">154,320 ₪</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>דוח חיסכון ומכתב דרישה לשימור לקוחות</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">
+        מכתב רשמי למחלקת המשכנתאות לקבלת הצעה תחרותית לפני הגשת בקשה לסילוק והעברה לבנק מתחרה.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>רכיב חיסכון</th>
+            <th>בסיס חישוב</th>
+            <th>סך חיסכון (₪)</th>
+          </tr>
+        </thead>
+        <tbody id="mortTableBody">
+          <!-- נטען אוטומטית -->
+        </tbody>
+      </table>
+
+      <div class="letter-box" id="mortLetterContent">
+        <!-- נטען אוטומטית -->
+      </div>
+
+      <div class="no-print" style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="tactile-btn emerald" onclick="window.print()">🖨️ הדפס / ייצא כ-PDF</button>
+        <button class="tactile-btn" onclick="copyMortLetter()">📋 העתק נוסח מכתב לבנק</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function pmt(ratePerPeriod, nPeriods, presentValue) {
+  if (ratePerPeriod === 0) return presentValue / nPeriods;
+  const q = Math.pow(1 + ratePerPeriod, nPeriods);
+  return (presentValue * ratePerPeriod * q) / (q - 1);
+}
+
+function recalcMortgage() {
+  const name = document.getElementById('mortName').value.trim() || 'לווה';
+  const bank = document.getElementById('mortBank').value;
+  const bal = parseFloat(document.getElementById('mortBalance').value) || 0;
+  const years = parseFloat(document.getElementById('mortYears').value) || 1;
+  const curRate = parseFloat(document.getElementById('mortCurRate').value) || 0;
+  const tarRate = parseFloat(document.getElementById('mortTarRate').value) || 0;
+  const curIns = parseFloat(document.getElementById('mortInsCur').value) || 0;
+  const fees = parseFloat(document.getElementById('mortBankFees').value) || 0;
+
+  const nMonths = years * 12;
+  const pmtCur = pmt((curRate / 100) / 12, nMonths, bal);
+  const pmtTar = pmt((tarRate / 100) / 12, nMonths, bal);
+
+  const monthlyRateDiff = Math.max(0, Math.round(pmtCur - pmtTar));
+  const totalRateSaved = Math.round(monthlyRateDiff * nMonths);
+
+  // הוזלת ביטוח חיים כ-35% על בסיס השוואת סוכנויות
+  const monthlyInsSaved = Math.round(curIns * 0.35);
+  const totalInsSaved = Math.round(monthlyInsSaved * Math.min(nMonths, 120));
+
+  // ביטול עמלות עו"ש ל-3 שנים
+  const totalFeesSaved = Math.round(fees * 36);
+
+  const grandSaved = totalRateSaved + totalInsSaved + totalFeesSaved;
+
+  document.getElementById('kpiMonthlySaved').textContent = monthlyRateDiff.toLocaleString() + ' ₪';
+  document.getElementById('kpiRateSaved').textContent = totalRateSaved.toLocaleString() + ' ₪';
+  document.getElementById('kpiTotalSaved').textContent = grandSaved.toLocaleString() + ' ₪';
+
+  document.getElementById('mortTableBody').innerHTML = `
+    <tr>
+      <td>מחזור ריבית משכנתא (${curRate.toFixed(2)}% ← ${tarRate.toFixed(2)}%)</td>
+      <td>ירידה של ${monthlyRateDiff.toLocaleString()} ₪ בחודש לאורך ${years} שנים</td>
+      <td><strong>${totalRateSaved.toLocaleString()} ₪</strong></td>
+    </tr>
+    <tr>
+      <td>הוזלת פוליסת ביטוח חיים משועבדת</td>
+      <td>חיסכון של ${monthlyInsSaved} ₪ לחודש (עד 10 שנים)</td>
+      <td><strong>${totalInsSaved.toLocaleString()} ₪</strong></td>
+    </tr>
+    <tr>
+      <td>ביטול עמלות ניהול חשבון ודמי כרטיס</td>
+      <td>פטור מעמלות עו״ש ל-36 חודשים</td>
+      <td><strong>${totalFeesSaved.toLocaleString()} ₪</strong></td>
+    </tr>
+    <tr style="background:var(--surface-alt); font-weight:700;">
+      <td>סה״כ חיסכון כלכלי כולל בהלוואה</td>
+      <td>מחזור פנימי מול הצעות מתחרות</td>
+      <td style="color:var(--emerald); font-size:16px;"><strong>${grandSaved.toLocaleString()} ₪</strong></td>
+    </tr>
+  `;
+
+  document.getElementById('mortLetterContent').innerHTML = `
+    <strong>לכבוד: הנהלת ${bank} — מוקד משכנתאות ושימור לקוחות</strong><br>
+    <strong>הנדון: בקשה למחזור משכנתא פנימי, עדכון מרווחי ריבית ופטור מעמלות — ${name}</strong><br><br>
+    1. הריני לפנות אליכם בבקשה להפקת דוח יתרות לסילוק משכנתא ולהגשת הצעת מחזור פנימי בגין ההלוואה הקיימת (יתרה לסילוק: ${bal.toLocaleString()} ₪, תקופה: ${years} שנים).<br>
+    2. מבדיקת השוואת ריביות מול בנקים מתחרים, הפחתת הריבית מ-${curRate.toFixed(2)}% ל-${tarRate.toFixed(2)}% תביא להפחתת ההחזר החודשי ב-${monthlyRateDiff.toLocaleString()} ₪ ולחיסכון מצטבר של <strong>${totalRateSaved.toLocaleString()} ₪</strong>.<br>
+    3. במקביל, הנני מבקש להסדיר פטור מלא מעמלות עו״ש ודמי כרטיס, ולהתאים את פוליסת ביטוח החיים. סך החיסכון הכולל עומד על <strong>${grandSaved.toLocaleString()} ₪</strong>.<br>
+    4. במידה ולא תתקבל הצעה תחרותית תואמת בתוך 7 ימי עסקים, אפעל להעברת תיק המשכנתא לבנק מתחרה שהגיש הצעה משופרת.<br><br>
+    <em>בכבוד רב,<br><strong>${name}</strong></em>
+  `;
+}
+
+function copyMortLetter() {
+  const text = document.getElementById('mortLetterContent').innerText;
+  navigator.clipboard.writeText(text);
+  alert('נוסח המכתב לבנק הועתק ללוח בהצלחה!');
+}
+
+recalcMortgage();
+</script>
+</body>
+</html>

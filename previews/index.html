@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סטודיו תבניות קוד | ספריית מערכות אינטרנט מוכנות להורדה עצמית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-muted: #ede9df;
+    --ink: #141413;
+    --ink-secondary: #57554f;
+    --line: #d8d3c6;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --accent-dark: #a6340e;
+    --emerald: #146341;
+    --emerald-dark: #0d452c;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+  }
+  body.theme-dark {
+    --bg: #111210;
+    --surface: #191a18;
+    --surface-muted: #232521;
+    --ink: #f3f1ea;
+    --ink-secondary: #a39f93;
+    --line: #2e302b;
+    --line-strong: #52554d;
+    --accent: #e85d2e;
+    --accent-dark: #b33f18;
+    --emerald: #1f8a5c;
+    --emerald-dark: #135c3c;
+  }
+  body.theme-warm {
+    --bg: #efe9dc;
+    --surface: #faf6ed;
+    --surface-muted: #e4dccb;
+    --ink: #1f1b16;
+    --ink-secondary: #635a4f;
+    --line: #cfc5b1;
+    --line-strong: #2c251d;
+    --accent: #b83b14;
+    --accent-dark: #87280a;
+    --emerald: #1b5e3c;
+    --emerald-dark: #103d26;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--line) 0.75px, transparent 0.75px);
+    background-size: 20px 20px;
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.55;
+    padding: 20px 16px 48px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .studio-frame {
+    max-width: 1140px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    box-shadow: 0 6px 0 var(--line-strong);
+  }
+
+  /* פס מפרט טכני עליון בסגנון בראון / טינאייג׳ אנג׳ינירינג */
+  .spec-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 10px 22px;
+    border-bottom: 1.5px solid var(--line-strong);
+    background: var(--surface-muted);
+    font-size: 12px;
+  }
+  .spec-id {
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .led-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--emerald);
+    display: inline-block;
+    box-shadow: 0 0 0 3px rgba(20, 99, 65, 0.2);
+  }
+
+  .toolbar-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+  /* כפתורים טקטיליים עם פיזיקת לחיצה מכנית */
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: transform 0.08s ease, border-bottom-width 0.08s ease, background-color 0.15s ease;
+  }
+  .tactile-btn:hover { background: var(--surface-muted); }
+  .tactile-btn:active {
+    transform: translateY(2px);
+    border-bottom-width: 1.5px;
+  }
+  .tactile-btn.active {
+    background: var(--ink);
+    color: var(--surface);
+  }
+  .tactile-btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent-dark);
+  }
+  .tactile-btn.primary:hover { background: #c53f13; }
+  .tactile-btn.emerald {
+    background: var(--emerald);
+    color: #fff;
+    border-color: var(--emerald-dark);
+  }
+
+  /* כותרת מערכת אדיטוריאלית */
+  .editorial-header {
+    padding: 32px 28px;
+    border-bottom: 1.5px solid var(--line-strong);
+    display: grid;
+    grid-template-columns: 1.45fr 0.55fr;
+    gap: 24px;
+    align-items: end;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .editorial-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(26px, 3.3vw, 38px);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .editorial-header p {
+    color: var(--ink-secondary);
+    font-size: 15px;
+    max-width: 64ch;
+  }
+  .meta-box {
+    border: 1px solid var(--line);
+    background: var(--surface-muted);
+    padding: 14px 16px;
+    font-size: 12.5px;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+  .meta-row:last-child { border-bottom: none; }
+
+  /* רשת מוצרים הנדסית */
+  .catalog-section { padding: 28px; }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 28px;
+  }
+  .unit-card {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease;
+  }
+  .unit-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-secondary);
+  }
+  .unit-thumb {
+    position: relative;
+    height: 185px;
+    overflow: hidden;
+    border-bottom: 1.5px solid var(--line-strong);
+  }
+  .unit-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: contrast(1.03);
+  }
+  .unit-body {
+    padding: 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .unit-body h2 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .unit-body p {
+    font-size: 13.5px;
+    color: var(--ink-secondary);
+    margin-bottom: 14px;
+  }
+  .spec-list {
+    list-style: none;
+    margin-bottom: 18px;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+    font-size: 12.5px;
+  }
+  .spec-list li {
+    padding: 3px 0;
+    display: flex;
+    justify-content: space-between;
+    color: var(--ink-secondary);
+  }
+  .spec-list li strong { color: var(--ink); font-weight: 700; }
+
+  .unit-footer {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1.5px solid var(--line-strong);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .price-tag {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* שער רכישה משפטי מחייב */
+  .legal-vault {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-muted);
+    padding: 22px 24px;
+  }
+  .vault-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .vault-header h3 {
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  .consent-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--emerald);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .checkout-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    opacity: 0.35;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .checkout-controls.unlocked {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .site-footer {
+    padding: 16px 28px;
+    border-top: 1.5px solid var(--line-strong);
+    font-size: 12px;
+    color: var(--ink-secondary);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 860px) {
+    .editorial-header { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="studio-frame">
+  <div class="spec-bar">
+    <div class="spec-id">
+      <span class="led-dot"></span>
+      <span>CODECRAFT STUDIO IL // SELF-SERVE CODE ARCHIVE</span>
+    </div>
+    <div class="toolbar-group">
+      <button class="tactile-btn active" onclick="switchSection('store', this)">ספריית 13 המערכות והמחוללים</button>
+      <a class="tactile-btn primary" href="./share_center.html">📣 מרכז הפצה אנונימי ב-1 קליק</a>
+      <a class="tactile-btn" href="./preview_WAR_ROOM.html">🚀 חדר מלחמה</a>
+      <button class="tactile-btn" onclick="switchSection('terms', this)">תנאי רישיון ופטור מאחריות</button>
+      <button class="tactile-btn" onclick="setMode('clean')">נייר בהיר</button>
+      <button class="tactile-btn" onclick="setMode('dark')">פחם כהה</button>
+      <button class="tactile-btn" onclick="setMode('warm')">שמנת חמה</button>
+      <button class="tactile-btn emerald" onclick="narratePage()">הקראה קולית</button>
+    </div>
+  </div>
+
+  <header class="editorial-header">
+    <div>
+      <span class="eyebrow">13 SELF-SERVE GENERATORS & WEB SYSTEMS • MIT AS-IS LICENSE</span>
+      <h1>מחוללי מסמכים, החזרי מס ומערכות קוד מוכנות להורדה עצמית</h1>
+      <p>
+        13 כלים אינטראקטיביים ומערכות שלמות בקובץ עצמאי ללא דמי מנוי חודשיים: סימולטור החזרי מס לשכירים (טופס 135), בורר חיסכון במחזור משכנתא ועמלות בנק, סורק הוצאות ומע״מ 18% לעצמאים, בודק תלושי שכר, מחולל ביטול עסקה, מיני-סייט לוואטסאפ, משדרג קורות חיים ו-6 מערכות קטלוג לעסקים.
+      </p>
+    </div>
+    <div class="meta-box">
+      <div class="meta-row"><span>מודל אספקה:</span><strong>שירות עצמי מיידי בדפדפן</strong></div>
+      <div class="meta-row"><span>רישיון שימוש:</span><strong>MIT / As-Is (ללא אחריות)</strong></div>
+      <div class="meta-row"><span>מחירון גמיש:</span><strong>50 ₪ (מסמך/כלי) / 100 ₪ (מערכת מלאה)</strong></div>
+      <div class="meta-row"><span>מספר להעברה בביט:</span><strong>054-6373001</strong></div>
+    </div>
+  </header>
+
+  <main class="catalog-section" id="viewContainer"></main>
+
+  <footer class="site-footer">
+    <div>
+      <strong>הבהרה משפטית:</strong> כל המוצרים באתר הם קובצי תבנית קוד גנריים המסופקים כמות שהם ("As-Is") להורדה חד-פעמית בלבד, ללא שירותי אחסון, תחזוקה, התאמה אישית או ייעוץ.
+    </div>
+    <div style="font-family:var(--mono);">REV 2026.10 // ZERO-DEPENDENCY ARCHITECTURE</div>
+  </footer>
+</div>
+
+<script>
+const MASTER_HASH = '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+
+function playTactileClick(pitchHz = 620) {
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(pitchHz, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.018);
+    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.018);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.019);
+  } catch (e) {}
+}
+
+function renderStoreView() {
+  document.getElementById('viewContainer').innerHTML = `
+    <div style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <h2 style="font-family:var(--serif); font-size:22px; font-weight:900;">⚡ 7 מחוללי שירות עצמי מהירים לכסף, מיסים, זכויות ועסקים (50 ₪ / 100 ₪ בביט)</h2>
+      <span style="font-family:var(--mono); font-size:12px; color:var(--accent); font-weight:700;">INSTANT TRY-BEFORE-YOU-BUY GENERATORS</span>
+    </div>
+
+    <div class="grid-3" style="grid-template-columns: repeat(2, 1fr); margin-bottom:30px;">
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 11-TAXREFUND-135</span>
+          <span>6-YEAR INCOME TAX SIMULATOR</span>
+        </div>
+        <div class="unit-body">
+          <h2>סימולטור החזרי מס לשכירים (טופס 135 — ללא עמלת 20%)</h2>
+          <p>בדיקת החזר מס 6 שנים אחורה בגין החלפת עבודות, נקודות זיכוי לילדים/תואר, סעיף 46 וביטוח חיים + הפקת מכתב בקשה רשמי לפקיד השומה בלי לשלם אלפי שקלים לחברות החזרים.</p>
+          <ul class="spec-list">
+            <li><span>חיסכון עמלות תיווך:</span><strong>100% מההחזר נשאר אצלך בחשבון</strong></li>
+            <li><span>פתיחת דוח וטופס 135 ל-PDF:</span><strong>50 ₪ (או 100 ₪ למערכת המלאה)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">50 / 100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_TAX_REFUND.html" onclick="playTactileClick(660)">בדיקת החזר מס חיה ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 12-MORTGAGESAVE</span>
+          <span>REFINANCE & BANK FEE AUDITOR</span>
+        </div>
+        <div class="unit-body">
+          <h2>בורר חיסכון במחזור משכנתא, ריביות עו״ש ודמי כרטיס + מכתב לבנק</h2>
+          <p>חישוב חיסכון של עשרות אלפי שקלים במחזור ריבית משכנתא, ביטוח חיים משועבד ופטור מעמלות בנק, כולל הפקת מכתב דרישה רשמי למחלקת המשכנתאות במקום יועץ ב-6,000 ₪.</p>
+          <ul class="spec-list">
+            <li><span>לוח סילוקין שפיצר חי:</span><strong>חישוב ירידה בהחזר החודשי בש״ח</strong></li>
+            <li><span>פתיחת תחשיב ומכתב לבנק:</span><strong>50 ₪ (או 100 ₪ למערכת המלאה)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">50 / 100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_MORTGAGE_AUDITOR.html" onclick="playTactileClick(660)">בדיקת חיסכון במשכנתא ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 13-FREELANCESHIELD</span>
+          <span>OSEK ZAIR 30% vs ITEMIZED + 18% VAT</span>
+        </div>
+        <div class="unit-body">
+          <h2>מחשבון מסלול "עוסק זעיר" (30%) מול הוצאות מוכרות ומע״מ 18%</h2>
+          <p>לפרילנסרים ועצמאים: בדיקה חיה האם משתלם לבחור בניכוי 30% אוטומטי ללא קבלות או לדרוש הוצאות מפורטות (משרד ביתי 25%, רכב 45%, קרן השתלמות ומע״מ תשומות 18%).</p>
+          <ul class="spec-list">
+            <li><span>השוואת מסלולים חכמה:</span><strong>חיסכון של אלפי שקלים במס ובביטוח לאומי</strong></li>
+            <li><span>פתיחת נספח דיווח שנתי:</span><strong>50 ₪ (או 100 ₪ למערכת המלאה)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">50 / 100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_FREELANCE_SHIELD.html" onclick="playTactileClick(660)">בדיקת מסלול לעצמאים ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 07-PAYAUDIT</span>
+          <span>LABOR & PENSION AUDITOR</span>
+        </div>
+        <div class="unit-body">
+          <h2>בודק תלוש שכר, פנסיה, שעות נוספות ופיצויים + מכתב דרישה</h2>
+          <p>מחשבון אוטומטי המחשב הפרשי פנסיה (6.5%), שעות נוספות (125%/150%), דמי הבראה (418 ₪ ליום) ופדיון חופשה, ומפיק מכתב דרישה מסודר למעסיק.</p>
+          <ul class="spec-list">
+            <li><span>חישוב חינם על המסך:</span><strong>סה״כ הפרשים בש״ח בזמן אמת</strong></li>
+            <li><span>פתיחת דוח ומכתב PDF:</span><strong>50 ₪ (או 100 ₪ למערכת המלאה)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">50 / 100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_SALARY_AUDITOR.html" onclick="playTactileClick(660)">בדיקת תלוש שכר חיה ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 08-CONSUMERSHIELD</span>
+          <span>4 FORMAL NOTICE GENERATORS</span>
+        </div>
+        <div class="unit-body">
+          <h2>מחולל מכתבי ביטול עסקה, פיצוי 10,000 ₪ וערעור על דו"חות</h2>
+          <p>4 מחוללים במערכת אחת: ביטול עסקה והחזר כספי (חוק הגנת הצרכן), התראה לפני פיצוי 10,000 ₪ (סעיף 31א), ערעור על דו"ח חניה ודרישת תיקון ליקויים משוכר.</p>
+          <ul class="spec-list">
+            <li><span>סוגי מכתבים מובנים:</span><strong>4 תבניות מנוסחות לפי סעיפי החוק</strong></li>
+            <li><span>פתיחה והדפסה ל-PDF:</span><strong>50 ₪ (או 100 ₪ למחולל המלא)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">50 / 100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_LEGAL_SHIELD.html" onclick="playTactileClick(660)">הפקת מכתב ביטול/ערעור ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 09-CARDCRAFT</span>
+          <span>WHATSAPP MINISITE BUILDER</span>
+        </div>
+        <div class="unit-body">
+          <h2>בונה מיני-סייט, מחירון וכרטיס ביקור דיגיטלי לוואטסאפ ב-60 שניות</h2>
+          <p>הזן את שם העסק, הטלפון והמחירון שלך — וקבל מיני-סייט יוקרתי עם כפתורי הזמנה ישירים לוואטסאפ ללא דמי מנוי חודשיים לעולם.</p>
+          <ul class="spec-list">
+            <li><span>חיסכון שנתי קבוע:</span><strong>ללא דמי מנוי של 540 ₪ בשנה</strong></li>
+            <li><span>ייצוא קובץ מותאם לעסק:</span><strong>50 ₪ (או 100 ₪ למחולל המלא)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">50 / 100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_WHATSAPP_MINISITE.html" onclick="playTactileClick(660)">בניית מיני-סייט חי ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 10-CVBOOSTER</span>
+          <span>ATS CV & COVER LETTER</span>
+        </div>
+        <div class="unit-body">
+          <h2>משדרג קורות חיים (CV) ומכתב מקדים מותאם מערכות גיוס (ATS)</h2>
+          <p>בדיקת ציון התאמה למערכות סינון (ATS Score) ועיצוב אוטומטי של קורות חיים בפורמט מנהלים נקי להדפסה ל-PDF תוך דקה.</p>
+          <ul class="spec-list">
+            <li><span>מדד ATS בזמן אמת:</span><strong>בדיקת מילות מפתח והישגים</strong></li>
+            <li><span>הסרת חותמת מים ו-PDF:</span><strong>50 ₪ (או 100 ₪ למחולל המלא)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">50 / 100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_CV_BOOSTER.html" onclick="playTactileClick(660)">שדרוג קורות חיים חי ←</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <h2 style="font-family:var(--serif); font-size:22px; font-weight:900;">🏛️ 6 מערכות אינטרנט וקטלוגים לעסקים (100 ₪ ליחידה — קוד מקור מלא)</h2>
+      <span style="font-family:var(--mono); font-size:12px; color:var(--emerald); font-weight:700;">STANDALONE HTML5 / JS BUSINESS SYSTEMS</span>
+    </div>
+
+    <div class="grid-3">
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 01-AUTO</span>
+          <span>HTML5 + ADMIN CRUD</span>
+        </div>
+        <div class="unit-thumb">
+          <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=900&q=80" alt="תבנית קטלוג רכבים" />
+        </div>
+        <div class="unit-body">
+          <h2>מערכת קטלוג סוכנות רכב וניהול מלאי</h2>
+          <p>תבנית מלאה לאולם תצוגה הכוללת סינון רב-שכבתי, מפרט רכב מורחב, מחשבון מימון וממשק ניהול להוספה והסרה של רכבים.</p>
+          <ul class="spec-list">
+            <li><span>ממשק ניהול פנימי:</span><strong>הוספה ומחיקת רכבים חיה</strong></li>
+            <li><span>מנוע סינון:</span><strong>יצרן, שנתון, תקציב ומיון</strong></li>
+            <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_XPLACE_217130.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 02-SYNC</span>
+          <span>SHEETS WEBHOOK + CSV</span>
+        </div>
+        <div class="unit-thumb">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80" alt="מערכת סנכרון לידים" />
+        </div>
+        <div class="unit-body">
+          <h2>מערכת קליטת לידים ואוטומציית גליונות</h2>
+          <p>תבנית מערכת קליטת פניות עם טבלת מעקב בזמן אמת, תצוגת מייל אוטומטי, ייצוא לאקסל וסקריפט מוכן להדבקה ב-Google Sheets.</p>
+          <ul class="spec-list">
+            <li><span>סקריפט אוטומציה:</span><strong>Google Apps Script מובנה</strong></li>
+            <li><span>ייצוא נתונים:</span><strong>הורדת CSV בעברית מלאה</strong></li>
+            <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_XPLACE_216327.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 03-COMMERCE</span>
+          <span>CATALOG + 2 LANDING PAGES</span>
+        </div>
+        <div class="unit-thumb">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80" alt="קטלוג מסחרי ודפי נחיתה" />
+        </div>
+        <div class="unit-body">
+          <h2>קטלוג מסחרי + זוג דפי נחיתה לעסקים</h2>
+          <p>חבילת קוד משולשת הכוללת קטלוג מוצרים אינטראקטיבי עם סל הזמנה מהיר, דף נחיתה למבצעי השקה ודף נחיתה לתיאום פגישות עסקיות.</p>
+          <ul class="spec-list">
+            <li><span>רכיבים בחבילה:</span><strong>קטלוג + 2 דפי נחיתה שלמים</strong></li>
+            <li><span>סל הזמנות:</span><strong>חישוב חי וסיכום פרטים</strong></li>
+            <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_XPLACE_216353.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 04-QUOTE</span>
+          <span>DIGITAL SIGNATURE + PDF</span>
+        </div>
+        <div class="unit-thumb">
+          <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80" alt="מחולל הצעות מחיר וחתימה דיגיטלית" />
+        </div>
+        <div class="unit-body">
+          <h2>מחולל הצעות מחיר + חתימת לקוח על המסך</h2>
+          <p>מערכת הפקת הצעות מחיר לפרילנסרים ועסקים עם חישוב מע״מ 18% אוטומטי, משטח חתימה דיגיטלית על המסך וייצוא ל-PDF ללא דמי מנוי.</p>
+          <ul class="spec-list">
+            <li><span>חתימה דיגיטלית:</span><strong>משטח חתימה במגע או עכבר</strong></li>
+            <li><span>חישוב מס:</span><strong>מע״מ 18% וסיכום אוטומטי</strong></li>
+            <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_QUOTE_INVOICE.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 05-CLINIC</span>
+          <span>APPOINTMENT SCHEDULER</span>
+        </div>
+        <div class="unit-thumb">
+          <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=900&q=80" alt="מערכת תיאום תורים לקליניקות" />
+        </div>
+        <div class="unit-body">
+          <h2>מערכת תיאום תורים ודף נחיתה לקליניקות</h2>
+          <p>תבנית הזמנת תורים אינטראקטיבית לקליניקות, מאמנים ויועצים הכוללת בחירת סוג טיפול, שעות פנויות וסיכום תור מובנה.</p>
+          <ul class="spec-list">
+            <li><span>יומן תורים:</span><strong>בחירת שירות ושעה פנויה</strong></li>
+            <li><span>חיסכון קבוע:</span><strong>ללא עמלות מנוי חודשיות</strong></li>
+            <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_CLINIC_BOOKING.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="unit-card">
+        <div class="unit-card-top">
+          <span>UNIT // 06-ESTATE</span>
+          <span>REAL ESTATE + MORTGAGE</span>
+        </div>
+        <div class="unit-thumb">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80" alt="קטלוג נדל״ן ומחשבון משכנתא" />
+        </div>
+        <div class="unit-body">
+          <h2>קטלוג נכסי נדל״ן + סימולטור משכנתא ותשואה</h2>
+          <p>תבנית למשרדי תיווך ויזמים המציגה נכסים למכירה בליווי מחשבון הון עצמי, החזר משכנתא חודשי ותשואת שכירות שנתית.</p>
+          <ul class="spec-list">
+            <li><span>סימולטור פיננסי:</span><strong>הון עצמי, משכנתא ותשואה</strong></li>
+            <li><span>תצוגת נכסים:</span><strong>כרטיסי מפרט אדריכליים</strong></li>
+            <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
+          </ul>
+          <div class="unit-footer">
+            <span class="price-tag">100 ₪</span>
+            <a class="tactile-btn primary" href="./preview_REALESTATE_PRO.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <section class="legal-vault" style="margin-bottom:20px;">
+      <div class="vault-header">
+        <h3>⚡ צריך פתרון קוד / אקסל / דף נחיתה מותאם אישית להיום ב-50–100 ₪? (ביצוע מראש — Pre-Fulfillment)</h3>
+        <span style="font-family:var(--mono); font-size:11.5px; color:var(--accent); font-weight:700;">INSTANT CUSTOM PREVIEW GENERATOR</span>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1.6fr auto; gap:10px; align-items:center;">
+        <input id="reqClientName" placeholder="השם או העסק שלך" style="padding:9px 12px; border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink);" />
+        <input id="reqTaskTitle" placeholder="תאר בקצרה מה אתה צריך להיום (למשל: דף נחיתה לסטודיו / ניקוי אקסל)" style="padding:9px 12px; border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink);" />
+        <button class="tactile-btn primary" onclick="submitInboundTask()">ייצר תצוגה מקדימה מוגנת ←</button>
+      </div>
+      <div id="inboundResult" style="margin-top:10px; font-size:13px;"></div>
+    </section>
+
+    <section class="legal-vault">
+      <div class="vault-header">
+        <h3>שער רכישה בשירות עצמי (חובה לאשר תנאי רישיון לפני פתיחת התשלום)</h3>
+        <span style="font-family:var(--mono); font-size:11.5px; color:var(--emerald); font-weight:700;">CLAUSE // AS-IS MIT WAIVER</span>
+      </div>
+      <label class="consent-label">
+        <input type="checkbox" id="masterLegalCheck" onchange="toggleMasterCheckout()" />
+        <span>
+          <strong>אישור תנאי רכישה ופטור מאחריות:</strong> אני מצהיר/ה ומאשר/ת כי המוצר הנרכש הוא קובץ תבנית קוד גנרי המסופק כמות שהוא ("As-Is" תחת רישיון MIT) להורדה דיגיטלית חד-פעמית בלבד. ידוע לי כי העסקה אינה כוללת שירותי אחסון, תחזוקה, הטמעה, התאמה אישית, תמיכה טכנית או אחריות מכל סוג שהוא.
+        </span>
+      </label>
+      <div class="checkout-controls" id="masterCheckoutBox">
+        <button class="tactile-btn emerald" onclick="copyBitPhone()">1א. העתקת מספר לביט: 054-6373001 (50 / 100 ₪)</button>
+        <button class="tactile-btn emerald" onclick="copyPayboxPhone()">1ב. העתקת מספר ל-PayBox: 054-6373001</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%2FPayBox%20%D7%A2%D7%91%D7%95%D7%A8%20CodeCraft%20Studio.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="masterUnlockInput" type="password" placeholder="קוד פתיחה (מהיר: 2800)" style="padding:7px 11px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:190px;" />
+        <button class="tactile-btn primary" onclick="unlockMasterArchive()">3. פתיחה והורדת החבילה</button>
+        <span style="font-size:13px; color:var(--ink-secondary);" id="copyFeedback">לאחר סימון התיבה ניתן להעתיק את המספר ולהוריד את קוד המקור.</span>
+      </div>
+    </section>
+  `;
+}
+
+function renderTermsView() {
+  document.getElementById('viewContainer').innerHTML = `
+    <section class="legal-vault">
+      <div class="vault-header">
+        <h3>מדיניות אספקת קוד בשירות עצמי והגנה משפטית מלאה</h3>
+        <span style="font-family:var(--mono); font-size:11.5px;">STANDARD MIT LICENSE</span>
+      </div>
+      <p style="font-size:14px; margin-bottom:12px;">
+        1. <strong>מכירת קובץ קוד גנרי בלבד ("As-Is"):</strong> כל מערכת באתר מוצגת במלואה לבדיקה חופשית לפני הרכישה. התשלום מעניק זכות להורדה חד-פעמית של קובץ ה-HTML/JS כמות שהוא, ללא כל התחייבות להתאמה אישית, שינויי עיצוב, חיבור דומיין, אחסון או תחזוקה שוטפת.
+      </p>
+      <p style="font-size:14px; margin-bottom:12px;">
+        2. <strong>אפס פניות יזומות (ציות מלא לחוק התקשורת סעיף 30א):</strong> הסטודיו פועל במודל שירות עצמי נכנס בלבד ואינו שולח הודעות שיווקיות יזומות.
+      </p>
+      <p style="font-size:14px;">
+        3. <strong>הפרדה מלאה ממותגים צד-שלישי:</strong> כל השמות, מספרי הרישוי והנתונים בתבניות ההדגמה הם פיקטיביים לחלוטין ונועדו להמחשת יכולות הקוד בלבד.
+      </p>
+    </section>
+  `;
+}
+
+function toggleMasterCheckout() {
+  playTactileClick(540);
+  const checked = document.getElementById('masterLegalCheck')?.checked;
+  const box = document.getElementById('masterCheckoutBox');
+  if (!box) return;
+  if (checked) box.classList.add('unlocked');
+  else box.classList.remove('unlocked');
+}
+
+function copyBitPhone() {
+  playTactileClick(680);
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'MASTER_INDEX' }) }).catch(()=>{});
+  const fb = document.getElementById('copyFeedback');
+  if (fb) {
+    fb.textContent = 'המספר 054-6373001 הועתק! לאחר ההעברה בביט שלח הודעת וואטסאפ למספר זה לקבלת קוד הפתיחה להורדת הקובץ.';
+    fb.style.color = 'var(--emerald)';
+    fb.style.fontWeight = '700';
+  }
+}
+
+function copyPayboxPhone() {
+  playTactileClick(680);
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_paybox', itemId:'MASTER_INDEX' }) }).catch(()=>{});
+  const fb = document.getElementById('copyFeedback');
+  if (fb) {
+    fb.textContent = 'המספר 054-6373001 הועתק עבור PayBox! לאחר ההעברה שלח הודעת וואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).';
+    fb.style.color = 'var(--emerald)';
+    fb.style.fontWeight = '700';
+  }
+}
+
+async function verifyMasterDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === MASTER_HASH;
+}
+
+async function unlockMasterArchive() {
+  const code = (document.getElementById('masterUnlockInput')?.value || '').trim();
+  if (!code) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'MASTER_INDEX' }) }).catch(()=>{});
+  if (!(await verifyMasterDigest(code))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  const el = document.getElementById('masterUnlockInput');
+  if (el) { el.value = ''; el.removeAttribute('value'); }
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CodeCraft_Studio_Master_Archive.html';
+  a.click();
+}
+
+async function submitInboundTask() {
+  const clientName = document.getElementById('reqClientName')?.value.trim() || 'לקוח מהיר';
+  const requestTitle = document.getElementById('reqTaskTitle')?.value.trim();
+  const out = document.getElementById('inboundResult');
+  if (!requestTitle) {
+    if (out) out.textContent = 'אנא הזן תיאור קצר של המשימה המבוקשת.';
+    return;
+  }
+  try {
+    const res = await fetch('/api/request-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientName, requestTitle, priceNIS: 100 })
+    });
+    const data = await res.json();
+    if (data.previewUrl && out) {
+      out.innerHTML = `<strong style="color:var(--emerald);">✅ התצוגה המקדימה שלך נוצרה:</strong> <a href="${data.previewUrl}" style="font-weight:700; color:var(--accent);">לחץ כאן לפתיחת דף הפתרון והתשלום בביט ←</a>`;
+    }
+  } catch {
+    if (out) out.textContent = 'ניתן לשלוח את הבקשה ישירות בוואטסאפ למספר 054-6373001.';
+  }
+}
+
+function switchSection(sec, btn) {
+  playTactileClick(600);
+  document.querySelectorAll('.spec-bar .tactile-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (sec === 'store') renderStoreView();
+  else renderTermsView();
+}
+
+function setMode(mode) {
+  playTactileClick(520);
+  document.body.className = mode === 'clean' ? '' : 'theme-' + mode;
+}
+
+function narratePage() {
+  playTactileClick(660);
+  const u = new SpeechSynthesisUtterance("ברוכים הבאים לסטודיו תבניות הקוד ומחוללי השירות העצמי. כאן ניתן לבדוק שלוש עשרה מערכות חיות בדפדפן — שבעה מחוללי שירות עצמי בחמישים שקלים, שש מערכות קטלוג ואוטומציה לעסקים במאה שקלים, וכן שירות ביצוע מראש למשימה מותאמת אישית להיום במאה שקלים בביט.");
+  u.lang = 'he-IL';
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+renderStoreView();
+</script>
+</body>
+</html>

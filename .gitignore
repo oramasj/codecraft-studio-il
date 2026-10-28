@@ -1,0 +1,7 @@
+node_modules/
+daemon.log
+daemon.pid
+server.pid
+daemon_status.json
+*.tmp*
+.DS_Store

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מרכז הפצה אנונימי ב-1 קליק | CodeCraft Studio IL — 14 קמפיינים מוכנים לפרסום</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe7dc;
+    --ink: #141413;
+    --muted: #595750;
+    --line: #d5cfc1;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --emerald: #146341;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #111210;
+    --surface: #191b18;
+    --surface-alt: #232622;
+    --ink: #f3f1ea;
+    --muted: #a09d93;
+    --line: #2e322d;
+    --line-strong: #555952;
+    --accent: #e85d2e;
+    --emerald: #1f8a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.55; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link { color: #f3f1ea; text-decoration: none; border: 1px solid #454844; padding: 4px 10px; font-weight: 700; }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.active { background: var(--accent); color: #fff; border-color: #8f2a09; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0b3d26; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 54px; }
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 22px; margin-bottom: 22px; }
+  .panel h1 { font-family: var(--serif); font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+  .panel h2 { font-family: var(--serif); font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .posts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 24px; }
+  .post-card {
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    box-shadow: 0 4px 0 var(--line-strong);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+  }
+  .post-card h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 6px; }
+  .target-group { font-size: 12px; color: var(--emerald); font-weight: 700; margin-bottom: 8px; }
+  .post-body {
+    background: var(--surface-alt);
+    border: 1px solid var(--line-strong);
+    padding: 12px;
+    font-size: 12.5px;
+    white-space: pre-line;
+    margin-bottom: 12px;
+    line-height: 1.55;
+  }
+
+  .consent-gate { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 14px 16px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13px; }
+  .consent-gate input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--emerald); flex-shrink: 0; }
+  .locked-zone { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; }
+  .locked-zone.unlocked { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 860px) { .posts-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="./index.html">← חזרה לחנות הסטודיו</a>
+    <a class="back-link" href="./preview_WAR_ROOM.html">🚀 חדר מלחמה</a>
+    <span style="font-family:var(--mono);">ANONYMOUS SHARE CENTER // 14 SELF-HEALING CAMPAIGNS</span>
+  </div>
+  <div style="display:flex; gap:6px;">
+    <button class="tactile-btn emerald" onclick="copyAllCampaigns()">📋 העתק את כל 14 הקמפיינים יחד</button>
+    <button class="tactile-btn" onclick="document.body.classList.toggle('theme-dark')">מצב תצוגה כהה/בהיר</button>
+  </div>
+</div>
+
+<div class="container">
+  <section class="panel">
+    <span style="font-family:var(--mono); font-size:11.5px; color:var(--accent); font-weight:700;">ZERO-EXPOSURE DISTRIBUTION // ANONYMOUS MEMBER READY</span>
+    <h1>מרכז הפצה אנונימי ב-1 קליק ("משתתף אנונימי" בפייסבוק, וואטסאפ וטלגרם)</h1>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:14px;">
+      כל 14 הפוסטים להלן מנוסחים להדבקה מיידית כ<strong>"משתתף אנונימי" (Anonymous Member)</strong> בקבוצות פייסבוק ישראליות, קבוצות וואטסאפ וערוצי טלגרם — ללא שום חשיפת שם אישי, ב-100% חוקיות (אפס הודעות ספאם יזומות), ועם קישורים קבועים ב-<strong>Telegra.ph</strong> שמתעדכנים אוטומטית בכל החלפת מנהרה!
+    </p>
+    <div class="filter-bar">
+      <button class="tactile-btn active" onclick="filterPosts('all', this)">הצג הכל (14 קמפיינים)</button>
+      <button class="tactile-btn" onclick="filterPosts('b2c50', this)">⚡ 7 כלי שירות עצמי מהירים (50 ₪)</button>
+      <button class="tactile-btn" onclick="filterPosts('b2b100', this)">🏛️ 6 מערכות וקטלוגים לעסקים (100 ₪)</button>
+      <button class="tactile-btn" onclick="filterPosts('urgent100', this)">🎯 משימת קוד/אקסל דחופה להיום (100 ₪)</button>
+    </div>
+  </section>
+
+  <div class="posts-grid" id="postsContainer"></div>
+
+  <section class="panel">
+    <h2>שער רכישה והורדת ערכת ההפצה + כל 13 מערכות הקוד (50 / 100 ₪ בביט)</h2>
+    <label class="consent-gate">
+      <input type="checkbox" id="scConsent" onchange="document.getElementById('scPayZone').classList.toggle('unlocked', this.checked)" />
+      <span>
+        <strong>אישור תנאי רכישה ופטור מאחריות (As-Is / MIT License):</strong> אני מצהיר/ה ומאשר/ת כי כל הכלים והתבניות מסופקים כמות שהם ("As-Is" תחת רישיון MIT) להורדה חד-פעמית בשירות עצמי בלבד, ללא שירותי אחסון, תחזוקה, ייעוץ משפטי או אחריות.
+      </span>
+    </label>
+    <div class="locked-zone" id="scPayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn emerald" onclick="copyScBit(50)">1א. העתק מספר לביט: 054-6373001 (50 ₪ לכלי בודד)</button>
+        <button class="tactile-btn emerald" onclick="copyScBit(100)">1ב. העתק מספר לביט: 054-6373001 (100 ₪ לחבילה המלאה)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%20%D7%9E%D7%9E%D7%A8%D7%9B%D7%96%20%D7%94%D7%94%D7%A4%D7%A6%D7%94%20(SHARE_CENTER).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="scCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="unlockSharePack()">3. פתח והורד ערכת הפצה מלאה</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const EXPECTED_HASH = '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+
+const CAMPAIGNS = [
+  {
+    id: 'TaxRefund135',
+    category: 'b2c50',
+    badge: 'NEW B2C FAST TOOL // 50 NIS',
+    title: 'חדש! סימולטור החזרי מס לשכירים (טופס 135 — 6 שנים אחורה ללא עמלת 20%)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות שכירים, הורים צעירים, בוגרי תואר, הייטק ופיננסים',
+    url: 'https://telegra.ph/סימולטור-החזרי-מס-לשכירים-טופס-135--6-שנים-אחורה-ללא-עמלת-20--מכתב-לפקיד-השומה-50-10-28',
+    post: `משתף כמשתתף אנונימי לכל השכירים כאן: לפני שאתם משלמים 20% עמלה (אלפי שקלים!) לחברות החזרי מס 💰
+העלינו סימולטור חי שבודק ב-30 שניות כמה מס מגיע לכם בחזרה 6 שנים אחורה (בגלל החלפת עבודות, חודשים ללא עבודה, נקודות זיכוי לילדים/תואר, תרומות סעיף 46 וביטוח חיים).
+החישוב על המסך בחינם לגמרי — ומי שרוצה להפיק את דוח הסעיפים המלא + מכתב בקשה רשמי לפקיד השומה (טופס 135) כדי ש-100% מההחזר ייכנס ישירות לחשבון שלו, פותח ב-50 ₪ בביט (054-6373001, שירות עצמי As-Is):
+https://telegra.ph/סימולטור-החזרי-מס-לשכירים-טופס-135--6-שנים-אחורה-ללא-עמלת-20--מכתב-לפקיד-השומה-50-10-28`
+  },
+  {
+    id: 'MortgageAuditor',
+    category: 'b2c50',
+    badge: 'NEW B2C FAST TOOL // 50 NIS',
+    title: 'חדש! בורר חיסכון במחזור משכנתא, ריביות עו״ש ודמי כרטיס + מכתב דרישה לבנק (50 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות משכנתאות, רוכשי דירות, זוגות צעירים והתנהלות כלכלית',
+    url: 'https://telegra.ph/בורר-חיסכון-במחזור-משכנתא-ריביות-עוש-ודמי-כרטיס--מכתב-דרישה-לבנק-50-10-28',
+    post: `טיפ זהב לבעלי משכנתא (מפרסם כמשתתף אנונימי): יועצי משכנתאות גובים 6,000 ₪ על בדיקת כדאיות מחזור 🏦
+בנינו מחשבון שפיצר חי שמחשב מיד כמה תחסכו בהחזר החודשי ובסך הכל אם תמחזרו ריבית, תוזילו ביטוח חיים משועבד ותבטלו עמלות עו״ש ודמי כרטיס.
+בדיקה חיה בחינם בדפדפן, ופתיחת תחשיב המסלולים המלא + מכתב דרישה רשמי למחלקת המשכנתאות בבנק ב-50 ₪ בביט (054-6373001, As-Is):
+https://telegra.ph/בורר-חיסכון-במחזור-משכנתא-ריביות-עוש-ודמי-כרטיס--מכתב-דרישה-לבנק-50-10-28`
+  },
+  {
+    id: 'FreelanceShield',
+    category: 'b2c50',
+    badge: 'NEW SMB FAST TOOL // 50 NIS',
+    title: 'חדש! מחשבון מסלול "עוסק זעיר" (30%) מול הוצאות מוכרות ומע״מ 18% לעצמאים (50 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות עוסק פטור, עוסק זעיר, פרילנסרים ועצמאים בישראל',
+    url: 'https://telegra.ph/מחשבון-מסלול-עוסק-זעיר-30-מול-הוצאות-מוכרות-ומעמ-18-לעצמאים-ופרילנסרים-50-10-28',
+    post: `עצמאים, פרילנסרים ובעלי עוסק פטור/מורשה — מתלבטים אם לבחור במסלול "עוסק זעיר" (30% ניכוי אוטומטי ללא קבלות) או לדווח הוצאות מפורטות? 📊
+העלינו מחשבון חי שמשווה בשניות בין ניכוי 30% לבין הכרה בעבודה מהבית (25%), רכב (45%), קרן השתלמות (4.5%) וקיזוז מע״מ תשומות (18%), ומראה בדיוק באיזה מסלול תשלמו אלפי שקלים פחות מס וביטוח לאומי.
+בדיקה חיה בדפדפן ופתיחת נספח ריכוז ההוצאות השנתי ל-PDF ב-50 ₪ בביט (054-6373001, As-Is):
+https://telegra.ph/מחשבון-מסלול-עוסק-זעיר-30-מול-הוצאות-מוכרות-ומעמ-18-לעצמאים-ופרילנסרים-50-10-28`
+  },
+  {
+    id: 'PayAudit',
+    category: 'b2c50',
+    badge: 'B2C FAST TOOL // 50 NIS',
+    title: '1. PayAudit IL — בודק תלוש שכר, פנסיה, שעות נוספות ופיצויים + מכתב דרישה (50 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות זכויות עובדים, מלצרים/אבטחה/מוקדים, הייטק וחיפוש עבודה',
+    url: 'https://telegra.ph/בודק-תלוש-שכר-פנסיה-שעות-נוספות-ופיצויי-פיטורים--מחולל-מכתב-דרישה-למעסיק-50-10-28',
+    post: `משתף כמשתתף אנונימי לטובת כל מי שרוצה לבדוק את התלוש שלו לפני שיחה עם המעסיק 🧾
+בנינו כלי אוטומטי שמחשב תוך 30 שניות הפרשי פנסיה (6.5%), שעות נוספות (125%/150%), דמי הבראה (418 ₪ ליום) ופדיון חופשה — החישוב על המסך בחינם לגמרי.
+מי שרוצה להפיק גם את מכתב הדרישה המנוסח למעסיק ולהוריד ל-PDF יכול לפתוח בשירות עצמי ב-50 ₪ בביט (054-6373001, ללא הרשמה וללא דמי מנוי):
+https://telegra.ph/בודק-תלוש-שכר-פנסיה-שעות-נוספות-ופיצויי-פיטורים--מחולל-מכתב-דרישה-למעסיק-50-10-28`
+  },
+  {
+    id: 'ConsumerShield',
+    category: 'b2c50',
+    badge: 'B2C FAST TOOL // 50 NIS',
+    title: '2. ConsumerShield IL — מחולל מכתבי ביטול עסקה, פיצוי 10,000 ₪ וערעור דו"ח חניה (50 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות צרכנות נבונה, שוכרי דירות, נהגים וערעור דו"חות חניה',
+    url: 'https://telegra.ph/מחולל-מכתבי-ביטול-עסקה-חוק-הגנת-הצרכן-דרישת-פיצוי-10000--וערעור-על-דוח-חניה-50-10-28',
+    post: `טיפ מהיר (מפרסם כמשתתף אנונימי): אם חברה מסרבת לבטל לכם מנוי/עסקה, קיבלתם דו"ח חניה לא מוצדק או שבעל הדירה מתעלם מליקוי דחוף ⚖️
+העלינו מחולל שירות עצמי שמייצר בדקה 4 מכתבים רשמיים לפי סעיפי החוק (ביטול עסקה סעיף 14ג, התראה לפני פיצוי 10,000 ₪ סעיף 31א, בקשה לביטול דו"ח חניה ודרישת תיקון לפי חוק שכירות הוגנת):
+https://telegra.ph/מחולל-מכתבי-ביטול-עסקה-חוק-הגנת-הצרכן-דרישת-פיצוי-10000--וערעור-על-דוח-חניה-50-10-28
+פתיחה והדפסה ל-PDF בשירות עצמי ב-50 ₪ בביט ל-054-6373001 (מוצר תוכנה As-Is).`
+  },
+  {
+    id: 'CardCraft',
+    category: 'b2c50',
+    badge: 'B2C / SMB FAST TOOL // 50 NIS',
+    title: '3. CardCraft IL — בונה מיני-סייט, מחירון וכרטיס ביקור דיגיטלי לוואטסאפ ב-60 שניות (50 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות עצמאים, קוסמטיקאיות, מאמנים, בעלי מקצוע ופרילנסרים',
+    url: 'https://telegra.ph/בונה-מיני-סייט-מחירון-וכרטיס-ביקור-דיגיטלי-לוואטסאפ-לעסקים-ב-60-שניות--ללא-דמי-מנוי-10-28',
+    post: `עצמאים ובעלי עסקים — למה לשלם 45–60 ₪ כל חודש על כרטיס ביקור דיגיטלי או דף מחירון? 📱
+הנה מחולל חי שבו אתם מזינים את שם העסק, הטלפון והמחירון שלכם, רואים מיד על המסך את המיני-סייט עם כפתורי הזמנה ישירים לוואטסאפ ושמירת איש קשר (vCard), ומורידים את הקובץ המוכן בתשלום חד-פעמי של 50 ₪ בביט (054-6373001) ללא דמי מנוי לעולם:
+https://telegra.ph/בונה-מיני-סייט-מחירון-וכרטיס-ביקור-דיגיטלי-לוואטסאפ-לעסקים-ב-60-שניות--ללא-דמי-מנוי-10-28`
+  },
+  {
+    id: 'CVBooster',
+    category: 'b2c50',
+    badge: 'B2C FAST TOOL // 50 NIS',
+    title: '4. CVBooster ATS — משדרג קורות חיים ומכתב מקדים מותאם מערכות גיוס להייטק (50 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות משרות הייטק, ג׳וניורים, מחפשי עבודה וסטודנטים',
+    url: 'https://telegra.ph/משדרג-קורות-חיים-CV-ומכתב-מקדים-מותאם-מערכות-גיוס-ATS-להייטק-ולשוק-הישראלי-50-10-28',
+    post: `מחפשים עבודה בהייטק או בתפקידי ניהול ומערכות ה-ATS מסננות אתכם? 💼
+בנינו כלי שבודק בחינם את ציון ה-ATS של קורות החיים שלכם ומעצב אותם אוטומטית בפורמט מנהלים נקי וממוקד תוצאות.
+ייצוא ל-PDF נקי + קובץ HTML פתוח לעריכה עצמית ב-50 ₪ בביט (054-6373001, שירות עצמי As-Is):
+https://telegra.ph/משדרג-קורות-חיים-CV-ומכתב-מקדים-מותאם-מערכות-גיוס-ATS-להייטק-ולשוק-הישראלי-50-10-28`
+  },
+  {
+    id: 'QuoteCraft',
+    category: 'b2b100',
+    badge: 'B2B TEMPLATE // 100 NIS',
+    title: '5. QuoteCraft — מחולל הצעות מחיר וחתימה דיגיטלית על המסך לעסקים (100 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות קבלנים, מעצבים, יועצים, פרילנסרים ונותני שירות',
+    url: 'https://telegra.ph/מחולל-הצעות-מחיר-וחתימה-דיגיטלית-על-המסך-לעסקים-ופרילנסרים-ללא-דמי-מנוי-10-28',
+    post: `פרילנסרים ובעלי עסקים — מערכת מוכנה להפקת הצעות מחיר בעברית עם חישוב מע״מ 18% אוטומטי, משטח חתימה דיגיטלית של הלקוח עם האצבע/עכבר והדפסה ל-PDF ✍️
+קובץ עצמאי אחד ללא דמי מנוי חודשיים לעולם (50 ₪ להסרת חותמת מים / 100 ₪ לקובץ המערכת המלא בביט ל-054-6373001, רישיון MIT As-Is):
+https://telegra.ph/מחולל-הצעות-מחיר-וחתימה-דיגיטלית-על-המסך-לעסקים-ופרילנסרים-ללא-דמי-מנוי-10-28`
+  },
+  {
+    id: 'LeadSync',
+    category: 'b2b100',
+    badge: 'B2B TEMPLATE // 100 NIS',
+    title: '6. LeadSync Ledger — חיבור טופס דף נחיתה ל-Google Sheets + מייל אוטומטי ו-CSV (100 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות שיווק דיגיטלי, בוני דפי נחיתה, קמפיינרים ואוטומציה',
+    url: 'https://telegra.ph/סקריפט-חיבור-טופס-דף-נחיתה-ל-Google-Sheets-כולל-שליחת-מייל-אוטומטי-וייצוא-CSV-10-28-2',
+    post: `קמפיינרים ובוני דפי נחיתה — איך לחבר טופס לידים ישירות ל-Google Sheets + שליחת מייל אוטומטי ללקוח בלי לשלם מנוי חודשי ל-Zapier או Make? 📊
+הכנו תבנית קוד מלאה (HTML5 + Google Apps Script מוכן להדבקה + ייצוא CSV) להורדה מיידית ב-100 ₪ חד-פעמי בביט (054-6373001, As-Is):
+https://telegra.ph/סקריפט-חיבור-טופס-דף-נחיתה-ל-Google-Sheets-כולל-שליחת-מייל-אוטומטי-וייצוא-CSV-10-28-2`
+  },
+  {
+    id: 'BookStudio',
+    category: 'b2b100',
+    badge: 'B2B TEMPLATE // 100 NIS',
+    title: '7. BookStudio — מערכת תיאום תורים ודף נחיתה לקליניקות, מאמנים ויועצים (100 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות מטפלים, קליניקות, מאמני כושר ויועצים',
+    url: 'https://telegra.ph/תבנית-קוד-למערכת-תיאום-תורים-ודף-נחיתה-לקליניקות-מאמנים-ויועצים-10-28',
+    post: `בעלי קליניקות, מטפלים ומאמנים — תבנית מערכת קביעת תורים ודף נחיתה מוכנה להורדה עצמית ללא עמלות מנוי חודשיות 📅
+כוללת בחירת סוג טיפול, מחירון, שעות פנויות וסיכום תור ב-100 ₪ חד-פעמי בביט (054-6373001, תחת רישיון MIT As-Is):
+https://telegra.ph/תבנית-קוד-למערכת-תיאום-תורים-ודף-נחיתה-לקליניקות-מאמנים-ויועצים-10-28`
+  },
+  {
+    id: 'CommercePack',
+    category: 'b2b100',
+    badge: 'B2B TEMPLATE // 100 NIS',
+    title: '8. Commerce Pack — קטלוג הזמנות דיגיטלי עם סל קניות + 2 דפי נחיתה לעסקים (100 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות עסקים קטנים, חנויות בוטיק, ספקים ומפיצים',
+    url: 'https://telegra.ph/תבנית-קטלוג-הזמנות-דיגיטלי-לעסקים--2-דפי-נחיתה-מוכנים-להמרה-HTML5--JS-10-28-2',
+    post: `בעלי עסקים שרוצים להציג קטלוג מוצרים עם חישוב סל הזמנה חי + 2 דפי נחיתה מוכנים (ללקוחות פרטיים ולעסקים B2B) בלי לבנות אתר באלפי שקלים 🏺
+חבילת הקוד המלאה זמינה לבדיקה חיה בדפדפן ולהורדה עצמית ב-100 ₪ בביט (054-6373001, As-Is):
+https://telegra.ph/תבנית-קטלוג-הזמנות-דיגיטלי-לעסקים--2-דפי-נחיתה-מוכנים-להמרה-HTML5--JS-10-28-2`
+  },
+  {
+    id: 'MotorHouse',
+    category: 'b2b100',
+    badge: 'B2B TEMPLATE // 100 NIS',
+    title: '9. MotorHouse — תבנית אתר סוכנות רכב וקטלוג רכבים + מחשבון מימון וממשק ניהול (100 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות סוחרי רכב, מגרשי מכוניות ובוני אתרים',
+    url: 'https://telegra.ph/תבנית-קוד-מוכנה-לאתר-סוכנות-רכב-וקטלוג-רכבים-יד-שנייה-HTML5--ממשק-ניהול-10-28-2',
+    post: `למגרשי רכב, סוכנויות טרייד-אין ובוני אתרים — תבנית קוד מוכנה לאתר קטלוג רכבים (HTML5 + ממשק ניהול הוספת רכבים, לוחיות רישוי ומחשבון מימון ל-60 תשלומים) 🚗
+בדיקה חיה בדפדפן והורדה מיידית של קוד המקור ב-100 ₪ בביט (054-6373001, As-Is):
+https://telegra.ph/תבנית-קוד-מוכנה-לאתר-סוכנות-רכב-וקטלוג-רכבים-יד-שנייה-HTML5--ממשק-ניהול-10-28-2`
+  },
+  {
+    id: 'RealEstatePro',
+    category: 'b2b100',
+    badge: 'B2B TEMPLATE // 100 NIS',
+    title: '10. RealEstate Pro — קטלוג נכסי נדל״ן עם סימולטור משכנתא ותשואת שכירות (100 ₪)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות מתווכים, יזמי נדל״ן ומשקיעים',
+    url: 'https://telegra.ph/תבנית-אתר-קטלוג-נכסי-נדלן-עם-סימולטור-משכנתא-ותשואת-שכירות-למשרדי-תיווך-10-28-2',
+    post: `מתווכים ומשרדי נדל״ן — תבנית אתר קטלוג נכסים יוקרתית הכוללת מחשבון הון עצמי (30%), החזר משכנתא חודשי ותשואת שכירות שנתית לכל נכס 🏢
+מוכנה להורדה עצמית בקובץ HTML5/JS עצמאי ב-100 ₪ בביט (054-6373001, As-Is):
+https://telegra.ph/תבנית-אתר-קטלוג-נכסי-נדלן-עם-סימולטור-משכנתא-ותשואת-שכירות-למשרדי-תיווך-10-28-2`
+  },
+  {
+    id: 'UrgentCustom100',
+    category: 'urgent100',
+    badge: 'PRE-FULFILLMENT SERVICE // 100 NIS TODAY',
+    title: '11. משימת קוד / אקסל / דף נחיתה דחופה להיום ב-100 ₪ (תצוגה מקדימה לפני תשלום!)',
+    groups: 'קהל יעד (לפרסום כ"משתתף אנונימי"): קבוצות פרילנסרים, עסקים קטנים, אקסל ואוטומציה',
+    url: 'https://telegra.ph/ספריית-תבניות-קוד-מוכנות-לעסקים--קטלוגים-אוטומציה-ומחולל-הצעות-מחיר-ב-100-10-28',
+    post: `צריכים דף נחיתה, מחשבון לעסק, סקריפט אוטומציה ל-Google Sheets או ניקוי קובץ אקסל להיום ב-100 ₪ בלבד? ⚡
+אנחנו בונים עבורכם תצוגה מקדימה חיה לבדיקה בדפדפן *לפני* התשלום — משלמים 100 ₪ בביט (054-6373001) רק אחרי שרואים שהפתרון מוכן ועובד (אספקת קובץ As-Is בשירות עצמי):
+https://telegra.ph/ספריית-תבניות-קוד-מוכנות-לעסקים--קטלוגים-אוטומציה-ומחולל-הצעות-מחיר-ב-100-10-28`
+  }
+];
+
+let currentFilter = 'all';
+
+function renderCampaigns() {
+  const list = currentFilter === 'all'
+    ? CAMPAIGNS
+    : CAMPAIGNS.filter(c => c.category === currentFilter);
+
+  document.getElementById('postsContainer').innerHTML = list.map((c, idx) => {
+    const waShare = 'https://wa.me/?text=' + encodeURIComponent(c.post);
+    const tgShare = 'https://t.me/share/url?url=' + encodeURIComponent(c.url) + '&text=' + encodeURIComponent(c.post);
+    return `
+      <article class="post-card" data-id="${c.id}">
+        <div>
+          <div class="post-meta">
+            <span>${c.badge}</span>
+            <span>SELF-HEALING TELEGRA.PH</span>
+          </div>
+          <h3>${c.title}</h3>
+          <div class="target-group">👥 ${c.groups}</div>
+          <div class="post-body" id="postBody_${idx}">${c.post}</div>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="tactile-btn active" onclick="copyPost(${idx}, '${c.id}')">📋 העתק פוסט ל"משתתף אנונימי"</button>
+          <a class="tactile-btn emerald" href="${waShare}" target="_blank">📲 שלח בוואטסאפ</a>
+          <a class="tactile-btn" href="${tgShare}" target="_blank">✈️ שתף בטלגרם</a>
+          <a class="tactile-btn" href="${c.url}" target="_blank">🔗 פתח קישור קבוע</a>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function filterPosts(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-bar .tactile-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderCampaigns();
+}
+
+function copyPost(idx, itemId) {
+  const txt = document.getElementById('postBody_' + idx)?.textContent || '';
+  navigator.clipboard.writeText(txt);
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'share_copy', itemId }) }).catch(()=>{});
+  alert('הפוסט הועתק! כעת כנס לקבוצת פייסבוק, בחר "פרסם כמשתתף אנונימי" (Anonymous Member) והדבק.');
+}
+
+function copyAllCampaigns() {
+  const allTxt = CAMPAIGNS.map(c => `=== ${c.title} ===\n${c.post}`).join('\n\n');
+  navigator.clipboard.writeText(allTxt);
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'share_copy_all', itemId:'SHARE_CENTER' }) }).catch(()=>{});
+  alert('כל 14 הפוסטים הועתקו ללוח!');
+}
+
+function copyScBit(amount) {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'SHARE_CENTER', amount }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק לביט!');
+}
+
+async function sha256Hex(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function unlockSharePack() {
+  const code = (document.getElementById('scCode')?.value || '').trim();
+  if (!code) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'SHARE_CENTER' }) }).catch(()=>{});
+  const hex = await sha256Hex(code);
+  if (hex !== EXPECTED_HASH) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  const el = document.getElementById('scCode');
+  if (el) { el.value = ''; el.removeAttribute('value'); }
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CodeCraft_Anonymous_Share_Center.html';
+  a.click();
+}
+
+renderCampaigns();
+</script>
+</body>
+</html>

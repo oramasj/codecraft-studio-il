@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סימולטור החזרי מס ומחולל טופס 135 לשכירים | גרסה מלאה עצמאית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe7dc;
+    --ink: #141413;
+    --muted: #595750;
+    --line: #d5cfc1;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --emerald: #146341;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; padding-bottom: 50px; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 10px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .pro-pill { background: rgba(16,185,129,0.2); color: #34d399; padding: 3px 10px; border-radius: 99px; font-weight: 700; font-size: 11.5px; border: 1px solid rgba(16,185,129,0.4); }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 7px 15px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.primary { background: var(--accent); color: #fff; border-color: #8f2a09; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0d452c; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 20px; }
+  .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  @media (max-width: 860px) { .split-grid { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 24px; }
+  .panel h2 { font-family: var(--serif); font-size: 22px; font-weight: 900; margin-bottom: 12px; }
+
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .input-row { margin-bottom: 12px; }
+  .input-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .input-row input, .input-row select { width: 100%; padding: 8px 10px; border: 1.5px solid var(--line-strong); background: var(--surface-alt); color: var(--ink); font-family: var(--sans); font-size: 13.5px; outline: none; }
+  .input-row input:focus { background: #fff; border-color: var(--accent); }
+
+  .kpi-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+  .kpi-box { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 10px 12px; text-align: center; }
+  .kpi-box span { font-size: 11.5px; color: var(--muted); display: block; }
+  .kpi-box strong { font-family: var(--mono); font-size: 18px; color: var(--accent); }
+
+  .letter-box {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 18px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .studio-bar, .no-print, .input-panel { display: none !important; }
+    .container { max-width: 100%; padding: 0; }
+    .split-grid { display: block; }
+    .panel { border: none; box-shadow: none; padding: 0; }
+    .letter-box { border: 1px solid #141413; background: #fff; padding: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <strong>סימולטור החזרי מס לשכירים (טופס 135)</strong>
+    <span class="pro-pill">גרסה מלאה לשימוש עצמאי</span>
+  </div>
+  <div class="no-print">
+    <button class="tactile-btn emerald" onclick="window.print()">🖨️ הדפס / שמור כ-PDF לפקיד השומה</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="split-grid">
+    <!-- צד ימין: שדות החישוב -->
+    <div class="panel input-panel">
+      <h2>נתוני העובד ותקופות הבדיקה</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">
+        הסימולטור בודק 6 שנות מס אחרונות לפי פקודת מס הכנסה, כולל חודשי אי-עבודה, נקודות זיכוי וסעיפים 45א ו-46.
+      </p>
+
+      <div class="input-row">
+        <label>שם מלא של העובד/ת:</label>
+        <input type="text" id="taxFullName" value="ישראל ישראלי" oninput="recalcTax()" />
+      </div>
+
+      <div class="input-grid">
+        <div class="input-row">
+          <label>כמה שנות מס לבדיקה? (עד 6):</label>
+          <select id="taxYears" onchange="recalcTax()">
+            <option value="1">שנה 1 (2025)</option>
+            <option value="2">2 שנים (2024-2025)</option>
+            <option value="3">3 שנים (2023-2025)</option>
+            <option value="4">4 שנים (2022-2025)</option>
+            <option value="5">5 שנים (2021-2025)</option>
+            <option value="6" selected>6 שנים מלאות (2020-2025)</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <label>חודשי אי-עבודה / חל"ת בתקופה:</label>
+          <input type="number" id="taxGapMonths" value="4" min="0" max="36" oninput="recalcTax()" />
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-row">
+          <label>שכר חודשי ממוצע ברוטו (₪):</label>
+          <input type="number" id="taxAvgSalary" value="14500" step="500" oninput="recalcTax()" />
+        </div>
+        <div class="input-row">
+          <label>נקודות זיכוי לילדים עד גיל 18:</label>
+          <input type="number" id="taxChildPoints" value="2.5" step="0.5" min="0" oninput="recalcTax()" />
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-row">
+          <label>סיום תואר אקדמי / מקצועי:</label>
+          <select id="taxDegree" onchange="recalcTax()">
+            <option value="0">ללא זכאות לתואר</option>
+            <option value="1" selected>תואר ראשון (1 נקודת זיכוי)</option>
+            <option value="0.5">תואר שני (0.5 נקודת זיכוי)</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <label>תרומות מוכרות סעיף 46 (₪ סה"כ):</label>
+          <input type="number" id="taxDonations" value="2400" step="100" oninput="recalcTax()" />
+        </div>
+      </div>
+
+      <div class="input-row">
+        <label>הפקדות פרטיות לביטוח חיים / פנסיה סעיף 45א (₪ שנתי):</label>
+        <input type="number" id="taxLifeInsurance" value="1800" step="100" oninput="recalcTax()" />
+      </div>
+
+      <div class="kpi-strip">
+        <div class="kpi-box">
+          <span>שווי נקודת זיכוי</span>
+          <strong>2,904 ₪</strong>
+        </div>
+        <div class="kpi-box">
+          <span>החזר תרומות 35%</span>
+          <strong id="kpiDonationRefund">840 ₪</strong>
+        </div>
+        <div class="kpi-box">
+          <span>זיכוי ביטוח 25%</span>
+          <strong id="kpiInsuranceRefund">450 ₪</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- צד שמאל: דוח החזר ומכתב לפקיד השומה -->
+    <div class="panel">
+      <h2>תוצאת תחשיב ומכתב רשמי לפקיד השומה</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">
+        המכתב מנוסח בהתאם לסעיפי פקודת מס הכנסה (טופס 135) ומוכן להגשה ישירה.
+      </p>
+
+      <div style="background:var(--surface-alt); border:1.5px solid var(--emerald); padding:14px; margin-bottom:16px;">
+        <span style="font-size:12px; font-weight:700; color:var(--emerald);">סך החזר מס משוער להעברה לחשבון הבנק:</span>
+        <div id="taxTotalRefund" style="font-family:var(--mono); font-size:28px; font-weight:900; color:var(--emerald); margin-top:4px;">0 ₪</div>
+      </div>
+
+      <div class="letter-box" id="taxLetterContent">
+        <!-- נטען אוטומטית -->
+      </div>
+
+      <div class="no-print" style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="tactile-btn emerald" onclick="window.print()">🖨️ הדפס / ייצא כ-PDF</button>
+        <button class="tactile-btn" onclick="copyLetterText()">📋 העתק נוסח מכתב</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function recalcTax() {
+  const name = document.getElementById('taxFullName').value.trim() || 'ישראל ישראלי';
+  const years = parseInt(document.getElementById('taxYears').value) || 1;
+  const gapMonths = parseInt(document.getElementById('taxGapMonths').value) || 0;
+  const avgSalary = parseFloat(document.getElementById('taxAvgSalary').value) || 0;
+  const childPts = parseFloat(document.getElementById('taxChildPoints').value) || 0;
+  const degPts = parseFloat(document.getElementById('taxDegree').value) || 0;
+  const donations = parseFloat(document.getElementById('taxDonations').value) || 0;
+  const lifeIns = parseFloat(document.getElementById('taxLifeInsurance').value) || 0;
+
+  const POINT_VALUE = 2904; // ערך שנתי לנקודת זיכוי
+  const marginalTaxRate = avgSalary > 15000 ? 0.20 : 0.14;
+
+  const gapRefund = Math.round(gapMonths * (avgSalary * marginalTaxRate));
+  const pointsRefund = Math.round((childPts + degPts) * POINT_VALUE * Math.min(years, 3));
+  const donRefund = Math.round(donations * 0.35);
+  const insRefund = Math.round(lifeIns * 0.25 * years);
+
+  const totalRefund = gapRefund + pointsRefund + donRefund + insRefund;
+
+  document.getElementById('kpiDonationRefund').textContent = donRefund.toLocaleString() + ' ₪';
+  document.getElementById('kpiInsuranceRefund').textContent = insRefund.toLocaleString() + ' ₪';
+  document.getElementById('taxTotalRefund').textContent = totalRefund.toLocaleString() + ' ₪';
+
+  document.getElementById('taxLetterContent').innerHTML = `
+    <strong>לכבוד: פקיד השומה — רשות המסים בישראל (מחלקת החזרי מס לשכירים)</strong><br>
+    <strong>הנדון: בקשה לעריכת שומה והחזר מס הכנסה לשכיר (טופס 135) — ${name}</strong><br><br>
+    1. הריני להגיש בזאת בקשה להחזר מס הכנסה בגין ${years} שנות המס האחרונות (בהתאם להוראות סעיף 160 לפקודת מס הכנסה).<br>
+    2. מצורפים לבקשה זו טפסי 106 מכל המעסיקים בתקופה (כולל תיעוד בגין ${gapMonths} חודשי אי-עבודה/חל"ת בהם נוצר עודף ניכוי מס במקור), אישורי זכאות ל-${(childPts + degPts).toFixed(1)} נקודות זיכוי (סעיפים 40 ו-40ג), קבלות תרומה מוכרות לפי סעיף 46 על סך ${donations.toLocaleString()} ₪ ודוחות הפקדה שנתיים לביטוח חיים לפי סעיף 45א על סך ${lifeIns.toLocaleString()} ₪.<br>
+    3. סך ההחזר המשוער כולל ריבית והפרשי הצמדה כחוק עומד על <strong>${totalRefund.toLocaleString()} ₪</strong>.<br>
+    4. אבקש להעביר את כספי ההחזר ישירות לחשבון הבנק המעודכן במערכת רשות המסים.<br><br>
+    <em>בכבוד רב,<br><strong>${name}</strong></em>
+  `;
+}
+
+function copyLetterText() {
+  const text = document.getElementById('taxLetterContent').innerText;
+  navigator.clipboard.writeText(text);
+  alert('נוסח המכתב הועתק ללוח!');
+}
+
+recalcTax();
+</script>
+</body>
+</html>

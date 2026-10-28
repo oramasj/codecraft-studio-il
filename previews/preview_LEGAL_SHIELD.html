@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConsumerShield IL | מחולל מכתבי ביטול עסקה, פיצוי 10,000 ₪ וערעור על דו"חות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe7dc;
+    --ink: #141413;
+    --muted: #595750;
+    --line: #d5cfc1;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --emerald: #146341;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #111210;
+    --surface: #191b18;
+    --surface-alt: #232622;
+    --ink: #f3f1ea;
+    --muted: #a09d93;
+    --line: #2e322d;
+    --line-strong: #555952;
+    --accent: #e85d2e;
+    --emerald: #1f8a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link { color: #f3f1ea; text-decoration: none; border: 1px solid #454844; padding: 4px 10px; font-weight: 700; }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.active { background: var(--accent); color: #fff; border-color: #8f2a09; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0b3d26; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 54px; }
+  .split-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 22px; margin-bottom: 24px; }
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 22px; }
+  .panel h2 { font-family: var(--serif); font-size: 22px; font-weight: 900; margin-bottom: 12px; }
+
+  .input-row { margin-bottom: 10px; }
+  .input-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+  .input-row input, .input-row select, .input-row textarea { width: 100%; padding: 8px 10px; border: 1.5px solid var(--line-strong); background: var(--surface-alt); color: var(--ink); font-family: var(--sans); font-size: 13.5px; }
+
+  .doc-stage {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 20px;
+    min-height: 320px;
+    position: relative;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+  .doc-lock-overlay {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 55%;
+    background: linear-gradient(to bottom, rgba(246,244,238,0.2), rgba(246,244,238,0.96) 35%);
+    backdrop-filter: blur(3px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 18px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body.theme-dark .doc-lock-overlay {
+    background: linear-gradient(to bottom, rgba(17,18,16,0.2), rgba(17,18,16,0.96) 35%);
+  }
+  .doc-lock-overlay.hidden { display: none !important; }
+
+  .consent-gate { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 14px 16px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13px; }
+  .consent-gate input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--emerald); flex-shrink: 0; }
+  .locked-zone { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; }
+  .locked-zone.unlocked { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 860px) { .split-grid { grid-template-columns: 1fr; } }
+  @media print { .studio-bar, .no-print { display: none !important; } .split-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="./index.html">← חזרה לספריית המערכות</a>
+    <span style="font-family:var(--mono);">MODULE // CONSUMERSHIELD-IL-V4</span>
+  </div>
+  <div style="display:flex; gap:6px;">
+    <button class="tactile-btn" onclick="window.print()">הדפסת מכתב ל-PDF</button>
+    <button class="tactile-btn" onclick="document.body.classList.toggle('theme-dark')">מצב תצוגה כהה/בהיר</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="split-grid">
+    <div class="panel no-print">
+      <h2>מחולל מכתבי ביטול עסקה, פיצוי 10,000 ₪ וערעור על דו"חות</h2>
+      <div class="input-row">
+        <label>סוג המסמך המבוקש</label>
+        <select id="docType" onchange="renderLegalDoc()">
+          <option value="cancel">1. הודעת ביטול עסקה והחזר כספי (חוק הגנת הצרכן סעיף 14ג)</option>
+          <option value="statutory10k">2. התראה לפני דרישת פיצוי לדוגמה עד 10,000 ₪ (סעיף 31א)</option>
+          <option value="parking">3. בקשה לביטול דו"ח חניה עירוני / המרה באזהרה</option>
+          <option value="tenant">4. דרישת שוכר לתיקון ליקוי דחוף בדירה (חוק שכירות הוגנת)</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label>שם הפונה המלא</label>
+        <input id="senderName" value="רועי כהן" oninput="renderLegalDoc()" />
+      </div>
+      <div class="input-row">
+        <label>לכבוד (שם החברה / הרשות המקומית / המשכיר)</label>
+        <input id="targetEntity" value="רשת מועדוני כושר אקטיב בע״מ" oninput="renderLegalDoc()" />
+      </div>
+      <div class="input-row">
+        <label>סכום העסקה / הדו"ח / הפיצוי המבוקש (₪)</label>
+        <input id="claimAmount" type="number" value="2400" oninput="renderLegalDoc()" />
+      </div>
+      <div class="input-row">
+        <label>מספר עסקה / מנוי / דו"ח ותיאור קצר</label>
+        <textarea id="caseDetails" rows="3" oninput="renderLegalDoc()">עסקה מיום 20/10/2026 בגין מנוי שנתי. פנייתי הקודמת לביטול המנוי לא נענתה ונגבה חיוב בניגוד לדין.</textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div style="display:flex; justify-content:space-between; border-bottom:2px solid var(--line-strong); padding-bottom:10px; margin-bottom:12px;">
+        <div>
+          <span style="font-family:var(--mono); font-size:11px; color:var(--accent);">FORMAL NOTICE GENERATOR</span>
+          <h2 id="docTitleOut" style="margin-bottom:2px;">הודעת ביטול עסקה ודרישת השבה</h2>
+        </div>
+        <div style="font-family:var(--mono); font-size:12px;">28/10/2026</div>
+      </div>
+
+      <div class="doc-stage">
+        <div id="docBodyOut"></div>
+        <div class="doc-lock-overlay" id="legalWatermark">
+          <div style="font-size:16px; font-weight:800; color:var(--accent); margin-bottom:6px;">🔒 סעיפי הדרישה החוקיים והחתימה נעולים בתצוגה מקדימה</div>
+          <p style="font-size:13px; max-width:410px; font-weight:600;">
+            לפתיחת המכתב המלא להעתקה, הדפסה ל-PDF והורדת מחולל 4 המכתבים המלא — השלם רכישה בביט (50 ₪ למכתב / 100 ₪ למערכת המלאה) למטה.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="panel no-print">
+    <h2>פתיחת המסמך המלא להדפסה + הורדת המחולל (50 ₪ / 100 ₪ בביט)</h2>
+    <label class="consent-gate">
+      <input type="checkbox" id="legalConsent" onchange="document.getElementById('legalPayZone').classList.toggle('unlocked', this.checked)" />
+      <span>
+        <strong>אישור תנאי שימוש ופטור מאחריות (As-Is / Non-Legal Waiver):</strong> אני מצהיר/ה ומאשר/ת כי מחולל התבניות מפיק טיוטת מכתב גנרית בשירות עצמי בלבד ("As-Is" תחת רישיון MIT) ואינו מהווה ייעוץ משפטי או תחליף לעורך דין, ללא כל אחריות או שירותי תמיכה.
+      </span>
+    </label>
+    <div class="locked-zone" id="legalPayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn emerald" onclick="copyLegalBit(50)">1א. העתק מספר לביט — 50 ₪ (פתיחת המסמך ל-PDF)</button>
+        <button class="tactile-btn emerald" onclick="copyLegalBit(100)">1ב. העתק מספר לביט — 100 ₪ (הורדת מחולל 4 המכתבים המלא)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%9E%D7%97%D7%95%D7%9C%D7%9C%20%D7%9E%D7%9B%D7%AA%D7%91%D7%99%20%D7%94%D7%91%D7%99%D7%98%D7%95%D7%9C%20(LEGAL_SHIELD).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="legalCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="unlockLegalDoc()">3. פתח מסמך מלא והורד קובץ</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const LEGAL_HASH = '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+let isUnlocked = document.getElementById('legalWatermark')?.classList.contains('hidden') || false;
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function syncDomForExport() {
+  document.querySelectorAll('input').forEach(el => {
+    if (el.type === 'password') {
+      el.value = '';
+      el.removeAttribute('value');
+    } else if (el.type === 'checkbox' || el.type === 'radio') {
+      if (el.checked) el.setAttribute('checked', 'checked');
+      else el.removeAttribute('checked');
+    } else {
+      el.setAttribute('value', el.value);
+    }
+  });
+  document.querySelectorAll('textarea').forEach(el => {
+    el.textContent = el.value;
+  });
+  document.querySelectorAll('select').forEach(el => {
+    Array.from(el.options).forEach(opt => {
+      if (opt.value === el.value) opt.setAttribute('selected', 'selected');
+      else opt.removeAttribute('selected');
+    });
+  });
+}
+
+function renderLegalDoc() {
+  const type = document.getElementById('docType').value;
+  const sender = escapeHtml(document.getElementById('senderName').value.trim() || 'הפונה');
+  const target = escapeHtml(document.getElementById('targetEntity').value.trim() || 'הנמען');
+  const amount = Number(document.getElementById('claimAmount').value || 0).toLocaleString();
+  const details = escapeHtml(document.getElementById('caseDetails').value.trim());
+
+  const titles = {
+    cancel: 'הודעת ביטול עסקה ודרישת השבה מיידית (חוק הגנת הצרכן)',
+    statutory10k: 'התראה לפני נקיטת הליכים ודרישת פיצוי לדוגמה (סעיף 31א)',
+    parking: 'בקשה לביטול הודעת תשלום קנס / המרה באזהרה',
+    tenant: 'דרישה לתיקון פגמים וליקויים במושכר (חוק שכירות הוגנת)'
+  };
+  document.getElementById('docTitleOut').textContent = titles[type] || titles.cancel;
+
+  let clauseList = [];
+  if (type === 'cancel') {
+    clauseList = [
+      `1. הריני להודיעכם באופן רשמי ומתועד על ביטול העסקה/המנוי בהתאם להוראות סעיפים 13ד ו-14ג לחוק הגנת הצרכן, התשמ"א-1981.`,
+      `2. פרטי האירוע: ${details}`,
+      `3. בהתאם להוראות החוק, הנכם נדרשים להפסיק לאלתר כל חיוב עתידי ולהשיב לידי את הסך של <strong>${amount} ₪</strong> בתוך המועד הקבוע בחוק.`,
+      `4. ככל שלא יבוצע ההחזר הכספי במועד, שמורה לי הזכות לעתור לפיצויים לדוגמה ללא הוכחת נזק בסך של עד 10,000 ₪ בהתאם לסעיף 31א לחוק הגנת הצרכן.`
+    ];
+  } else if (type === 'statutory10k') {
+    clauseList = [
+      `1. למרות פניותיי המפורשות והמתועדות לביטול העסקה/החיוב, המשכתם לחייב את אמצעי התשלום שלי בסך ${amount} ₪ בניגוד להוראות חוק הגנת הצרכן.`,
+      `2. פרטי ההפרה: ${details}`,
+      `3. בהתאם לסעיף 31א לחוק הגנת הצרכן, מוקנית לבית המשפט הסמכות לפסוק פיצויים שאינם תלויים בנזק (פיצויים לדוגמה) בסך של עד <strong>10,000 ₪</strong> בגין כל הפרה.`,
+      `4. ניתנת לכם בזאת אורכה אחרונה של 7 ימי עסקים להשבת מלוא הסכום שנגבה ביתר בצירוף פיצוי מוסכם, בטרם הגשת תביעה מתאימה.`
+    ];
+  } else if (type === 'parking') {
+    clauseList = [
+      `1. הריני להגיש בקשה לביטול הודעת תשלום קנס בסך <strong>${amount} ₪</strong> בהתאם לסעיף 229 לחוק סדר הדין הפלילי [נוסח משולב], התשמ"ב-1982.`,
+      `2. נימוקי הבקשה והנסיבות המיוחדות: ${details}`,
+      `3. לחלופין, ולאור עברי התעבורתי הנקי והנסיבות המפורטות לעיל, אבקש להמיר את הדו"ח בהתראה/אזהרה בלבד בהתאם להנחיות התביעה העירונית.`
+    ];
+  } else {
+    clauseList = [
+      `1. בהתאם להוראות סעיף 7 לחוק השכירות והשאילה (תיקון מס' 1 — שכירות הוגנת), התשע"ז-2017, חלה על המשכיר החובה לתקן כל פגם או ליקוי השולל או מגביל שימוש סביר במושכר.`,
+      `2. פירוט הליקויים בדירה: ${details}`,
+      `3. הנך נדרש לתקן את הליקוי הדחוף בתוך 3 ימים. ככל שלא יתוקן הליקוי במועד, אפעל לתיקונו ואקזז את העלות המשוערת בסך <strong>${amount} ₪</strong> מדמי השכירות בהתאם לזכותי שבדין.`
+    ];
+  }
+
+  const renderedClauses = isUnlocked
+    ? clauseList.join('<br>') + `<br><br><strong>בכבוד רב ובלי לפגוע בזכויות,</strong><br>${sender}`
+    : `${clauseList[0]}<br><br><strong>[המשך הסעיפים המלאים נפתח אוטומטית לאחר הזנת קוד הפתיחה]</strong>`;
+
+  document.getElementById('docBodyOut').innerHTML = `
+    <strong>לכבוד: ${target}</strong><br>
+    <strong>מאת: ${sender}</strong><br><br>
+    ${renderedClauses}
+  `;
+}
+
+function copyLegalBit(amount) {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'LEGAL_SHIELD', amount }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק! העבר כעת ' + amount + ' ₪ בביט ושלח הודעת וואטסאפ לקבלת קוד הפתיחה.');
+}
+
+async function verifyLegalDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === LEGAL_HASH;
+}
+
+async function unlockLegalDoc() {
+  const c = (document.getElementById('legalCode')?.value || '').trim();
+  if (!c) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'LEGAL_SHIELD' }) }).catch(()=>{});
+  if (!(await verifyLegalDigest(c))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  isUnlocked = true;
+  document.getElementById('legalWatermark').classList.add('hidden');
+  renderLegalDoc();
+  syncDomForExport();
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ConsumerShield_IL_Generator.html';
+  a.click();
+  if (typeof window.print === 'function') window.print();
+}
+
+renderLegalDoc();
+</script>
+</body>
+</html>

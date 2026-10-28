@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EstateLedger IL | קטלוג נכסי נדל״ן ומחשבון משכנתא ותשואה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe6da;
+    --ink: #141413;
+    --muted: #5a5851;
+    --line: #d4cec0;
+    --line-strong: #141413;
+    --accent: #c84318;
+    --emerald: #14613f;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #111210;
+    --surface: #191b18;
+    --surface-alt: #232622;
+    --ink: #f3f1ea;
+    --muted: #a09d93;
+    --line: #2e322d;
+    --line-strong: #555952;
+    --accent: #e65627;
+    --emerald: #1f8a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link { color: #f3f1ea; text-decoration: none; border: 1px solid #454844; padding: 4px 10px; font-weight: 700; }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.active { background: var(--accent); color: #fff; border-color: #8a2a0a; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0b3b26; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 54px; }
+  .grid-props { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+  .prop-card { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); display: flex; flex-direction: column; }
+  .prop-card img { width: 100%; height: 185px; object-fit: cover; border-bottom: 1.5px solid var(--line-strong); }
+  .prop-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+  .prop-body h3 { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+  .prop-meta { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 22px; margin-bottom: 24px; }
+  .panel h2 { font-family: var(--serif); font-size: 23px; font-weight: 900; margin-bottom: 8px; }
+
+  .consent-gate { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 14px 16px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13.5px; }
+  .consent-gate input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--emerald); flex-shrink: 0; }
+  .locked-zone { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; }
+  .locked-zone.unlocked { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 840px) { .grid-props { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="./index.html">← חזרה לספריית התבניות</a>
+    <span style="font-family:var(--mono);">MODULE // ESTATE-LEDGER-V3</span>
+  </div>
+  <button class="tactile-btn" onclick="document.body.classList.toggle('theme-dark')">מצב תצוגה כהה/בהיר</button>
+</div>
+
+<div class="container">
+  <div class="panel">
+    <span style="font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:700;">REAL ESTATE & MORTGAGE CALCULATOR</span>
+    <h2>קטלוג נכסים ומחשבון משכנתא ותשואה למשרדי תיווך</h2>
+    <p style="font-size:13.5px; color:var(--muted);">בחר נכס מהקטלוג לחישוב מיידי של הון עצמי נדרש, החזר משכנתא חודשי ותשואת שכירות שנתית:</p>
+  </div>
+
+  <div class="grid-props" id="propsGrid"></div>
+
+  <div class="panel" id="mortgageBox"></div>
+
+  <section class="panel">
+    <h2>הורדת תבנית קטלוג הנדל״ן ומחשבון המשכנתא בשירות עצמי (100 ₪)</h2>
+    <label class="consent-gate">
+      <input type="checkbox" onchange="document.getElementById('rePayZone').classList.toggle('unlocked', this.checked)" />
+      <span>
+        <strong>אישור תנאי רכישה ופטור מאחריות:</strong> אני מצהיר/ה ומאשר/ת כי המוצר הנרכש הוא קובץ תבנית קוד גנרי המסופק כמות שהוא ("As-Is" תחת רישיון MIT) להורדה חד-פעמית בלבד, ללא שירותי אחסון, תחזוקה או אחריות.
+      </span>
+    </label>
+    <div class="locked-zone" id="rePayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn emerald" onclick="copyReBit()">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%AA%D7%91%D7%A0%D7%99%D7%AA%20%D7%94%D7%A0%D7%93%D7%9C%D7%9F.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="reCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="downloadRE()">3. הורדת קובץ המקור המלא</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const props = [
+  { id: 1, title: "דירת גן 4 חדרים • צפון תל אביב", sqm: 112, price: 4250000, rent: 11800, img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" },
+  { id: 2, title: "פנטהאוז 5 חדרים • הרצליה הירוקה", sqm: 145, price: 3890000, rent: 10500, img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" },
+  { id: 3, title: "משרד בוטיק מעוצב • מתחם הבורסה", sqm: 95, price: 1950000, rent: 9200, img: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80" }
+];
+let activeIdx = 0;
+
+function copyReBit() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'REALESTATE_PRO', amount:100 }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק לביט!');
+}
+
+function renderProps() {
+  document.getElementById('propsGrid').innerHTML = props.map((p, i) => `
+    <article class="prop-card">
+      <img src="${p.img}" alt="${p.title}" />
+      <div class="prop-body">
+        <h3>${p.title}</h3>
+        <div class="prop-meta">${p.sqm} מ״ר | שכירות צפויה: ${p.rent.toLocaleString()} ₪/חודש</div>
+        <div style="margin-top:auto; display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid var(--line);">
+          <strong style="font-family:var(--mono); font-size:17px;">${p.price.toLocaleString()} ₪</strong>
+          <button class="tactile-btn ${i === activeIdx ? 'active' : ''}" onclick="activeIdx=${i}; renderProps();">בחר לחישוב משכנתא</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+
+  const cur = props[activeIdx];
+  const equity = Math.round(cur.price * 0.30);
+  const loan = cur.price - equity;
+  const monthly = Math.round((loan * 0.0053));
+  const yieldPct = (((cur.rent * 12) / cur.price) * 100).toFixed(2);
+
+  document.getElementById('mortgageBox').innerHTML = `
+    <h2>סימולטור משכנתא ותשואה עבור: ${cur.title}</h2>
+    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-top:12px; font-family:var(--mono);">
+      <div style="border:1px solid var(--line-strong); padding:12px; background:var(--surface-alt);">
+        <span style="font-size:11px; color:var(--muted); display:block;">הון עצמי (30%)</span>
+        <strong style="font-size:16px;">${equity.toLocaleString()} ₪</strong>
+      </div>
+      <div style="border:1px solid var(--line-strong); padding:12px; background:var(--surface-alt);">
+        <span style="font-size:11px; color:var(--muted); display:block;">גובה המשכנתא (70%)</span>
+        <strong style="font-size:16px;">${loan.toLocaleString()} ₪</strong>
+      </div>
+      <div style="border:1px solid var(--line-strong); padding:12px; background:var(--surface-alt);">
+        <span style="font-size:11px; color:var(--muted); display:block;">החזר חודשי משוער (25 שנה)</span>
+        <strong style="font-size:16px; color:var(--accent);">${monthly.toLocaleString()} ₪</strong>
+      </div>
+      <div style="border:1px solid var(--line-strong); padding:12px; background:var(--surface-alt);">
+        <span style="font-size:11px; color:var(--muted); display:block;">תשואה שנתית ברוטו</span>
+        <strong style="font-size:16px; color:var(--emerald);">${yieldPct}%</strong>
+      </div>
+    </div>
+  `;
+}
+
+async function verifyReUnlockDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+}
+
+async function downloadRE() {
+  const c = (document.getElementById('reCode')?.value || '').trim();
+  if (!c) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'REALESTATE_PRO' }) }).catch(()=>{});
+  if (!(await verifyReUnlockDigest(c))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  const el = document.getElementById('reCode');
+  if (el) { el.value = ''; el.removeAttribute('value'); }
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'EstateLedger_RealEstate_Mortgage.html';
+  a.click();
+}
+
+renderProps();
+</script>
+</body>
+</html>

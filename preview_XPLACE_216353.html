@@ -308,15 +308,22 @@
     </label>
     <div class="locked-zone" id="commPayZone">
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <button class="tactile-btn olive" onclick="navigator.clipboard.writeText('054-6373001'); alert('המספר 054-6373001 הועתק לביט!');">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
-        <input id="commCode" placeholder="הזן קוד פתיחה (2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:180px;" />
-        <button class="tactile-btn active" onclick="downloadCommercePack()">2. הורדת קובץ המקור המלא</button>
+        <button class="tactile-btn olive" onclick="copyCommBit()">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A7%D7%98%D7%9C%D7%95%D7%92%20%D7%95%D7%93%D7%A4%D7%99%20%D7%94%D7%A0%D7%97%D7%99%D7%AA%D7%94.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="commCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="downloadCommercePack()">3. הורדת קובץ המקור המלא</button>
       </div>
     </div>
   </section>
 </div>
 
 <script>
+function copyCommBit() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'XPLACE_216353', amount:100 }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק לביט!');
+}
+
 const catalogItems = [
   { sku: "ATL-01", name: "מארז אירוח ושולחן עבודה", desc: "סט כלי קרמיקה ועץ אלון מלא בעבודת יד לסביבת עבודה מוקפדת.", price: 290, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80" },
   { sku: "ATL-02", name: "מערכת שמע שולחנית אנלוגית", desc: "תיבת תהודה מאלומיניום מוברש עם חיבור אלחוטי וסוללה ל-18 שעות.", price: 450, img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80" },
@@ -451,12 +458,26 @@ function toggleCommUnlock() {
   if (z) z.classList.toggle('unlocked', !!ok);
 }
 
-function downloadCommercePack() {
-  const code = document.getElementById('commCode')?.value.trim();
-  if (code !== '2800') {
-    alert('יש להזין את קוד הפתיחה 2800 לאחר ההעברה.');
+async function verifyCommUnlockDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+}
+
+async function downloadCommercePack() {
+  const code = (document.getElementById('commCode')?.value || '').trim();
+  if (!code) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
     return;
   }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'XPLACE_216353' }) }).catch(()=>{});
+  if (!(await verifyCommUnlockDigest(code))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  const el = document.getElementById('commCode');
+  if (el) { el.value = ''; el.removeAttribute('value'); }
   const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);

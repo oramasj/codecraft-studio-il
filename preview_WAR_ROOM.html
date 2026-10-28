@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>חדר מלחמה וביצוע מהיר | CodeCraft Studio IL — 5 מנועי הכנסה ליום 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe7dc;
+    --ink: #141413;
+    --muted: #595750;
+    --line: #d5cfc1;
+    --line-strong: #141413;
+    --accent: #d84a1b;
+    --emerald: #146341;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #111210;
+    --surface: #191b18;
+    --surface-alt: #232622;
+    --ink: #f3f1ea;
+    --muted: #a09d93;
+    --line: #2e322d;
+    --line-strong: #555952;
+    --accent: #e85d2e;
+    --emerald: #1f8a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+
+  .studio-bar {
+    background: #141413;
+    color: #f3f1ea;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #2e322d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link { color: #f3f1ea; text-decoration: none; border: 1px solid #454844; padding: 4px 10px; font-weight: 700; }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.active { background: var(--accent); color: #fff; border-color: #8f2a09; }
+  .tactile-btn.emerald { background: var(--emerald); color: #fff; border-color: #0b3d26; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 26px 18px 54px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+  .kpi-card { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 4px 0 var(--line-strong); padding: 14px 16px; }
+  .kpi-card span { font-size: 12px; color: var(--muted); display: block; }
+  .kpi-card strong { font-family: var(--mono); font-size: 22px; color: var(--emerald); }
+
+  .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 24px; }
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 22px; margin-bottom: 22px; }
+  .panel h2 { font-family: var(--serif); font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+
+  .share-card { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 14px; margin-bottom: 12px; }
+  .share-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+  .share-card p { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; white-space: pre-line; }
+
+  .input-row { margin-bottom: 10px; }
+  .input-row label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+  .input-row input, .input-row textarea { width: 100%; padding: 8px 10px; border: 1.5px solid var(--line-strong); background: var(--surface-alt); color: var(--ink); font-family: var(--sans); font-size: 13.5px; }
+
+  .consent-gate { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 14px 16px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13px; }
+  .consent-gate input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--emerald); flex-shrink: 0; }
+  .locked-zone { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; }
+  .locked-zone.unlocked { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 860px) { .kpi-row, .split-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="./index.html">← חזרה לחנות הסטודיו המרכזית</a>
+    <span style="font-family:var(--mono);">WAR-ROOM // LIVE TELEMETRY & 1-CLICK SYNDICATION</span>
+  </div>
+  <div style="display:flex; gap:6px;">
+    <a class="tactile-btn active" href="./share_center.html">📣 מרכז הפצה אנונימי (14 פוסטים מוכנים)</a>
+    <button class="tactile-btn emerald" onclick="refreshStats()">רענון מדדים חיים</button>
+    <button class="tactile-btn" onclick="document.body.classList.toggle('theme-dark')">מצב תצוגה כהה/בהיר</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <span>צפיות חיות בעמודי הסטודיו:</span>
+      <strong id="statViews">0</strong>
+    </div>
+    <div class="kpi-card">
+      <span>לחיצות על העתקת ביט (054-6373001):</span>
+      <strong id="statBitClicks" style="color:var(--accent);">0</strong>
+    </div>
+    <div class="kpi-card">
+      <span>ניסיונות פתיחת קוד ובקשות נכנסות:</span>
+      <strong id="statLeads">0</strong>
+    </div>
+    <div class="kpi-card">
+      <span>מערכות חיות זמינות למכירה מיידית:</span>
+      <strong>13 מערכות (50/100 ₪)</strong>
+    </div>
+  </div>
+
+  <div class="split-grid">
+    <div class="panel" style="margin-bottom:0;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+        <h2 style="margin-bottom:0;">🚀 1. שיגור פוסטים ויראליים בלחיצה אחת (חוקי 100% — ללא ספאם)</h2>
+        <a class="tactile-btn active" href="./share_center.html">פתח את מרכז ההפצה המלא (14 קמפיינים) ←</a>
+      </div>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">
+        במקום למכור רק תבניות קוד, יצרנו 7 כלי כסף וזכויות שכל ישראלי צריך היום ב-50–100 ₪ בביט. לחץ על כפתור השיתוף כדי לפרסם בסטטוס וואטסאפ, קבוצות פייסבוק/טלגרם או לינקדאין!
+      </p>
+      <div id="shareCardsBox"></div>
+    </div>
+
+    <div class="panel" style="margin-bottom:0;">
+      <h2>⚡ 2. מחולל הצעת Pre-Fulfillment מותאמת אישית ב-5 שניות</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">
+        ראית בקבוצה מישהו שמחפש "דף נחיתה / ניקוי אקסל / מחשבון לעסק / אוטומציה / מצגת להיום"? הזן את הכותרת שלו כאן — והמערכת תייצר עבורו דף תצוגה מקדימה מוגן עם סליקת ביט מיידית!
+      </p>
+      <div class="input-row">
+        <label>שם הלקוח / המבקש (או כינוי בקבוצה)</label>
+        <input id="customClient" value="בעל עסק / מבקש השירות" />
+      </div>
+      <div class="input-row">
+        <label>מה הלקוח ביקש? (כותרת המשימה)</label>
+        <input id="customTitle" value="אוטומציית אקסל ודף קליטת לידים לעסק" />
+      </div>
+      <div class="input-row">
+        <label>מה להציג לו בתצוגה המקדימה החינמית?</label>
+        <textarea id="customSnippet" rows="3">✔ המערכת נבנתה ומותאמת לדרישות שפרסמת
+✔ תצוגה חיה פעילה ומוכנה למסירה מיידית
+🔒 קובץ המקור המלא נפתח להורדה מיד לאחר העברה בביט</textarea>
+      </div>
+      <div class="input-row">
+        <label>מחיר מבוקש בביט (₪)</label>
+        <input id="customPrice" type="number" value="100" />
+      </div>
+      <button class="tactile-btn active" onclick="createInstantCustomPreview()">⚡ ייצר דף תצוגה מקדימה מוגן וקבל קישור חי</button>
+      <div id="customResultBox" style="margin-top:12px; font-size:13px;"></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <h2>שער רכישת חבילת כל 13 המערכות (All-In-One Bundle ב-100 ₪ בביט)</h2>
+    <label class="consent-gate">
+      <input type="checkbox" id="wrConsent" onchange="document.getElementById('wrPayZone').classList.toggle('unlocked', this.checked)" />
+      <span>
+        <strong>אישור תנאי רכישה ופטור מאחריות (As-Is / MIT License):</strong> אני מצהיר/ה ומאשר/ת כי כל הכלים והתבניות מסופקים כמות שהם ("As-Is" תחת רישיון MIT) להורדה חד-פעמית בשירות עצמי בלבד, ללא שירותי אחסון, תחזוקה, ייעוץ משפטי או אחריות.
+      </span>
+    </label>
+    <div class="locked-zone" id="wrPayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn emerald" onclick="copyWrBit()">1. העתק מספר לביט: 054-6373001 (100 ₪ לכל החבילה)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%2013%20%D7%94%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="wrCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="unlockBundleManifest()">3. הורד מניפסט גישה מלא</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const WR_HASH = '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+
+function renderShareCards() {
+  const origin = window.location.origin;
+  const campaigns = [
+    {
+      title: '💰 קמפיין 1 (חדש!): סימולטור החזרי מס לשכירים (טופס 135 — ללא 20% עמלה, 50 ₪)',
+      text: `שכירים — לפני שאתם משלמים 20% עמלה לחברות החזרי מס 💰\nבדקו ב-30 שניות כמה מס מגיע לכם בחזרה 6 שנים אחורה + הפיקו מכתב רשמי לפקיד השומה (טופס 135):\n${origin}/preview_TAX_REFUND.html\n(שירות עצמי As-Is ב-50 ₪ בביט ל-054-6373001)`
+    },
+    {
+      title: '🏦 קמפיין 2 (חדש!): בורר חיסכון במחזור משכנתא ועמלות בנק + מכתב לבנק (50 ₪)',
+      text: `בעלי משכנתא — במקום לשלם 6,000 ₪ ליועץ משכנתאות, בדקו בחינם כמה תחסכו במחזור ריבית וביטול עמלות עו״ש והפיקו מכתב דרישה לבנק:\n${origin}/preview_MORTGAGE_AUDITOR.html\n(שירות עצמי As-Is ב-50 ₪ בביט ל-054-6373001)`
+    },
+    {
+      title: '📊 קמפיין 3 (חדש!): מחשבון מסלול "עוסק זעיר" 30% מול הוצאות מוכרות ומע״מ 18% (50 ₪)',
+      text: `עצמאים ופרילנסרים — בדקו בשניות האם משתלם לכם מסלול עוסק זעיר (30%) או דיווח הוצאות מפורט (משרד ביתי 25%, רכב 45%, קרן השתלמות ומע״מ 18%):\n${origin}/preview_FREELANCE_SHIELD.html`
+    },
+    {
+      title: '🔥 קמפיין 4: בודק תלוש שכר, פנסיה ופיצויים + מכתב דרישה (50 ₪)',
+      text: `חושדים שחסר לכם כסף בתלוש השכר, בשעות הנוספות או בהפרשות לפנסיה? 🧾\nבנינו מחשבון אוטומטי שבודק תוך 30 שניות כמה המעסיק חייב לכם (חינם על המסך!) ומפיק מכתב דרישה מסודר:\n${origin}/preview_SALARY_AUDITOR.html\n(שירות עצמי As-Is ב-50 ₪ בביט ל-054-6373001)`
+    },
+    {
+      title: '⚖️ קמפיין 5: מחולל מכתב ביטול עסקה, פיצוי 10,000 ₪ וערעור על דו"ח חניה (50 ₪)',
+      text: `רוצים לבטל מנוי/עסקה שלאחר 14 יום, לדרוש פיצוי לדוגמה או לערער על דו"ח חניה? ⚡\nמחולל אוטומטי שמייצר את המכתב המוכן עם סעיפי החוק תוך דקה:\n${origin}/preview_LEGAL_SHIELD.html\n(שירות עצמי As-Is ב-50 ₪ בביט ל-054-6373001)`
+    },
+    {
+      title: '📱 קמפיין 6: מיני-סייט וכרטיס ביקור דיגיטלי לוואטסאפ לעסקים ללא דמי מנוי (50/100 ₪)',
+      text: `בעלי עסקים ופרילנסרים — למה לשלם 50 ₪ כל חודש על כרטיס ביקור דיגיטלי? 🚀\nהזינו את שם העסק והמחירון שלכם וקבלו מיני-סייט מוכן להזמנות בוואטסאפ תוך 60 שניות ללא דמי מנוי לעולם:\n${origin}/preview_WHATSAPP_MINISITE.html`
+    },
+    {
+      title: '💼 קמפיין 7: משדרג קורות חיים מותאם מערכות גיוס (ATS) להייטק (50 ₪)',
+      text: `מחפשים עבודה? בדקו את ציון ה-ATS של קורות החיים שלכם ושדרגו אותם לתבנית מנהלים נקייה ב-60 שניות:\n${origin}/preview_CV_BOOSTER.html`
+    }
+  ];
+
+  document.getElementById('shareCardsBox').innerHTML = campaigns.map((c, idx) => {
+    const waUrl = 'https://wa.me/?text=' + encodeURIComponent(c.text);
+    const tgUrl = 'https://t.me/share/url?url=' + encodeURIComponent(origin + '/index.html') + '&text=' + encodeURIComponent(c.text);
+    return `
+      <div class="share-card">
+        <h3>${c.title}</h3>
+        <p id="campTxt_${idx}">${c.text}</p>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <a class="tactile-btn emerald" href="${waUrl}" target="_blank">📲 שתף בוואטסאפ / סטטוס</a>
+          <a class="tactile-btn" href="${tgUrl}" target="_blank">✈️ שתף בטלגרם</a>
+          <button class="tactile-btn" onclick="copyCampText(${idx})">📋 העתק טקסט לפייסבוק/לינקדאין</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function copyCampText(idx) {
+  const txt = document.getElementById('campTxt_' + idx)?.textContent || '';
+  navigator.clipboard.writeText(txt);
+  alert('הפוסט הועתק ללוח! הדבק אותו עכשיו בקבוצת פייסבוק, וואטסאפ או לינקדאין.');
+}
+
+async function refreshStats() {
+  try {
+    const res = await fetch('/api/stats');
+    if (!res.ok) return;
+    const data = await res.json();
+    document.getElementById('statViews').textContent = data.pageViews || 0;
+    document.getElementById('statBitClicks').textContent = data.bitCopyClicks || 0;
+    document.getElementById('statLeads').textContent = (data.unlockAttempts || 0) + (data.inboundLeadsCount || 0);
+  } catch {}
+}
+
+async function createInstantCustomPreview() {
+  const clientName = document.getElementById('customClient').value.trim();
+  const requestTitle = document.getElementById('customTitle').value.trim();
+  const previewSnippet = document.getElementById('customSnippet').value.trim().replace(/\n/g, '<br>');
+  const priceNIS = Number(document.getElementById('customPrice').value || 100);
+
+  const box = document.getElementById('customResultBox');
+  box.textContent = 'מייצר דף תצוגה מקדימה מוגן...';
+  try {
+    const res = await fetch('/api/request-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientName, requestTitle, previewSnippet, priceNIS })
+    });
+    const data = await res.json();
+    if (data.previewUrl) {
+      const fullUrl = window.location.origin + data.previewUrl;
+      box.innerHTML = `
+        <div style="border:1.5px solid var(--emerald); background:var(--surface-alt); padding:10px;">
+          <strong style="color:var(--emerald);">✅ דף התצוגה המקדימה מוכן לשליחה ללקוח:</strong><br>
+          <a href="${data.previewUrl}" target="_blank" style="font-family:var(--mono); word-break:break-all;">${fullUrl}</a>
+          <div style="margin-top:8px;">
+            <button class="tactile-btn emerald" onclick="navigator.clipboard.writeText('${fullUrl}'); alert('הקישור הועתק!');">העתק קישור ללקוח</button>
+          </div>
+        </div>
+      `;
+      refreshStats();
+    }
+  } catch {
+    box.textContent = 'שגיאה ביצירת הדף — ודא שהשרת המקומי פעיל.';
+  }
+}
+
+function copyWrBit() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'WAR_ROOM_BUNDLE', amount:100 }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק לביט!');
+}
+
+async function verifyWrDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === WR_HASH;
+}
+
+async function unlockBundleManifest() {
+  const c = (document.getElementById('wrCode')?.value || '').trim();
+  if (!c) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'WAR_ROOM_BUNDLE' }) }).catch(()=>{});
+  if (!(await verifyWrDigest(c))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  const codeEl = document.getElementById('wrCode');
+  if (codeEl) { codeEl.value = ''; codeEl.removeAttribute('value'); }
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CodeCraft_All_10_Systems_Bundle.html';
+  a.click();
+}
+
+renderShareCards();
+refreshStats();
+</script>
+</body>
+</html>

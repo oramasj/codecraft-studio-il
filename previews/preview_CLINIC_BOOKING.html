@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookStudio IL | מערכת תיאום תורים ודף נחיתה לקליניקות ונותני שירות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ebe6da;
+    --ink: #151513;
+    --muted: #5c5952;
+    --line: #d4cec0;
+    --line-strong: #151513;
+    --sage: #165e3f;
+    --accent: #c9461a;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #111311;
+    --surface: #191c19;
+    --surface-alt: #222622;
+    --ink: #f3f1ea;
+    --muted: #9f9c92;
+    --line: #2d332d;
+    --line-strong: #555b55;
+    --sage: #218559;
+    --accent: #e35829;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+
+  .studio-bar {
+    background: #151513;
+    color: #f3f1ea;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #2d332d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link { color: #f3f1ea; text-decoration: none; border: 1px solid #454844; padding: 4px 10px; font-weight: 700; }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tactile-btn:active { transform: translateY(2px); border-bottom-width: 1.5px; }
+  .tactile-btn.active { background: var(--sage); color: #fff; border-color: #0b3b26; }
+  .tactile-btn.orange { background: var(--accent); color: #fff; border-color: #872b0c; }
+
+  .container { max-width: 1120px; margin: 0 auto; padding: 26px 18px 54px; }
+  .booking-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 22px; margin-bottom: 24px; }
+  .panel { background: var(--surface); border: 1.5px solid var(--line-strong); box-shadow: 0 5px 0 var(--line-strong); padding: 22px; }
+  .panel h2 { font-family: var(--serif); font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+
+  .service-option {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .service-option.selected { background: var(--sage); color: #fff; }
+
+  .slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0 18px; }
+  .slot-btn {
+    padding: 8px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+  }
+  .slot-btn.selected { background: var(--accent); color: #fff; }
+
+  .consent-gate { border: 1.5px solid var(--line-strong); background: var(--surface-alt); padding: 14px 16px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13.5px; }
+  .consent-gate input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--sage); flex-shrink: 0; }
+  .locked-zone { opacity: 0.35; pointer-events: none; transition: opacity 0.2s; }
+  .locked-zone.unlocked { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 820px) { .booking-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="./index.html">← חזרה לספריית התבניות</a>
+    <span style="font-family:var(--mono);">MODULE // BOOKSTUDIO-CLINIC-V3</span>
+  </div>
+  <button class="tactile-btn" onclick="document.body.classList.toggle('theme-dark')">מצב תצוגה כהה/בהיר</button>
+</div>
+
+<div class="container">
+  <div class="booking-grid">
+    <div class="panel">
+      <span style="font-family:var(--mono); font-size:11px; color:var(--sage); font-weight:700;">APPOINTMENT SCHEDULER</span>
+      <h2>בחירת שירות ומועד לפגישה או טיפול</h2>
+      <p style="font-size:13.5px; color:var(--muted); margin-bottom:14px;">בחר את סוג השירות והשעה המבוקשת לתיאום מיידי:</p>
+
+      <div id="servicesList"></div>
+
+      <label style="font-size:12.5px; font-weight:800; display:block; margin-top:14px;">שעות פנויות להיום ומחר:</label>
+      <div class="slots-grid" id="slotsList"></div>
+    </div>
+
+    <div class="panel">
+      <span style="font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:700;">BOOKING CONFIRMATION</span>
+      <h2>סיכום התור ואישור הגעה</h2>
+      <div style="border:1.5px solid var(--line-strong); background:var(--surface-alt); padding:14px; margin:12px 0 16px; font-size:14px;">
+        <div>שירות נבחר: <strong id="sumService">פגישת אבחון וייעוץ אישי (45 דק׳)</strong></div>
+        <div>שעה נבחרת: <strong id="sumSlot" style="font-family:var(--mono);">10:30</strong></div>
+        <div>עלות: <strong id="sumPrice" style="font-family:var(--mono); color:var(--sage);">280 ₪</strong></div>
+      </div>
+
+      <input id="custName" placeholder="שם מלא של המטופל / הלקוח" style="width:100%; padding:10px; border:1.5px solid var(--line-strong); background:var(--surface-alt); margin-bottom:10px;" />
+      <input id="custPhone" placeholder="טלפון נייד לקבלת תזכורת" style="width:100%; padding:10px; border:1.5px solid var(--line-strong); background:var(--surface-alt); margin-bottom:12px;" />
+      <button class="tactile-btn active" style="width:100%; justify-content:center; padding:11px;" onclick="alert('התור נקלט במערכת ההדגמה בהצלחה!')">שריון תור ושליחת אישור ←</button>
+    </div>
+  </div>
+
+  <section class="panel">
+    <h2>הורדת מערכת תיאום התורים בשירות עצמי (100 ₪ תשלום חד-פעמי)</h2>
+    <p style="font-size:13.5px; color:var(--muted);">
+      קובץ HTML5/JS מלא ומוכן לשימוש לקליניקות, מאמנים ויועצים ללא עמלות חודשיות. מסופק כמות שהוא ("As-Is").
+    </p>
+    <label class="consent-gate">
+      <input type="checkbox" onchange="document.getElementById('bPayZone').classList.toggle('unlocked', this.checked)" />
+      <span>
+        <strong>אישור תנאי רכישה ופטור מאחריות:</strong> אני מצהיר/ה ומאשר/ת כי המוצר הנרכש הוא קובץ תבנית קוד גנרי המסופק כמות שהוא ("As-Is" תחת רישיון MIT) להורדה חד-פעמית בלבד, ללא שירותי אחסון, תחזוקה או אחריות.
+      </span>
+    </label>
+    <div class="locked-zone" id="bPayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn active" onclick="copyBookingBit()">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%9E%D7%A2%D7%A8%D7%9B%D7%AA%20%D7%AA%D7%99%D7%90%D7%95%D7%9D%20%D7%94%D7%AA%D7%95%D7%A8%D7%99%D7%9D.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="bCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn orange" onclick="downloadBooking()">3. הורדת קובץ המקור המלא</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const services = [
+  { name: "פגישת אבחון וייעוץ אישי (45 דק׳)", price: 280 },
+  { name: "טיפול קליני ממוקד (60 דק׳)", price: 360 },
+  { name: "סדרת ליווי ומעקב (מפגש כפול)", price: 520 }
+];
+const slots = ["09:00", "10:30", "12:00", "14:15", "16:00", "17:30", "19:00", "20:15"];
+let selService = 0;
+let selSlot = "10:30";
+
+function copyBookingBit() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'CLINIC_BOOKING', amount:100 }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק לביט!');
+}
+
+function renderAll() {
+  document.getElementById('servicesList').innerHTML = services.map((s, i) => `
+    <div class="service-option ${i === selService ? 'selected' : ''}" onclick="selService=${i}; renderAll();">
+      <strong>${s.name}</strong>
+      <span style="font-family:var(--mono); font-weight:700;">${s.price} ₪</span>
+    </div>
+  `).join('');
+
+  document.getElementById('slotsList').innerHTML = slots.map(t => `
+    <div class="slot-btn ${t === selSlot ? 'selected' : ''}" onclick="selSlot='${t}'; renderAll();">${t}</div>
+  `).join('');
+
+  document.getElementById('sumService').textContent = services[selService].name;
+  document.getElementById('sumPrice').textContent = services[selService].price + ' ₪';
+  document.getElementById('sumSlot').textContent = selSlot;
+}
+
+async function verifyBookingUnlockDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+}
+
+async function downloadBooking() {
+  const c = (document.getElementById('bCode')?.value || '').trim();
+  if (!c) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'CLINIC_BOOKING' }) }).catch(()=>{});
+  if (!(await verifyBookingUnlockDigest(c))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  const el = document.getElementById('bCode');
+  if (el) { el.value = ''; el.removeAttribute('value'); }
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'BookStudio_Clinic_Scheduler.html';
+  a.click();
+}
+
+renderAll();
+</script>
+</body>
+</html>

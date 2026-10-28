@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אטלייה מסחרי | קטלוג מוצרים אינטראקטיבי וזוג דפי נחיתה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2eb;
+    --surface: #ffffff;
+    --surface-alt: #ebe5d8;
+    --ink: #171513;
+    --muted: #5e5850;
+    --line: #d4cbb8;
+    --line-strong: #171513;
+    --terracotta: #c4451c;
+    --terracotta-dark: #8c2d0e;
+    --olive: #1b593a;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #121110;
+    --surface: #1b1917;
+    --surface-alt: #252320;
+    --ink: #f4f0e8;
+    --muted: #a39c90;
+    --line: #33302b;
+    --line-strong: #5c574f;
+    --terracotta: #e0582c;
+    --olive: #237a4f;
+  }
+  body.theme-warm {
+    --bg: #ede5d5;
+    --surface: #faf6ee;
+    --surface-alt: #e2d7c3;
+    --ink: #1f1a14;
+    --muted: #63594c;
+    --line: #cbbba1;
+    --line-strong: #2d241b;
+    --terracotta: #b03a14;
+    --olive: #175234;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.55;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .studio-bar {
+    background: #171513;
+    color: #f4f0e8;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #33302b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link {
+    color: #f4f0e8;
+    text-decoration: none;
+    border: 1px solid #4a453e;
+    padding: 4px 10px;
+    font-weight: 700;
+  }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.08s ease, border-bottom-width 0.08s ease;
+  }
+  .tactile-btn:active {
+    transform: translateY(2px);
+    border-bottom-width: 1.5px;
+  }
+  .tactile-btn.active {
+    background: var(--terracotta);
+    color: #fff;
+    border-color: var(--terracotta-dark);
+  }
+  .tactile-btn.olive {
+    background: var(--olive);
+    color: #fff;
+    border-color: #0e3621;
+  }
+
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 28px 20px 54px;
+  }
+
+  .catalog-top {
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    box-shadow: 0 5px 0 var(--line-strong);
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .catalog-top h1 {
+    font-family: var(--serif);
+    font-size: 27px;
+    font-weight: 900;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+    margin-bottom: 28px;
+  }
+  .item-card {
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    box-shadow: 0 5px 0 var(--line-strong);
+    display: flex;
+    flex-direction: column;
+  }
+  .item-sku {
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-alt);
+    font-family: var(--mono);
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .item-img {
+    height: 190px;
+    border-bottom: 1.5px solid var(--line-strong);
+    overflow: hidden;
+  }
+  .item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .item-body {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .item-body h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .item-body p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .item-foot {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1.5px solid var(--line-strong);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .item-price {
+    font-family: var(--mono);
+    font-size: 19px;
+    font-weight: 700;
+  }
+
+  /* תבניות דפי נחיתה אדיטוריאליים (ללא גרדיאנטים סגולים) */
+  .editorial-lp {
+    background: var(--surface);
+    border: 2px solid var(--line-strong);
+    box-shadow: 0 7px 0 var(--line-strong);
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    margin-bottom: 28px;
+  }
+  .lp-story {
+    padding: 36px 32px;
+    border-left: 1.5px solid var(--line-strong);
+  }
+  .lp-story h2 {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.18;
+    margin: 10px 0 14px;
+  }
+  .lp-form-column {
+    background: var(--surface-alt);
+    padding: 32px 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .lp-form-column input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    margin-bottom: 10px;
+  }
+
+  .vault-panel {
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    box-shadow: 0 5px 0 var(--line-strong);
+    padding: 22px;
+  }
+  .consent-gate {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 14px 16px;
+    margin: 14px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+    font-size: 13.5px;
+  }
+  .consent-gate input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--olive);
+    flex-shrink: 0;
+  }
+  .locked-zone {
+    opacity: 0.35;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .locked-zone.unlocked {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 820px) {
+    .editorial-lp { grid-template-columns: 1fr; }
+    .lp-story { border-left: none; border-bottom: 1.5px solid var(--line-strong); }
+  }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="./index.html">← חזרה לספריית התבניות</a>
+    <span style="font-family:var(--mono);">BUNDLE // ATELIER-COMMERCE-V3</span>
+  </div>
+  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+    <button class="tactile-btn active" onclick="switchPart('catalog', this)">1. קטלוג המוצרים</button>
+    <button class="tactile-btn" onclick="switchPart('lp1', this)">2. דף נחיתה: מהדורת השקה</button>
+    <button class="tactile-btn" onclick="switchPart('lp2', this)">3. דף נחיתה: לקוחות עסקיים</button>
+    <button class="tactile-btn" onclick="setTheme('clean')">בהיר</button>
+    <button class="tactile-btn" onclick="setTheme('dark')">כהה</button>
+    <button class="tactile-btn" onclick="setTheme('warm')">שמנת</button>
+  </div>
+</div>
+
+<div class="container">
+  <div id="stageArea"></div>
+
+  <section class="vault-panel">
+    <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1.5px solid var(--line-strong); margin-bottom:12px;">
+      <h2 style="font-size:18px; font-weight:900;">רכישת חבילת הקוד המשולשת בשירות עצמי (קטלוג + 2 דפי נחיתה — 100 ₪)</h2>
+      <span style="font-family:var(--mono); font-size:11px; color:var(--olive); font-weight:700;">MIT AS-IS BUNDLE</span>
+    </div>
+    <p style="font-size:13.5px; color:var(--muted);">
+      קובץ המקור כולל את שלושת המודולים במלואם (קטלוג סל קניות + שני דפי נחיתה). האספקה מתבצעת כהורדה חד-פעמית של הקובץ כמות שהוא ("As-Is").
+    </p>
+    <label class="consent-gate">
+      <input type="checkbox" id="commConsent" onchange="toggleCommUnlock()" />
+      <span>
+        <strong>אישור תנאי רכישה ופטור מאחריות:</strong> אני מצהיר/ה ומאשר/ת כי המוצר הנרכש הוא קובץ תבנית קוד גנרי המסופק כמות שהוא ("As-Is" תחת רישיון MIT) להורדה חד-פעמית בלבד, ללא שירותי אחסון, תחזוקה, התאמה אישית או אחריות מכל סוג שהוא.
+      </span>
+    </label>
+    <div class="locked-zone" id="commPayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn olive" onclick="copyCommBit()">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A7%D7%98%D7%9C%D7%95%D7%92%20%D7%95%D7%93%D7%A4%D7%99%20%D7%94%D7%A0%D7%97%D7%99%D7%AA%D7%94.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="commCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="downloadCommercePack()">3. הורדת קובץ המקור המלא</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+function copyCommBit() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'XPLACE_216353', amount:100 }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק לביט!');
+}
+
+const catalogItems = [
+  { sku: "ATL-01", name: "מארז אירוח ושולחן עבודה", desc: "סט כלי קרמיקה ועץ אלון מלא בעבודת יד לסביבת עבודה מוקפדת.", price: 290, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80" },
+  { sku: "ATL-02", name: "מערכת שמע שולחנית אנלוגית", desc: "תיבת תהודה מאלומיניום מוברש עם חיבור אלחוטי וסוללה ל-18 שעות.", price: 450, img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80" },
+  { sku: "ATL-03", name: "מצלמת סטודיו קומפקטית", desc: "עדשת 35 מ״מ בהירה במארז מתכת עמיד לצילום מוצרים ותיעוד יומי.", price: 390, img: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80" },
+  { sku: "ATL-04", name: "תיק נשיאה מודולרי מבד קנבס", desc: "תאים מרופדים למחשב נייד, מחברת סקיצות וכבלים עם רוכסנים אטומים.", price: 340, img: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=800&q=80" }
+];
+
+let cartCount = 0;
+let cartSum = 0;
+
+function playClickTone(f = 610) {
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(f, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.018);
+    g.gain.setValueAtTime(0.035, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.018);
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime + 0.019);
+  } catch(e) {}
+}
+
+function addItemToCart(price) {
+  playClickTone(670);
+  cartCount++;
+  cartSum += price;
+  document.getElementById('cartBadgeCount').textContent = cartCount;
+  document.getElementById('cartBadgeSum').textContent = cartSum.toLocaleString() + ' ₪';
+}
+
+function renderCatalogStage() {
+  document.getElementById('stageArea').innerHTML = `
+    <div class="catalog-top">
+      <div>
+        <span style="font-family:var(--mono); font-size:11px; color:var(--terracotta); font-weight:700;">COLLECTION // AUTUMN-WINTER</span>
+        <h1>קטלוג מוצרי סטודיו ועיצוב תעשייתי</h1>
+      </div>
+      <div style="border:1.5px solid var(--line-strong); background:var(--surface-alt); padding:10px 16px; font-family:var(--mono); font-size:13px;">
+        סל הזמנה: <strong id="cartBadgeCount">${cartCount}</strong> פריטים | סה״כ: <strong id="cartBadgeSum" style="color:var(--terracotta);">${cartSum.toLocaleString()} ₪</strong>
+      </div>
+    </div>
+
+    <div class="products-grid">
+      ${catalogItems.map(p => `
+        <article class="item-card">
+          <div class="item-sku">
+            <span>SKU // ${p.sku}</span>
+            <span>במלאי מיידי</span>
+          </div>
+          <div class="item-img">
+            <img src="${p.img}" alt="${p.name}" />
+          </div>
+          <div class="item-body">
+            <h3>${p.name}</h3>
+            <p>${p.desc}</p>
+            <div class="item-foot">
+              <span class="item-price">${p.price} ₪</span>
+              <button class="tactile-btn active" onclick="addItemToCart(${p.price})">+ הוספה לסל</button>
+            </div>
+          </div>
+        </article>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderLP1Stage() {
+  document.getElementById('stageArea').innerHTML = `
+    <div class="editorial-lp">
+      <div class="lp-story">
+        <span style="font-family:var(--mono); font-size:11.5px; color:var(--terracotta); font-weight:700;">LANDING PAGE 01 // DIRECT LAUNCH OFFER</span>
+        <h2>מהדורת השקה ממוספרת לחללי עבודה וסטודיו</h2>
+        <p style="font-size:15px; color:var(--muted); margin-bottom:20px;">
+          עיצוב תעשייתי נקי מחומרי גלם טבעיים המיוצר בסדרות קטנות. הזמינו היום מראש עם 20% הנחת השקה ומשלוח ישיר עד בית העסק.
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; border-top:1.5px solid var(--line-strong); padding-top:16px; font-size:12.5px;">
+          <div><strong>ייצור מוקפד</strong><br><span style="color:var(--muted);">אלומיניום, עץ וקרמיקה</span></div>
+          <div><strong>אספקה מהירה</strong><br><span style="color:var(--muted);">שליח עד הדלת ב-48 שעות</span></div>
+          <div><strong>מהדורה מוגבלת</strong><br><span style="color:var(--muted);">200 יחידות ממוספרות</span></div>
+        </div>
+      </div>
+      <div class="lp-form-column">
+        <h3 style="font-size:18px; font-weight:800; margin-bottom:6px;">שריון הטבת השקה (20% הנחה)</h3>
+        <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">הזינו פרטים לקבלת שובר ההנחה ישירות לנייד:</p>
+        <input placeholder="שם מלא" />
+        <input placeholder="מספר טלפון נייד" />
+        <input placeholder="כתובת אימייל" />
+        <button class="tactile-btn active" style="width:100%; justify-content:center; padding:11px;" onclick="alert('הפנייה נשמרה בדמו בהצלחה.')">שליחת שובר ההשקה ←</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderLP2Stage() {
+  document.getElementById('stageArea').innerHTML = `
+    <div class="editorial-lp">
+      <div class="lp-story">
+        <span style="font-family:var(--mono); font-size:11.5px; color:var(--olive); font-weight:700;">LANDING PAGE 02 // B2B CORPORATE EDITIONS</span>
+        <h2>מארזים ממותגים בהתאמה ארגונית לחברות ואדריכלים</h2>
+        <p style="font-size:15px; color:var(--muted); margin-bottom:20px;">
+          פתרון שלם למתנות הוקרה, כנסים מקצועיים וערכות קליטה לעובדים. חריטת לוגו בלייזר על גבי המוצרים ואריזת קרטון ממוחזר בעיצוב אישי.
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; border-top:1.5px solid var(--line-strong); padding-top:16px; font-size:12.5px;">
+          <div><strong>מינימום הזמנה</strong><br><span style="color:var(--muted);">החל מ-25 מארזים</span></div>
+          <div><strong>מיתוג בחריטה</strong><br><span style="color:var(--muted);">ללא מדבקות מתקלפות</span></div>
+          <div><strong>ליווי הפקה</strong><br><span style="color:var(--muted);">אספקה מרוכזת או פרטנית</span></div>
+        </div>
+      </div>
+      <div class="lp-form-column">
+        <h3 style="font-size:18px; font-weight:800; margin-bottom:6px;">בקשת הצעת מחיר מרוכזת לחברות</h3>
+        <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">נחזור אליכם עם קטלוג מחירים סיטונאי תוך שעה:</p>
+        <input placeholder="שם החברה / הארגון" />
+        <input placeholder="איש קשר וטלפון" />
+        <input placeholder="כמות מארזים משוערת" />
+        <button class="tactile-btn olive" style="width:100%; justify-content:center; padding:11px;" onclick="alert('בקשת הצעת המחיר נשמרה בדמו.')">קבלת הצעת מחיר עסקית ←</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleCommUnlock() {
+  playClickTone(540);
+  const ok = document.getElementById('commConsent')?.checked;
+  const z = document.getElementById('commPayZone');
+  if (z) z.classList.toggle('unlocked', !!ok);
+}
+
+async function verifyCommUnlockDigest(raw) {
+  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex === '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
+}
+
+async function downloadCommercePack() {
+  const code = (document.getElementById('commCode')?.value || '').trim();
+  if (!code) {
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'XPLACE_216353' }) }).catch(()=>{});
+  if (!(await verifyCommUnlockDigest(code))) {
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    return;
+  }
+  const el = document.getElementById('commCode');
+  if (el) { el.value = ''; el.removeAttribute('value'); }
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Atelier_Commerce_And_2_LandingPages.html';
+  a.click();
+}
+
+function switchPart(part, btn) {
+  playClickTone(590);
+  document.querySelectorAll('.studio-bar .tactile-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (part === 'catalog') renderCatalogStage();
+  else if (part === 'lp1') renderLP1Stage();
+  else renderLP2Stage();
+}
+
+function setTheme(m) {
+  playClickTone(510);
+  document.body.className = m === 'clean' ? '' : 'theme-' + m;
+}
+
+renderCatalogStage();
+</script>
+
+<footer style="background:#171513; color:#a39c90; font-size:11.5px; padding:14px 22px; border-top:1.5px solid #33302b; text-align:center;">
+  <strong>הבהרה משפטית ופטור מאחריות (As-Is / MIT License):</strong> עמוד זה הוא תבנית קוד גנרית להדגמה בלבד. רכישת התבנית מקנה הורדה חד-פעמית של קוד המקור כמות שהוא ("As-Is"), ללא שירותי אחסון, תחזוקה, התאמה אישית או אחריות.
+</footer>
+</body>
+</html>

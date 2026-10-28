@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מחולל הצעות מחיר וחתימה דיגיטלית לעסקים | QuoteCraft Pro (גרסה מלאה)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --accent: #10b981;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Heebo', sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 24px 16px; line-height: 1.5; }
+    .container { max-width: 860px; margin: 0 auto; background: var(--card); border-radius: var(--radius); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06); padding: 32px; border: 1px solid var(--border); }
+    .pro-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.12); color: #059669; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-bottom: 16px; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; border-bottom: 2px solid var(--border); padding-bottom: 24px; margin-bottom: 24px; flex-wrap: wrap; }
+    .brand h1 { font-size: 26px; font-weight: 800; color: var(--primary); outline: none; border-bottom: 1px dashed transparent; }
+    .brand h1:focus { border-bottom-color: var(--primary); }
+    .brand p { font-size: 14px; color: var(--text-muted); outline: none; border-bottom: 1px dashed transparent; }
+    .brand p:focus { border-bottom-color: var(--text-muted); }
+    .doc-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 14px; background: #f1f5f9; padding: 12px 16px; border-radius: 8px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+    .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; background: #fff; }
+    .form-control:focus { border-color: var(--primary); }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    th { background: #f1f5f9; padding: 12px 14px; text-align: right; font-size: 13px; font-weight: 700; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; border: none; transition: 0.2s; text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-success { background: var(--accent); color: #fff; }
+    .btn-success:hover { background: #059669; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: #f1f5f9; }
+    .btn-danger-sm { background: #fee2e2; color: #dc2626; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; border: none; }
+    .totals-box { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+    .totals-table { width: 280px; }
+    .totals-table div { display: flex; justify-content: space-between; padding: 6px 0; font-size: 15px; }
+    .totals-table .grand-total { font-size: 20px; font-weight: 800; color: var(--primary); border-top: 2px solid var(--border); padding-top: 10px; margin-top: 6px; }
+    .sig-section { border: 2px dashed var(--border); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 24px; background: #fafafa; }
+    #sigCanvas { width: 100%; max-width: 480px; height: 160px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; touch-action: none; cursor: crosshair; }
+    .actions-bar { display: flex; gap: 12px; justify-content: flex-end; padding-top: 16px; border-top: 2px solid var(--border); flex-wrap: wrap; }
+    .terms-box { font-size: 12.5px; color: var(--text-muted); background: #f8fafc; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border); }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+      .no-print, .btn, .btn-danger-sm, .actions-bar, .pro-badge { display: none !important; }
+      .sig-section { border: 1px solid #ccc; background: transparent; }
+      .brand h1, .brand p { border-bottom: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="no-print pro-badge">
+      ✨ גרסה מלאה לשימוש עצמאי — ללא הגבלת מסמכים וללא דמי מנוי
+    </div>
+
+    <div class="header-row">
+      <div class="brand">
+        <h1 contenteditable="true" id="bizName" title="לחץ לעריכת שם העסק">העסק שלך — הצעות מחיר</h1>
+        <p contenteditable="true" id="bizSub" title="לחץ לעריכת פרטי העסק">טלפון: 050-0000000 | ח.פ / ע.מ: 558000000 | כתובת העסק</p>
+      </div>
+      <div class="doc-meta">
+        <div><strong>מספר הצעה:</strong> <span id="docNum" contenteditable="true">2026-101</span></div>
+        <div><strong>תאריך:</strong> <span id="docDate"></span></div>
+        <div><strong>תוקף הצעה:</strong> <span contenteditable="true">14 ימים</span></div>
+        <div><strong>מטבע:</strong> ₪ (ש"ח)</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label>לכבוד (שם הלקוח / חברה):</label>
+        <input type="text" id="clientName" class="form-control" placeholder="ישראל ישראלי / חברת הדגמה בע״מ">
+      </div>
+      <div class="form-group">
+        <label>טלפון / וואטסאפ הלקוח:</label>
+        <input type="tel" id="clientPhone" class="form-control" placeholder="054-0000000">
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 50%;">תיאור השירות / מוצר</th>
+          <th style="width: 15%;">כמות</th>
+          <th style="width: 20%;">מחיר יחידה (₪)</th>
+          <th style="width: 15%;">סה״כ</th>
+          <th class="no-print" style="width: 5%;"></th>
+        </tr>
+      </thead>
+      <tbody id="itemsBody">
+        <tr>
+          <td><input type="text" class="form-control row-desc" value="פיתוח דף נחיתה מותאם למובייל כולל טופס לידים"></td>
+          <td><input type="number" class="form-control row-qty" value="1" min="1" oninput="calcTotals()"></td>
+          <td><input type="number" class="form-control row-price" value="1200" min="0" oninput="calcTotals()"></td>
+          <td class="row-total" style="font-weight:700;">1,200 ₪</td>
+          <td class="no-print"><button class="btn btn-danger-sm" onclick="removeRow(this)">✕</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="no-print" style="margin-bottom: 24px;">
+      <button class="btn btn-outline" onclick="addRow()">➕ הוסף שורת פריט</button>
+    </div>
+
+    <div class="totals-box">
+      <div class="totals-table">
+        <div><span>סה״כ לפני מע״מ:</span><strong id="subTotal">1,200 ₪</strong></div>
+        <div><span>מע״מ (18%):</span><strong id="vatTotal">216 ₪</strong></div>
+        <div class="grand-total"><span>לתשלום כולל מע״מ:</span><strong id="grandTotal">1,416 ₪</strong></div>
+      </div>
+    </div>
+
+    <div class="terms-box" contenteditable="true" title="ניתן לערוך את תנאי ההצעה">
+      <strong>תנאים והערות:</strong> תשלום: 50% מקדמה עם חתימת ההצעה, היתרה עם מסירת העבודה. המחירים כוללים מע״מ כחוק (18%). הצעה זו תקפה למשך 14 יום מיום הפקתה.
+    </div>
+
+    <div class="sig-section">
+      <h3 style="font-size:16px; margin-bottom:6px;">חתימת הלקוח לאישור ההצעה</h3>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">ניתן לחתום באצבע על מסך המגע בנייד או בעכבר</p>
+      <canvas id="sigCanvas"></canvas>
+      <div class="no-print" style="margin-top: 8px;">
+        <button class="btn btn-outline" style="font-size:12px; padding:4px 12px;" onclick="clearSignature()">🗑️ נקה חתימה</button>
+      </div>
+    </div>
+
+    <div class="actions-bar no-print">
+      <button class="btn btn-outline" onclick="saveAsTemplate()">💾 שמור כטיוטה מקומית</button>
+      <button class="btn btn-primary" onclick="printDoc()">🖨️ הדפס / שמור כ-PDF רשמי</button>
+      <button class="btn btn-success" onclick="shareWhatsApp()">💬 שלח קישור בוואטסאפ ללקוח</button>
+    </div>
+  </div>
+
+  <script>
+    // הגדרת תאריך אוטומטי
+    const today = new Date();
+    document.getElementById('docDate').textContent = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+
+    // קנבס חתימה דיגיטלית
+    const canvas = document.getElementById('sigCanvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 150);
+
+    function startDraw(e) {
+      drawing = true;
+      ctx.beginPath();
+      const pos = getPos(e);
+      ctx.moveTo(pos.x, pos.y);
+    }
+    function draw(e) {
+      if (!drawing) return;
+      const pos = getPos(e);
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+    function stopDraw() { drawing = false; }
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', stopDraw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    window.addEventListener('touchend', stopDraw);
+
+    function clearSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function addRow() {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" class="form-control row-desc" placeholder="תיאור סעיף נוסף"></td>
+        <td><input type="number" class="form-control row-qty" value="1" min="1" oninput="calcTotals()"></td>
+        <td><input type="number" class="form-control row-price" value="0" min="0" oninput="calcTotals()"></td>
+        <td class="row-total" style="font-weight:700;">0 ₪</td>
+        <td class="no-print"><button class="btn btn-danger-sm" onclick="removeRow(this)">✕</button></td>
+      `;
+      document.getElementById('itemsBody').appendChild(tr);
+    }
+
+    function removeRow(btn) {
+      const tr = btn.closest('tr');
+      if (document.querySelectorAll('#itemsBody tr').length > 1) {
+        tr.remove();
+        calcTotals();
+      }
+    }
+
+    function calcTotals() {
+      let sub = 0;
+      document.querySelectorAll('#itemsBody tr').forEach(tr => {
+        const qty = parseFloat(tr.querySelector('.row-qty').value) || 0;
+        const price = parseFloat(tr.querySelector('.row-price').value) || 0;
+        const rowTotal = qty * price;
+        tr.querySelector('.row-total').textContent = rowTotal.toLocaleString() + ' ₪';
+        sub += rowTotal;
+      });
+      const vat = Math.round(sub * 0.18);
+      const grand = sub + vat;
+      document.getElementById('subTotal').textContent = sub.toLocaleString() + ' ₪';
+      document.getElementById('vatTotal').textContent = vat.toLocaleString() + ' ₪';
+      document.getElementById('grandTotal').textContent = grand.toLocaleString() + ' ₪';
+    }
+
+    function printDoc() {
+      window.print();
+    }
+
+    function saveAsTemplate() {
+      const data = {
+        bizName: document.getElementById('bizName').innerText,
+        bizSub: document.getElementById('bizSub').innerText,
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem('quotecraft_profile', JSON.stringify(data));
+      alert('פרטי העסק נשמרו בדפדפן בהצלחה ויטענו אוטומטית בפעם הבאה!');
+    }
+
+    // שחזור פרופיל שמור
+    try {
+      const saved = JSON.parse(localStorage.getItem('quotecraft_profile') || '{}');
+      if (saved.bizName) document.getElementById('bizName').innerText = saved.bizName;
+      if (saved.bizSub) document.getElementById('bizSub').innerText = saved.bizSub;
+    } catch (e) {}
+
+    function shareWhatsApp() {
+      const client = document.getElementById('clientName').value || 'שלום';
+      const phone = document.getElementById('clientPhone').value.replace(/[^0-9]/g, '');
+      const grand = document.getElementById('grandTotal').textContent;
+      const text = encodeURIComponent(`היי ${client}, מצורף קישור להצעת המחיר שלך על סך ${grand}. ניתן לחתום באצבע על המסך ולאשר. יום מעולה!`);
+      const url = phone ? `https://wa.me/972${phone.replace(/^0/, '')}?text=${text}` : `https://wa.me/?text=${text}`;
+      window.open(url, '_blank');
+    }
+
+    calcTotals();
+  </script>
+</body>
+</html>
