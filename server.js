@@ -398,8 +398,8 @@ export function createServer(options = {}) {
     if (req.method === 'POST' && url === '/api/event') {
       const body = (await readJsonBody(req)) || {};
       const telemetry = loadJson(telemetryFile);
-      const evType = String(body.type || 'unknown').slice(0, 40);
-      const itemId = String(body.itemId || '').slice(0, 60);
+      const evType = String(body.type || body.eventType || 'unknown').slice(0, 40);
+      const itemId = String(body.itemId || body.product || '').slice(0, 60);
 
       if (evType === 'copy_bit' || evType === 'copy_paybox' || evType === 'paybox_click') {
         telemetry.bitCopyClicks = (telemetry.bitCopyClicks || 0) + 1;
@@ -464,9 +464,9 @@ export function createServer(options = {}) {
         return sendJson(res, 400, { success: false, error: 'Invalid or malformed JSON payload' });
       }
 
-      const name = escapeHtml(String(rawOrder.name || '').trim().slice(0, 80));
-      const phone = escapeHtml(String(rawOrder.phone || '').trim().slice(0, 40));
-      const taskDescription = escapeHtml(String(rawOrder.taskDescription || '').trim().slice(0, 500));
+      const name = escapeHtml(String(rawOrder.name || rawOrder.customerName || '').trim().slice(0, 80));
+      const phone = escapeHtml(String(rawOrder.phone || rawOrder.customerContact || rawOrder.contact || '').trim().slice(0, 40));
+      const taskDescription = escapeHtml(String(rawOrder.taskDescription || rawOrder.description || '').trim().slice(0, 500));
 
       if (!phone && !taskDescription && !name) {
         return sendJson(res, 400, {
