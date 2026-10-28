@@ -5,3 +5,5 @@ server.pid
 daemon_status.json
 *.tmp*
 .DS_Store
+preview_CUSTOM_*.html
+previews/preview_CUSTOM_*.html
