@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadSync Ledger | מערכת קליטת פניות ואוטומציית גליונות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700;900&family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --surface: #ffffff;
+    --surface-alt: #ece8de;
+    --ink: #131413;
+    --muted: #585751;
+    --line: #d6d0c3;
+    --line-strong: #131413;
+    --sheet-green: #12613e;
+    --sheet-green-dark: #0a3d26;
+    --accent: #d44719;
+    --sans: 'Heebo', sans-serif;
+    --serif: 'Frank Ruhl Libre', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body.theme-dark {
+    --bg: #101211;
+    --surface: #181a19;
+    --surface-alt: #222523;
+    --ink: #f3f1eb;
+    --muted: #9e9b91;
+    --line: #2d312e;
+    --line-strong: #555956;
+    --sheet-green: #1d8557;
+    --accent: #e65829;
+  }
+  body.theme-warm {
+    --bg: #eee7d9;
+    --surface: #faf6ed;
+    --surface-alt: #e3dac7;
+    --ink: #1d1914;
+    --muted: #60574c;
+    --line: #cbbba3;
+    --line-strong: #2b231a;
+    --sheet-green: #185c3c;
+    --accent: #b83b12;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .studio-bar {
+    background: #131413;
+    color: #f3f1eb;
+    padding: 9px 22px;
+    border-bottom: 1.5px solid #2d312e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .back-link {
+    color: #f3f1eb;
+    text-decoration: none;
+    border: 1px solid #454844;
+    padding: 4px 10px;
+    font-weight: 700;
+  }
+
+  .tactile-btn {
+    appearance: none;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+    border-bottom-width: 3.5px;
+    padding: 6px 13px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.08s ease, border-bottom-width 0.08s ease;
+  }
+  .tactile-btn:active {
+    transform: translateY(2px);
+    border-bottom-width: 1.5px;
+  }
+  .tactile-btn.active {
+    background: var(--sheet-green);
+    color: #fff;
+    border-color: var(--sheet-green-dark);
+  }
+  .tactile-btn.orange {
+    background: var(--accent);
+    color: #fff;
+    border-color: #8f2a09;
+  }
+
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 26px 20px 54px;
+  }
+
+  .ledger-banner {
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    box-shadow: 0 5px 0 var(--line-strong);
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .ledger-banner h1 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .ledger-banner p {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .workspace-grid {
+    display: grid;
+    grid-template-columns: 0.95fr 1.45fr;
+    gap: 22px;
+    margin-bottom: 24px;
+  }
+  .module-box {
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    box-shadow: 0 5px 0 var(--line-strong);
+    padding: 22px;
+  }
+  .module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+    border-bottom: 1.5px solid var(--line-strong);
+  }
+  .module-header h2 {
+    font-size: 16.5px;
+    font-weight: 800;
+  }
+  .module-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .field-row { margin-bottom: 13px; }
+  .field-row label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--muted);
+  }
+  .field-row input, .field-row select {
+    width: 100%;
+    padding: 9px 11px;
+    background: var(--surface-alt);
+    border: 1.5px solid var(--line-strong);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  .sheet-grid-wrap {
+    overflow-x: auto;
+    border: 1.5px solid var(--line-strong);
+    margin-bottom: 16px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    text-align: right;
+  }
+  th {
+    background: var(--sheet-green);
+    color: #fff;
+    padding: 9px 11px;
+    font-weight: 700;
+    border-left: 1px solid rgba(255,255,255,0.2);
+    white-space: nowrap;
+  }
+  td {
+    padding: 9px 11px;
+    border-bottom: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+  .badge-sent {
+    display: inline-block;
+    padding: 2px 8px;
+    border: 1px solid var(--sheet-green);
+    background: rgba(18, 97, 62, 0.1);
+    color: var(--sheet-green);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .mail-dispatch-box {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+
+  .consent-gate {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface-alt);
+    padding: 14px 16px;
+    margin: 14px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+    font-size: 13.5px;
+  }
+  .consent-gate input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--sheet-green);
+    flex-shrink: 0;
+  }
+  .locked-zone {
+    opacity: 0.35;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .locked-zone.unlocked {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 860px) {
+    .workspace-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="studio-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <a class="back-link" href="/index.html">← חזרה לספריית התבניות</a>
+    <span style="font-family:var(--mono);">MODULE // LEADSYNC-LEDGER-V3</span>
+  </div>
+  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+    <button class="tactile-btn active" onclick="switchTab('live', this)">סביבת עבודה חיה</button>
+    <button class="tactile-btn" onclick="switchTab('script', this)">סקריפט Google Apps Script</button>
+    <button class="tactile-btn" onclick="exportToCSV()">ייצוא לאקסל (CSV)</button>
+    <button class="tactile-btn" onclick="setTheme('clean')">בהיר</button>
+    <button class="tactile-btn" onclick="setTheme('dark')">כהה</button>
+    <button class="tactile-btn" onclick="setTheme('warm')">שמנת</button>
+  </div>
+</div>
+
+<div class="container">
+  <header class="ledger-banner">
+    <div>
+      <span style="font-family:var(--mono); font-size:11.5px; color:var(--sheet-green); font-weight:700;">AUTOMATED LEAD CAPTURE & GOOGLE SHEETS WEBHOOK</span>
+      <h1>מערכת קליטת פניות, רישום בגליון ודיוור אוטומטי</h1>
+      <p>הדגמה חיה של קליטת פנייה מדף נחיתה, הוספת שורה ממוספרת לגליון בזמן אמת ושליחת אישור מייל אוטומטי ללקוח.</p>
+    </div>
+    <button class="tactile-btn orange" onclick="exportToCSV()">הורדת טבלת הנתונים (CSV) ←</button>
+  </header>
+
+  <div id="tabViewport"></div>
+
+  <section class="module-box">
+    <div class="module-header">
+      <h2>הורדת תבנית הקוד המלאה + סקריפט האוטומציה בשירות עצמי (100 ₪)</h2>
+      <span class="module-tag">LICENSE // MIT AS-IS</span>
+    </div>
+    <p style="font-size:13.5px; color:var(--muted);">
+      החבילה כוללת את קובץ המערכת המלא ואת קוד ה-Webhook המוכן להדבקה ב-Google Sheets. האספקה מתבצעת כהורדה חד-פעמית כמות שהיא ("As-Is").
+    </p>
+    <label class="consent-gate">
+      <input type="checkbox" id="syncConsent" onchange="toggleSyncPay()" />
+      <span>
+        <strong>אישור תנאי רכישה ופטור מאחריות:</strong> אני מצהיר/ה ומאשר/ת כי המוצר הנרכש הוא קובץ תבנית קוד גנרי המסופק כמות שהוא ("As-Is" תחת רישיון MIT) להורדה חד-פעמית בלבד, ללא שירותי אחסון, תחזוקה, הטמעה, התאמה אישית או אחריות מכל סוג שהוא.
+      </span>
+    </label>
+    <div class="locked-zone" id="syncPayZone">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="tactile-btn active" onclick="navigator.clipboard.writeText('054-6373001'); alert('המספר 054-6373001 הועתק לביט!');">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
+        <input id="syncCodeInput" placeholder="הזן קוד פתיחה (2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:180px;" />
+        <button class="tactile-btn orange" onclick="downloadSyncBundle()">2. הורדת קובץ המקור המלא</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+let ledgerRows = [
+  { id: "ROW-104", time: "09:15", name: "עמית רוזנברג", phone: "052-4419820", email: "amit@studio-il.co.il", channel: "קמפיין חיפוש", status: "DISPATCHED_OK" },
+  { id: "ROW-103", time: "09:42", name: "נועה פרידמן", phone: "054-8821034", email: "noa@architecture.co.il", channel: "דף נחיתה ראשי", status: "DISPATCHED_OK" },
+  { id: "ROW-102", time: "10:08", name: "גיא שפירא", phone: "050-7192831", email: "guy@commerce.co.il", channel: "וואטסאפ עסקי", status: "DISPATCHED_OK" }
+];
+
+function playTone(f = 600) {
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = new Ctx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(f, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(115, ctx.currentTime + 0.018);
+    g.gain.setValueAtTime(0.035, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.018);
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime + 0.019);
+  } catch(e) {}
+}
+
+function renderLiveWorkspace() {
+  const latest = ledgerRows[0];
+  document.getElementById('tabViewport').innerHTML = `
+    <div class="workspace-grid">
+      <div class="module-box">
+        <div class="module-header">
+          <h2>1. טופס קליטת פנייה בדף הנחיתה</h2>
+          <span class="module-tag">INPUT // WEBFORM</span>
+        </div>
+        <div class="field-row">
+          <label>שם מלא של הפונה</label>
+          <input id="fName" value="דניאל אברהם" />
+        </div>
+        <div class="field-row">
+          <label>טלפון ליצירת קשר</label>
+          <input id="fPhone" value="050-9182736" />
+        </div>
+        <div class="field-row">
+          <label>כתובת דואר אלקטרוני (לשליחת אישור אוטומטי)</label>
+          <input id="fEmail" value="daniel@company.co.il" />
+        </div>
+        <div class="field-row">
+          <label>ערוץ הגעה</label>
+          <select id="fChannel">
+            <option value="דף נחיתה ראשי">דף נחיתה ראשי</option>
+            <option value="קמפיין ממומן">קמפיין ממומן</option>
+            <option value="הפניה אורגנית">הפניה אורגנית</option>
+          </select>
+        </div>
+        <button class="tactile-btn active" style="width:100%; justify-content:center; padding:11px;" onclick="submitLeadRow()">שגר פנייה וסנכרן לגליון בזמן אמת ←</button>
+      </div>
+
+      <div class="module-box">
+        <div class="module-header">
+          <h2>2. גליון Google Sheets מתעדכן (${ledgerRows.length} רשומות)</h2>
+          <span class="module-tag">LIVE LEDGER</span>
+        </div>
+        <div class="sheet-grid-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>מזהה</th>
+                <th>שעה</th>
+                <th>שם מלא</th>
+                <th>טלפון</th>
+                <th>אימייל</th>
+                <th>מקור</th>
+                <th>חיווי מייל</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${ledgerRows.map(r => `
+                <tr>
+                  <td style="font-family:var(--mono); font-weight:700;">${r.id}</td>
+                  <td style="font-family:var(--mono);">${r.time}</td>
+                  <td><strong>${r.name}</strong></td>
+                  <td style="font-family:var(--mono);">${r.phone}</td>
+                  <td>${r.email}</td>
+                  <td>${r.channel}</td>
+                  <td><span class="badge-sent">${r.status}</span></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mail-dispatch-box">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-family:var(--mono); font-size:11.5px; color:var(--sheet-green);">
+            <span>SMTP AUTO-RESPONDER // TRIGGERED IMMEDIATELY</span>
+            <span>TO: ${latest.email}</span>
+          </div>
+          <strong>נושא המייל שנשלח:</strong> שלום ${latest.name}, פנייתך נקלטה במערכת<br>
+          <span style="color:var(--muted);">תוכן ההודעה: תודה שפנית אלינו דרך ${latest.channel}. הפרטים נשמרו בגליון המעקב ונציג יחזור אליך למספר ${latest.phone}.</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function submitLeadRow() {
+  playTone(680);
+  const name = document.getElementById('fName').value || 'לקוח חדש';
+  const phone = document.getElementById('fPhone').value || '050-0000000';
+  const email = document.getElementById('fEmail').value || 'client@mail.co.il';
+  const channel = document.getElementById('fChannel').value;
+  const time = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+  const nextNum = 101 + ledgerRows.length + 1;
+  ledgerRows.unshift({
+    id: 'ROW-' + nextNum,
+    time,
+    name,
+    phone,
+    email,
+    channel,
+    status: 'DISPATCHED_OK'
+  });
+  renderLiveWorkspace();
+}
+
+function renderScriptView() {
+  document.getElementById('tabViewport').innerHTML = `
+    <div class="module-box" style="margin-bottom:24px;">
+      <div class="module-header">
+        <h2>קוד ה-Webhook המוכן להדבקה ב-Google Apps Script</h2>
+        <span class="module-tag">SERVERLESS APPS SCRIPT</span>
+      </div>
+      <pre style="background:#111312; color:#86efac; padding:18px; border:1.5px solid var(--line-strong); direction:ltr; text-align:left; overflow-x:auto; font-family:var(--mono); font-size:12.5px;">
+function doPost(e) {
+  const lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Leads');
+    const data = JSON.parse(e.postData.contents);
+    sheet.appendRow([new Date(), data.name, data.phone, data.email, data.channel, 'DISPATCHED_OK']);
+    MailApp.sendEmail({
+      to: data.email,
+      subject: 'שלום ' + data.name + ' - פנייתך התקבלה',
+      htmlBody: '<p>שלום ' + data.name + ', קיבלנו את פנייתך ונחזור למספר ' + data.phone + '.</p>'
+    });
+    return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}</pre>
+    </div>
+  `;
+}
+
+function exportToCSV() {
+  playTone(620);
+  const rows = [["מזהה", "שעה", "שם מלא", "טלפון", "אימייל", "מקור", "סטטוס"], ...ledgerRows.map(r => [r.id, r.time, r.name, r.phone, r.email, r.channel, r.status])];
+  const csv = "\uFEFF" + rows.map(r => r.join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "LeadSync_Ledger_Export.csv";
+  a.click();
+}
+
+function toggleSyncPay() {
+  playTone(540);
+  const ok = document.getElementById('syncConsent')?.checked;
+  const z = document.getElementById('syncPayZone');
+  if (z) z.classList.toggle('unlocked', !!ok);
+}
+
+function downloadSyncBundle() {
+  const code = document.getElementById('syncCodeInput')?.value.trim();
+  if (code !== '2800') {
+    alert('יש להזין את קוד הפתיחה 2800 לאחר ההעברה.');
+    return;
+  }
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'LeadSync_Ledger_Template.html';
+  a.click();
+}
+
+function switchTab(t, btn) {
+  playTone(580);
+  document.querySelectorAll('.studio-bar .tactile-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (t === 'live') renderLiveWorkspace();
+  else renderScriptView();
+}
+
+function setTheme(m) {
+  playTone(500);
+  document.body.className = m === 'clean' ? '' : 'theme-' + m;
+}
+
+renderLiveWorkspace();
+</script>
+
+<footer style="background:#131413; color:#a09e96; font-size:11.5px; padding:14px 22px; border-top:1.5px solid #2d312e; text-align:center;">
+  <strong>הבהרה משפטית ופטור מאחריות (As-Is / MIT License):</strong> עמוד זה הוא תבנית קוד גנרית להדגמה בלבד. רכישת התבנית מקנה הורדה חד-פעמית של קוד המקור כמות שהוא ("As-Is"), ללא שירותי אחסון, תחזוקה, הטמעה או אחריות.
+</footer>
+</body>
+</html>
