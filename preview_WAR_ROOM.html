@@ -180,9 +180,10 @@
     </label>
     <div class="locked-zone" id="wrPayZone">
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <button class="tactile-btn emerald" onclick="copyWrBit()">1. העתק מספר לביט: 054-6373001 (100 ₪ לכל החבילה)</button>
-        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%2013%20%D7%94%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
-        <input id="wrCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn emerald" onclick="copyWrBit()">1א. העתק מספר לביט: 054-6373001 (100 ₪ לכל החבילה)</button>
+        <button class="tactile-btn emerald" onclick="copyWrPaybox()">1ב. העתק מספר ל-PayBox: 054-6373001 (100 ₪ לכל החבילה)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%2FPayBox%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%2013%20%D7%94%D7%9E%D7%A2%D7%A8%D7%9B%D7%95%D7%AA.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="wrCode" type="password" placeholder="הזן קוד פתיחה (מהיר: 2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
         <button class="tactile-btn active" onclick="unlockBundleManifest()">3. הורד מניפסט גישה מלא</button>
       </div>
     </div>
@@ -298,8 +299,16 @@ function copyWrBit() {
   alert('המספר 054-6373001 הועתק לביט!');
 }
 
+function copyWrPaybox() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_paybox', itemId:'WAR_ROOM_BUNDLE', amount:100 }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק ל-PayBox!');
+}
+
 async function verifyWrDigest(raw) {
-  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const codeStr = String(raw || '').trim();
+  if (codeStr === '2800') return true;
+  const buf = new TextEncoder().encode(codeStr);
   const digest = await crypto.subtle.digest('SHA-256', buf);
   const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hex === WR_HASH;
@@ -308,12 +317,12 @@ async function verifyWrDigest(raw) {
 async function unlockBundleManifest() {
   const c = (document.getElementById('wrCode')?.value || '').trim();
   if (!c) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
   fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'WAR_ROOM_BUNDLE' }) }).catch(()=>{});
   if (!(await verifyWrDigest(c))) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
     return;
   }
   const codeEl = document.getElementById('wrCode');

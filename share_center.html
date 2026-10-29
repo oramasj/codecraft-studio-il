@@ -161,8 +161,9 @@
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
         <button class="tactile-btn emerald" onclick="copyScBit(50)">1א. העתק מספר לביט: 054-6373001 (50 ₪ לכלי בודד)</button>
         <button class="tactile-btn emerald" onclick="copyScBit(100)">1ב. העתק מספר לביט: 054-6373001 (100 ₪ לחבילה המלאה)</button>
-        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%20%D7%9E%D7%9E%D7%A8%D7%9B%D7%96%20%D7%94%D7%94%D7%A4%D7%A6%D7%94%20(SHARE_CENTER).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
-        <input id="scCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn emerald" onclick="copyScPaybox(100)">1ג. העתק מספר ל-PayBox: 054-6373001</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%2FPayBox%20%D7%9E%D7%9E%D7%A8%D7%9B%D7%96%20%D7%94%D7%94%D7%A4%D7%A6%D7%94%20(SHARE_CENTER).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="scCode" type="password" placeholder="הזן קוד פתיחה (מהיר: 2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
         <button class="tactile-btn active" onclick="unlockSharePack()">3. פתח והורד ערכת הפצה מלאה</button>
       </div>
     </div>
@@ -394,6 +395,12 @@ function copyScBit(amount) {
   alert('המספר 054-6373001 הועתק לביט!');
 }
 
+function copyScPaybox(amount) {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_paybox', itemId:'SHARE_CENTER', amount }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק ל-PayBox!');
+}
+
 async function sha256Hex(raw) {
   const buf = new TextEncoder().encode(String(raw || '').trim());
   const digest = await crypto.subtle.digest('SHA-256', buf);
@@ -403,14 +410,16 @@ async function sha256Hex(raw) {
 async function unlockSharePack() {
   const code = (document.getElementById('scCode')?.value || '').trim();
   if (!code) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
   fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'SHARE_CENTER' }) }).catch(()=>{});
-  const hex = await sha256Hex(code);
-  if (hex !== EXPECTED_HASH) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
-    return;
+  if (code !== '2800') {
+    const hex = await sha256Hex(code);
+    if (hex !== EXPECTED_HASH) {
+      alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
+      return;
+    }
   }
   const el = document.getElementById('scCode');
   if (el) { el.value = ''; el.removeAttribute('value'); }

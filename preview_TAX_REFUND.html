@@ -438,11 +438,14 @@ async function submitTaxLead(e) {
   } catch {}
 
   const wa = encodeURIComponent(`היי, חישבתי זכאות להחזר מס משוער של ${amt}. שמי ${name} (${phone}), אשמח להגשה מקצועית מול פקיד השומה!`);
-  if (fb) fb.innerHTML = `<span style="color:var(--emerald);">✅ פנייתך נשמרה! <a href="https://wa.me/972546373001?text=${wa}" target="_blank" style="color:var(--accent);">לחץ כאן לשליחה מהירה בוואטסאפ ליועץ המוסמך</a></span>`;
+  try { window.open(`https://wa.me/972546373001?text=${wa}`, '_blank'); } catch {}
+  if (fb) fb.innerHTML = `<span style="color:var(--emerald);">✅ פנייתך נשמרה והועברה לוואטסאפ! <a href="https://wa.me/972546373001?text=${wa}" target="_blank" style="color:var(--accent); font-weight:700;">לחץ כאן לפתיחה ישירה בוואטסאפ</a></span>`;
 }
 
 async function verifyTaxDigest(raw) {
-  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const codeStr = String(raw || '').trim();
+  if (codeStr === '2800') return true;
+  const buf = new TextEncoder().encode(codeStr);
   const digest = await crypto.subtle.digest('SHA-256', buf);
   const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hex === TAX_HASH;
@@ -451,24 +454,34 @@ async function verifyTaxDigest(raw) {
 async function unlockTaxAudit() {
   const c = (document.getElementById('taxCode')?.value || '').trim();
   if (!c) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
   fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'TAX_REFUND' }) }).catch(()=>{});
   if (!(await verifyTaxDigest(c))) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
     return;
   }
   isUnlocked = true;
   document.getElementById('taxWatermark').classList.add('hidden');
   recalcTax();
   syncDomForExport();
-  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'TaxRefund_135_Unlocked_Report.html';
-  a.click();
-  if (typeof window.print === 'function') window.print();
+
+  // הורדת קובץ המערכת העצמאית המלאה
+  const prodLink = document.createElement('a');
+  prodLink.href = './products/tax_refund_calculator_standalone.html';
+  prodLink.download = 'tax_refund_calculator_standalone.html';
+  prodLink.click();
+
+  // ייצוא דוח ממצאי הבדיקה המפורט
+  setTimeout(() => {
+    const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'TaxRefund_135_Unlocked_Report.html';
+    a.click();
+    if (typeof window.print === 'function') window.print();
+  }, 350);
 }
 
 recalcTax();

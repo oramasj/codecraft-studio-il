@@ -44,36 +44,53 @@ export const PRODUCT_CATALOG = {
   'cv_booster': { file: 'preview_CV_BOOSTER.html', dir: 'previews' },
   'war_room': { file: 'preview_WAR_ROOM.html', dir: 'previews' },
   'share_center': { file: 'share_center.html', dir: 'previews' },
-  'master_index': { file: 'index.html', dir: 'previews' }
+  'master_index': { file: 'index.html', dir: 'previews' },
+  'landing_commerce': { file: 'preview_XPLACE_216353.html', dir: 'previews' },
+  'xplace_leads': { file: 'preview_XPLACE_216327.html', dir: 'previews' },
+  'xplace_auto': { file: 'preview_XPLACE_217130.html', dir: 'previews' }
 };
 
 export const PRODUCT_ALIASES = {
   'quote_invoice': 'quotecraft',
   'quote_craft': 'quotecraft',
   'quotecraft_pro': 'quotecraft',
+  'quotecraft_standalone_v1_html': 'quotecraft',
   'tax_refund': 'tax_refund',
   'taxrefund': 'tax_refund',
   'tax_audit': 'tax_refund',
+  'tax_refund_calculator_standalone_html': 'tax_refund',
   'freelance_shield': 'freelance_shield',
   'freelanceshield': 'freelance_shield',
+  'freelance_shield_calculator_standalone_html': 'freelance_shield',
   'salary_auditor': 'salary_auditor',
   'salaryauditor': 'salary_auditor',
+  'salary_auditor_standalone_html': 'salary_auditor',
   'mortgage_auditor': 'mortgage_auditor',
   'mortgageauditor': 'mortgage_auditor',
+  'mortgage_auditor_standalone_html': 'mortgage_auditor',
   'legal_shield': 'legal_shield',
   'legalshield': 'legal_shield',
+  'legal_shield_generator_standalone_html': 'legal_shield',
   'whatsapp_minisite': 'whatsapp_minisite',
   'whatsappminisite': 'whatsapp_minisite',
+  'whatsapp_minisite_builder_standalone_html': 'whatsapp_minisite',
   'sheets_webhook': 'sheets_webhook',
   'sheetswebhook': 'sheets_webhook',
   'google_sheets_lead_webhook': 'sheets_webhook',
+  'google_sheets_lead_webhook_js': 'sheets_webhook',
   'clinic_booking': 'clinic_booking',
   'realestate_pro': 'realestate_pro',
   'cv_booster': 'cv_booster',
   'war_room_bundle': 'war_room',
   'war_room': 'war_room',
   'share_center': 'share_center',
-  'master_index': 'master_index'
+  'master_index': 'master_index',
+  'landing_commerce': 'landing_commerce',
+  'landing': 'landing_commerce',
+  'landing_page': 'landing_commerce',
+  'xplace_216353': 'landing_commerce',
+  'xplace_216327': 'sheets_webhook',
+  'xplace_217130': 'realestate_pro'
 };
 
 export function resolveProductKey(rawKey) {
@@ -183,6 +200,20 @@ export function matchServiceTemplate(description = '', clientName = '') {
       key: 'realestate_pro',
       title: 'תבנית אתר למשרד תיווך ונדל״ן עם מחשבון משכנתא',
       previewSnippet: '✔ קטלוג נכסים יוקרתי למכירה ולהשכרה<br>✔ מחשבון משכנתא ותשואת שכירות אוטומטי'
+    };
+  }
+  if (/נחיתה|דף נחיתה|landing|תדמית|showcase|חנות|סל קניות|e-commerce|איקומרס/.test(text)) {
+    return {
+      key: 'landing_commerce',
+      title: 'קטלוג מסחרי + 2 דפי נחיתה לעסקים ומכירות',
+      previewSnippet: '✔ קטלוג מוצרים אינטראקטיבי עם סל הזמנות מהיר<br>✔ זוג דפי נחיתה מעוצבים למבצעי השקה ופגישות<br>✔ אספקה מיידית בקובץ קוד עצמאי As-Is ללא דמי מנוי'
+    };
+  }
+  if (/קורות חיים|cv|resume|קורות-חיים|ראיון עבודה|ats/.test(text)) {
+    return {
+      key: 'cv_booster',
+      title: 'משדרג קורות חיים (CV) ומכתב מקדים מותאם מערכות גיוס ATS',
+      previewSnippet: '✔ בדיקת ציון התאמה למערכות סינון ATS<br>✔ עיצוב אוטומטי של קורות חיים בפורמט מנהלים נקי ל-PDF<br>✔ מכתב מקדים מנוסח אישית ללא תשלום מנוי'
     };
   }
 
@@ -379,6 +410,42 @@ export function createServer(options = {}) {
         totalEstimatedNIS,
         leads
       });
+    }
+
+    // 2ג. ייצוא פניות לקובץ CSV (GET /api/orders/export.csv, /api/orders.csv)
+    if (req.method === 'GET' && (url === '/api/orders/export.csv' || url === '/api/orders.csv')) {
+      const orders = loadJson(ordersFile, []);
+      const headers = ['מזהה הזמנה', 'תאריך', 'שם לקוח', 'טלפון', 'קטגוריה', 'שירות', 'תיאור משימה', 'תקציב (₪)', 'שווי משוער (₪)', 'תבנית שהותאמה', 'קישור לתצוגה'];
+      const formatCsvField = (val) => {
+        const str = String(val ?? '')
+          .replace(/&quot;/g, '"')
+          .replace(/&amp;/g, '&')
+          .replace(/&#39;/g, "'")
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>');
+        return `"${str.replace(/"/g, '""')}"`;
+      };
+      const rows = orders.map(o => [
+        o.id,
+        o.receivedAt,
+        formatCsvField(o.name),
+        formatCsvField(o.phone),
+        o.category || 'custom_order',
+        o.service || '',
+        formatCsvField(o.taskDescription),
+        o.budgetNIS || 100,
+        o.estimatedValue || '',
+        o.matchedTemplate || '',
+        o.previewUrl || ''
+      ]);
+      const csv = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      res.writeHead(200, {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': 'attachment; filename="inbound_orders.csv"',
+        'Access-Control-Allow-Origin': '*'
+      });
+      res.end(csv);
+      return;
     }
 
     // 3. הגשת מסך הבקרה היומי מתיקיית הפרויקט

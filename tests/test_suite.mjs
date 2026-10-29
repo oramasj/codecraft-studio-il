@@ -375,6 +375,68 @@ test('Verification 3: Server API, Security, Isolated Storage & Concurrency', asy
     });
     assert.equal(payboxEvRes.status, 200);
 
+    // 16. CSV Export of Inbound Orders with UTF-8 BOM & Headers
+    const csvRes = await fetch(`${BASE_URL}/api/orders/export.csv`);
+    assert.equal(csvRes.status, 200);
+    assert.ok(csvRes.headers.get('content-type')?.includes('text/csv'));
+    assert.ok(csvRes.headers.get('content-disposition')?.includes('attachment'));
+    const csvBuf = Buffer.from(await csvRes.arrayBuffer());
+    assert.equal(csvBuf[0], 0xEF, 'CSV must start with UTF-8 BOM byte 1');
+    assert.equal(csvBuf[1], 0xBB, 'CSV must start with UTF-8 BOM byte 2');
+    assert.equal(csvBuf[2], 0xBF, 'CSV must start with UTF-8 BOM byte 3');
+    const csvText = csvBuf.toString('utf8');
+    assert.ok(csvText.includes('מזהה הזמנה,תאריך,שם לקוח,טלפון'), 'CSV must contain standard Hebrew headers');
+    assert.ok(csvText.includes('דוד ישראלי'), 'CSV must contain existing orders');
+
+    // Also verify alias /api/orders.csv
+    const csvAliasRes = await fetch(`${BASE_URL}/api/orders.csv`);
+    assert.equal(csvAliasRes.status, 200);
+
+    // 17. Service Arbitrage: Advanced Template Matching
+    const commerceOrderRes = await fetch(`${BASE_URL}/api/order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'שירה מעצבת',
+        phone: '050-1122334',
+        taskDescription: 'צריכה דף נחיתה מהיר עם קטלוג מכירות',
+        budgetNIS: 100
+      })
+    });
+    assert.equal(commerceOrderRes.status, 200);
+    const commJson = await commerceOrderRes.json();
+    assert.equal(commJson.matchedTemplate, 'landing_commerce');
+
+    const cvOrderRes = await fetch(`${BASE_URL}/api/order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'רועי מהנדס',
+        phone: '052-9988776',
+        taskDescription: 'שדרוג קורות חיים והתאמה למערכות סינון ATS',
+        budgetNIS: 100
+      })
+    });
+    assert.equal(cvOrderRes.status, 200);
+    const cvJson = await cvOrderRes.json();
+    assert.equal(cvJson.matchedTemplate, 'cv_booster');
+
+    // 18. Unicode & Quote Escaping in Orders and CSV
+    const specialOrderRes = await fetch(`${BASE_URL}/api/order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'עו"ד "יעקב" כהן',
+        phone: '054-0001122',
+        taskDescription: 'מערכת "חכמה" עם פסיקים, ומירכאות',
+        budgetNIS: 100
+      })
+    });
+    assert.equal(specialOrderRes.status, 200);
+    const updatedCsvRes = await fetch(`${BASE_URL}/api/orders/export.csv`);
+    const updatedCsv = await updatedCsvRes.text();
+    assert.ok(updatedCsv.includes('""יעקב""'), 'Quotes inside fields must be escaped with double quotes in CSV');
+
   } finally {
     await new Promise((resolve) => server.close(resolve));
     // Cleanup temporary test directory

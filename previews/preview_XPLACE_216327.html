@@ -306,9 +306,10 @@
     </label>
     <div class="locked-zone" id="syncPayZone">
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <button class="tactile-btn active" onclick="copySyncBit()">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
-        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%AA%D7%91%D7%A0%D7%99%D7%AA%20LeadSync.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
-        <input id="syncCodeInput" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn active" onclick="copySyncBit()">1א. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
+        <button class="tactile-btn emerald" onclick="copySyncPaybox()">1ב. העתק מספר ל-PayBox (054-6373001)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%2FPayBox%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%AA%D7%91%D7%A0%D7%99%D7%AA%20LeadSync.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="syncCodeInput" type="password" placeholder="קוד פתיחה (מהיר: 2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
         <button class="tactile-btn orange" onclick="downloadSyncBundle()">3. הורדת קובץ המקור המלא</button>
       </div>
     </div>
@@ -549,8 +550,17 @@ function toggleSyncPay() {
   if (z) z.classList.toggle('unlocked', !!ok);
 }
 
+function copySyncPaybox() {
+  playTone(660);
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_paybox', itemId:'sheets_webhook' }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק עבור PayBox! העבר סכום ושלח הודעת וואטסאפ לקבלת קוד פתיחה (קוד מהיר: 2800).');
+}
+
 async function verifySyncUnlockDigest(raw) {
-  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const codeStr = String(raw || '').trim();
+  if (codeStr === '2800') return true;
+  const buf = new TextEncoder().encode(codeStr);
   const digest = await crypto.subtle.digest('SHA-256', buf);
   const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hex === '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
@@ -559,12 +569,12 @@ async function verifySyncUnlockDigest(raw) {
 async function downloadSyncBundle() {
   const code = (document.getElementById('syncCodeInput')?.value || '').trim();
   if (!code) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
-  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'XPLACE_216327' }) }).catch(()=>{});
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'sheets_webhook' }) }).catch(()=>{});
   if (!(await verifySyncUnlockDigest(code))) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
     return;
   }
   isUnlocked = true;
@@ -572,11 +582,21 @@ async function downloadSyncBundle() {
   if (currentTab === 'script') renderScriptView();
   else renderLiveWorkspace();
   syncDomForExport();
-  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'LeadSync_Ledger_Template.html';
-  a.click();
+
+  // הורדת קובץ הסקריפט העצמאי
+  const scriptLink = document.createElement('a');
+  scriptLink.href = './products/google_sheets_lead_webhook.js';
+  scriptLink.download = 'google_sheets_lead_webhook.js';
+  scriptLink.click();
+
+  // הורדת תבנית דף הנחיתה והניהול
+  setTimeout(() => {
+    const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'LeadSync_Ledger_Template.html';
+    a.click();
+  }, 350);
 }
 
 function switchTab(t, btn) {

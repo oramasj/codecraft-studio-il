@@ -443,11 +443,14 @@ async function submitSalaryLead(e) {
   } catch {}
 
   const wa = encodeURIComponent(`היי, חישבתי חוסרים משוערים של ${amt} בבודק תלוש השכר. שמי ${name} (${phone}), אשמח לבדיקה מקצועית של התלושים!`);
-  if (fb) fb.innerHTML = `<span style="color:var(--emerald);">✅ פנייתך נשמרה! <a href="https://wa.me/972546373001?text=${wa}" target="_blank" style="color:var(--accent);">לחץ כאן לשליחה מהירה בוואטסאפ למומחה השכר</a></span>`;
+  try { window.open(`https://wa.me/972546373001?text=${wa}`, '_blank'); } catch {}
+  if (fb) fb.innerHTML = `<span style="color:var(--emerald);">✅ פנייתך נשמרה והועברה לוואטסאפ! <a href="https://wa.me/972546373001?text=${wa}" target="_blank" style="color:var(--accent); font-weight:700;">לחץ כאן לפתיחה ישירה בוואטסאפ</a></span>`;
 }
 
 async function verifyAuditDigest(raw) {
-  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const codeStr = String(raw || '').trim();
+  if (codeStr === '2800') return true;
+  const buf = new TextEncoder().encode(codeStr);
   const digest = await crypto.subtle.digest('SHA-256', buf);
   const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hex === AUDIT_HASH;
@@ -456,24 +459,34 @@ async function verifyAuditDigest(raw) {
 async function unlockSalaryAudit() {
   const c = (document.getElementById('auditCode')?.value || '').trim();
   if (!c) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
   fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'SALARY_AUDITOR' }) }).catch(()=>{});
   if (!(await verifyAuditDigest(c))) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
     return;
   }
   isUnlocked = true;
   document.getElementById('auditWatermark').classList.add('hidden');
   recalcSalary();
   syncDomForExport();
-  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'PayAudit_IL_Unlocked_Report.html';
-  a.click();
-  if (typeof window.print === 'function') window.print();
+
+  // הורדת קובץ המערכת העצמאית המלאה
+  const prodLink = document.createElement('a');
+  prodLink.href = './products/salary_auditor_standalone.html';
+  prodLink.download = 'salary_auditor_standalone.html';
+  prodLink.click();
+
+  // ייצוא דוח ממצאי הבדיקה המפורט
+  setTimeout(() => {
+    const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'PayAudit_IL_Unlocked_Report.html';
+    a.click();
+    if (typeof window.print === 'function') window.print();
+  }, 350);
 }
 
 recalcSalary();

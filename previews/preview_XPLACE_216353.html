@@ -308,9 +308,10 @@
     </label>
     <div class="locked-zone" id="commPayZone">
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <button class="tactile-btn olive" onclick="copyCommBit()">1. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
-        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A7%D7%98%D7%9C%D7%95%D7%92%20%D7%95%D7%93%D7%A4%D7%99%20%D7%94%D7%A0%D7%97%D7%99%D7%AA%D7%94.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
-        <input id="commCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn olive" onclick="copyCommBit()">1א. העתקת מספר לביט: 054-6373001 (100 ₪)</button>
+        <button class="tactile-btn olive" onclick="copyCommPaybox()">1ב. העתקת מספר ל-PayBox: 054-6373001 (100 ₪)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20100%20%E2%82%AA%20%D7%91%D7%91%D7%99%D7%98%2FPayBox%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A7%D7%98%D7%9C%D7%95%D7%92%20%D7%95%D7%93%D7%A4%D7%99%20%D7%94%D7%A0%D7%97%D7%99%D7%AA%D7%94.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94." target="_blank">2. שליחת אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="commCode" type="password" placeholder="הזן קוד פתיחה (מהיר: 2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
         <button class="tactile-btn active" onclick="downloadCommercePack()">3. הורדת קובץ המקור המלא</button>
       </div>
     </div>
@@ -322,6 +323,12 @@ function copyCommBit() {
   navigator.clipboard.writeText('054-6373001');
   fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'XPLACE_216353', amount:100 }) }).catch(()=>{});
   alert('המספר 054-6373001 הועתק לביט!');
+}
+
+function copyCommPaybox() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_paybox', itemId:'XPLACE_216353', amount:100 }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק ל-PayBox!');
 }
 
 const catalogItems = [
@@ -459,7 +466,9 @@ function toggleCommUnlock() {
 }
 
 async function verifyCommUnlockDigest(raw) {
-  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const codeStr = String(raw || '').trim();
+  if (codeStr === '2800') return true;
+  const buf = new TextEncoder().encode(codeStr);
   const digest = await crypto.subtle.digest('SHA-256', buf);
   const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hex === '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af';
@@ -468,12 +477,12 @@ async function verifyCommUnlockDigest(raw) {
 async function downloadCommercePack() {
   const code = (document.getElementById('commCode')?.value || '').trim();
   if (!code) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
   fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'XPLACE_216353' }) }).catch(()=>{});
   if (!(await verifyCommUnlockDigest(code))) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    alert('קוד פתיחה שגוי או חסר. לאחר העברת 100 ₪ בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
     return;
   }
   const el = document.getElementById('commCode');

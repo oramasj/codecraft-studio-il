@@ -194,8 +194,9 @@
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
         <button class="tactile-btn emerald" onclick="copyLegalBit(50)">1א. העתק מספר לביט — 50 ₪ (פתיחת המסמך ל-PDF)</button>
         <button class="tactile-btn emerald" onclick="copyLegalBit(100)">1ב. העתק מספר לביט — 100 ₪ (הורדת מחולל 4 המכתבים המלא)</button>
-        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%9E%D7%97%D7%95%D7%9C%D7%9C%20%D7%9E%D7%9B%D7%AA%D7%91%D7%99%20%D7%94%D7%91%D7%99%D7%98%D7%95%D7%9C%20(LEGAL_SHIELD).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
-        <input id="legalCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn emerald" onclick="copyLegalPaybox()">📱 העתק מספר ל-PayBox (054-6373001)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%2FPayBox%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%9E%D7%97%D7%95%D7%9C%D7%9C%20%D7%9E%D7%9B%D7%AA%D7%91%D7%99%20%D7%94%D7%91%D7%99%D7%98%D7%95%D7%9C%20(LEGAL_SHIELD).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="legalCode" type="password" placeholder="קוד פתיחה (מהיר: 2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
         <button class="tactile-btn active" onclick="unlockLegalDoc()">3. פתח מסמך מלא והורד קובץ</button>
       </div>
     </div>
@@ -296,11 +297,19 @@ function renderLegalDoc() {
 function copyLegalBit(amount) {
   navigator.clipboard.writeText('054-6373001');
   fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'LEGAL_SHIELD', amount }) }).catch(()=>{});
-  alert('המספר 054-6373001 הועתק! העבר כעת ' + amount + ' ₪ בביט ושלח הודעת וואטסאפ לקבלת קוד הפתיחה.');
+  alert('המספר 054-6373001 הועתק! העבר כעת ' + amount + ' ₪ בביט ושלח הודעת וואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
+}
+
+function copyLegalPaybox() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_paybox', itemId:'LEGAL_SHIELD' }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק עבור PayBox! העבר סכום ושלח הודעת וואטסאפ לקבלת קוד פתיחה (קוד מהיר: 2800).');
 }
 
 async function verifyLegalDigest(raw) {
-  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const codeStr = String(raw || '').trim();
+  if (codeStr === '2800') return true;
+  const buf = new TextEncoder().encode(codeStr);
   const digest = await crypto.subtle.digest('SHA-256', buf);
   const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hex === LEGAL_HASH;
@@ -309,24 +318,34 @@ async function verifyLegalDigest(raw) {
 async function unlockLegalDoc() {
   const c = (document.getElementById('legalCode')?.value || '').trim();
   if (!c) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
   fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'LEGAL_SHIELD' }) }).catch(()=>{});
   if (!(await verifyLegalDigest(c))) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
     return;
   }
   isUnlocked = true;
   document.getElementById('legalWatermark').classList.add('hidden');
   renderLegalDoc();
   syncDomForExport();
-  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'ConsumerShield_IL_Generator.html';
-  a.click();
-  if (typeof window.print === 'function') window.print();
+
+  // הורדת קובץ המערכת העצמאית המלאה
+  const prodLink = document.createElement('a');
+  prodLink.href = './products/legal_shield_generator_standalone.html';
+  prodLink.download = 'legal_shield_generator_standalone.html';
+  prodLink.click();
+
+  // ייצוא דוח ממצאי הבדיקה המפורט
+  setTimeout(() => {
+    const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'ConsumerShield_IL_Generator.html';
+    a.click();
+    if (typeof window.print === 'function') window.print();
+  }, 350);
 }
 
 renderLegalDoc();

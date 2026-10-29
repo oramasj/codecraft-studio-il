@@ -169,8 +169,9 @@
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
         <button class="tactile-btn emerald" onclick="copyMsBit(50)">1א. העתק מספר לביט — 50 ₪ (הורדת המיני-סייט המוכן שלך)</button>
         <button class="tactile-btn emerald" onclick="copyMsBit(100)">1ב. העתק מספר לביט — 100 ₪ (הורדת מחולל המיני-סייטים ללא הגבלה)</button>
-        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%91%D7%95%D7%A0%D7%94%20%D7%94%D7%9E%D7%99%D7%A0%D7%99-%D7%A1%D7%99%D7%99%D7%98%20(WHATSAPP_MINISITE).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
-        <input id="msCode" type="password" placeholder="הזן קוד פתיחה לאחר תשלום" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
+        <button class="tactile-btn emerald" onclick="copyMsPaybox()">📱 העתק מספר ל-PayBox (054-6373001)</button>
+        <a class="tactile-btn" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%99%D7%A9%D7%A8%D7%AA%D7%99%20%D7%AA%D7%A0%D7%90%D7%99%20As-Is%20%D7%95%D7%94%D7%A2%D7%91%D7%A8%D7%AA%D7%99%20%D7%91%D7%91%D7%99%D7%98%2FPayBox%20%D7%A2%D7%91%D7%95%D7%A8%20%D7%91%D7%95%D7%A0%D7%94%20%D7%94%D7%9E%D7%99%D7%A0%D7%99-%D7%A1%D7%99%D7%99%D7%98%20(WHATSAPP_MINISITE).%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%95%D7%93%20%D7%A4%D7%AA%D7%99%D7%97%D7%94!" target="_blank">2. שלח אסמכתא בוואטסאפ לקבלת קוד</a>
+        <input id="msCode" type="password" placeholder="קוד פתיחה (מהיר: 2800)" style="padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:195px;" />
         <button class="tactile-btn active" onclick="unlockAndExportMiniSite()">3. הורד קובץ מיני-סייט מוכן</button>
       </div>
     </div>
@@ -289,11 +290,19 @@ function renderMiniSite() {
 function copyMsBit(amount) {
   navigator.clipboard.writeText('054-6373001');
   fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId:'WHATSAPP_MINISITE', amount }) }).catch(()=>{});
-  alert('המספר 054-6373001 הועתק! העבר כעת ' + amount + ' ₪ בביט ושלח הודעת וואטסאפ לקבלת קוד הפתיחה.');
+  alert('המספר 054-6373001 הועתק! העבר כעת ' + amount + ' ₪ בביט ושלח הודעת וואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
+}
+
+function copyMsPaybox() {
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_paybox', itemId:'WHATSAPP_MINISITE' }) }).catch(()=>{});
+  alert('המספר 054-6373001 הועתק עבור PayBox! העבר סכום ושלח הודעת וואטסאפ לקבלת קוד פתיחה (קוד מהיר: 2800).');
 }
 
 async function verifyMsDigest(raw) {
-  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const codeStr = String(raw || '').trim();
+  if (codeStr === '2800') return true;
+  const buf = new TextEncoder().encode(codeStr);
   const digest = await crypto.subtle.digest('SHA-256', buf);
   const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hex === MS_HASH;
@@ -302,18 +311,25 @@ async function verifyMsDigest(raw) {
 async function unlockAndExportMiniSite() {
   const c = (document.getElementById('msCode')?.value || '').trim();
   if (!c) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
   fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code: c, itemId: 'WHATSAPP_MINISITE' }) }).catch(()=>{});
   if (!(await verifyMsDigest(c))) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
     return;
   }
   isUnlocked = true;
   document.body.setAttribute('data-unlocked', 'true');
   renderMiniSite();
   syncDomForExport();
+
+  // הורדת קובץ המחולל המלא
+  const prodLink = document.createElement('a');
+  prodLink.href = './products/whatsapp_minisite_builder_standalone.html';
+  prodLink.download = 'whatsapp_minisite_builder_standalone.html';
+  prodLink.click();
+
   const bizTitle = escapeHtml(document.getElementById('msBizName').value.trim() || 'העסק שלי');
   const cardMarkup = buildMiniSiteInnerMarkup(true);
   const standaloneHtml = `<!DOCTYPE html>

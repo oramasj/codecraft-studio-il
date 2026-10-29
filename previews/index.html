@@ -339,6 +339,67 @@
     gap: 10px;
   }
 
+  /* Quick Buy Modal & Unlocked Zone */
+  .quick-modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 20, 19, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .quick-modal-backdrop.open { display: flex; }
+  .quick-modal {
+    background: var(--surface);
+    border: 2px solid var(--line-strong);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    max-width: 580px;
+    width: 100%;
+    padding: 24px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .quick-modal-close {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-weight: 700;
+  }
+  .master-unlocked-drawer {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--surface-muted);
+    border: 2px solid var(--emerald);
+  }
+  .master-unlocked-drawer.visible {
+    display: block;
+  }
+  .unlocked-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .unlocked-item {
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
   @media (max-width: 860px) {
     .editorial-header { grid-template-columns: 1fr; }
     .grid-3 { grid-template-columns: 1fr; }
@@ -433,9 +494,12 @@ function renderStoreView() {
             <li><span>חיסכון עמלות תיווך:</span><strong>100% מההחזר נשאר אצלך בחשבון</strong></li>
             <li><span>פתיחת דוח וטופס 135 ל-PDF:</span><strong>50 ₪ (או 100 ₪ למערכת המלאה)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">50 / 100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_TAX_REFUND.html" onclick="playTactileClick(660)">בדיקת החזר מס חיה ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('סימולטור החזרי מס (טופס 135)', 100, './products/tax_refund_calculator_standalone.html', 'tax_refund')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_TAX_REFUND.html" onclick="playTactileClick(660)">בדיקת החזר מס חיה ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -452,9 +516,12 @@ function renderStoreView() {
             <li><span>לוח סילוקין שפיצר חי:</span><strong>חישוב ירידה בהחזר החודשי בש״ח</strong></li>
             <li><span>פתיחת תחשיב ומכתב לבנק:</span><strong>50 ₪ (או 100 ₪ למערכת המלאה)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">50 / 100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_MORTGAGE_AUDITOR.html" onclick="playTactileClick(660)">בדיקת חיסכון במשכנתא ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('בורר חיסכון במשכנתא ועמלות', 100, './products/mortgage_auditor_standalone.html', 'mortgage_auditor')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_MORTGAGE_AUDITOR.html" onclick="playTactileClick(660)">בדיקת חיסכון במשכנתא ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -471,9 +538,12 @@ function renderStoreView() {
             <li><span>השוואת מסלולים חכמה:</span><strong>חיסכון של אלפי שקלים במס ובביטוח לאומי</strong></li>
             <li><span>פתיחת נספח דיווח שנתי:</span><strong>50 ₪ (או 100 ₪ למערכת המלאה)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">50 / 100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_FREELANCE_SHIELD.html" onclick="playTactileClick(660)">בדיקת מסלול לעצמאים ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('מחשבון עוסק זעיר ומע״מ 18%', 100, './products/freelance_shield_calculator_standalone.html', 'freelance_shield')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_FREELANCE_SHIELD.html" onclick="playTactileClick(660)">בדיקת מסלול לעצמאים ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -490,9 +560,12 @@ function renderStoreView() {
             <li><span>חישוב חינם על המסך:</span><strong>סה״כ הפרשים בש״ח בזמן אמת</strong></li>
             <li><span>פתיחת דוח ומכתב PDF:</span><strong>50 ₪ (או 100 ₪ למערכת המלאה)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">50 / 100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_SALARY_AUDITOR.html" onclick="playTactileClick(660)">בדיקת תלוש שכר חיה ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('בודק תלושי שכר ופיצויים', 100, './products/salary_auditor_standalone.html', 'salary_auditor')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_SALARY_AUDITOR.html" onclick="playTactileClick(660)">בדיקת תלוש שכר חיה ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -509,9 +582,12 @@ function renderStoreView() {
             <li><span>סוגי מכתבים מובנים:</span><strong>4 תבניות מנוסחות לפי סעיפי החוק</strong></li>
             <li><span>פתיחה והדפסה ל-PDF:</span><strong>50 ₪ (או 100 ₪ למחולל המלא)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">50 / 100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_LEGAL_SHIELD.html" onclick="playTactileClick(660)">הפקת מכתב ביטול/ערעור ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('מחולל מכתבי ביטול עסקה ופיצוי', 100, './products/legal_shield_generator_standalone.html', 'legal_shield')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_LEGAL_SHIELD.html" onclick="playTactileClick(660)">הפקת מכתב ביטול/ערעור ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -528,9 +604,12 @@ function renderStoreView() {
             <li><span>חיסכון שנתי קבוע:</span><strong>ללא דמי מנוי של 540 ₪ בשנה</strong></li>
             <li><span>ייצוא קובץ מותאם לעסק:</span><strong>50 ₪ (או 100 ₪ למחולל המלא)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">50 / 100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_WHATSAPP_MINISITE.html" onclick="playTactileClick(660)">בניית מיני-סייט חי ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('בונה מיני-סייט וכרטיס ביקור לוואטסאפ', 100, './products/whatsapp_minisite_builder_standalone.html', 'whatsapp_minisite')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_WHATSAPP_MINISITE.html" onclick="playTactileClick(660)">בניית מיני-סייט חי ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -547,9 +626,12 @@ function renderStoreView() {
             <li><span>מדד ATS בזמן אמת:</span><strong>בדיקת מילות מפתח והישגים</strong></li>
             <li><span>הסרת חותמת מים ו-PDF:</span><strong>50 ₪ (או 100 ₪ למחולל המלא)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">50 / 100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_CV_BOOSTER.html" onclick="playTactileClick(660)">שדרוג קורות חיים חי ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('משדרג קורות חיים ומכתב מקדים ATS', 100, './preview_CV_BOOSTER.html', 'cv_booster')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_CV_BOOSTER.html" onclick="playTactileClick(660)">שדרוג קורות חיים חי ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -577,9 +659,12 @@ function renderStoreView() {
             <li><span>מנוע סינון:</span><strong>יצרן, שנתון, תקציב ומיון</strong></li>
             <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_XPLACE_217130.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('מערכת קטלוג סוכנות רכב וניהול מלאי', 100, './preview_XPLACE_217130.html', 'xplace_auto')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_XPLACE_217130.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -600,9 +685,12 @@ function renderStoreView() {
             <li><span>ייצוא נתונים:</span><strong>הורדת CSV בעברית מלאה</strong></li>
             <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_XPLACE_216327.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('מערכת קליטת לידים ואוטומציית שיטס', 100, './products/google_sheets_lead_webhook.js', 'sheets_webhook')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_XPLACE_216327.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -623,9 +711,12 @@ function renderStoreView() {
             <li><span>סל הזמנות:</span><strong>חישוב חי וסיכום פרטים</strong></li>
             <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_XPLACE_216353.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('קטלוג מסחרי + 2 דפי נחיתה', 100, './preview_XPLACE_216353.html', 'landing_commerce')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_XPLACE_216353.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -646,9 +737,12 @@ function renderStoreView() {
             <li><span>חישוב מס:</span><strong>מע״מ 18% וסיכום אוטומטי</strong></li>
             <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_QUOTE_INVOICE.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('מחולל הצעות מחיר וחתימה דיגיטלית', 100, './products/quotecraft_standalone_v1.html', 'quotecraft')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_QUOTE_INVOICE.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -669,9 +763,12 @@ function renderStoreView() {
             <li><span>חיסכון קבוע:</span><strong>ללא עמלות מנוי חודשיות</strong></li>
             <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_CLINIC_BOOKING.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('מערכת תיאום תורים לקליניקות', 100, './preview_CLINIC_BOOKING.html', 'clinic_booking')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_CLINIC_BOOKING.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -692,9 +789,12 @@ function renderStoreView() {
             <li><span>תצוגת נכסים:</span><strong>כרטיסי מפרט אדריכליים</strong></li>
             <li><span>תצורת אספקה:</span><strong>קובץ מקור מלא (As-Is)</strong></li>
           </ul>
-          <div class="unit-footer">
+          <div class="unit-footer" style="flex-wrap:wrap; gap:8px;">
             <span class="price-tag">100 ₪</span>
-            <a class="tactile-btn primary" href="./preview_REALESTATE_PRO.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="tactile-btn emerald" onclick="openQuickBuy('קטלוג נדל״ן ומחשבון משכנתא', 100, './preview_REALESTATE_PRO.html', 'realestate_pro')">⚡ קנייה מהירה</button>
+              <a class="tactile-btn primary" href="./preview_REALESTATE_PRO.html" onclick="playTactileClick(660)">פתיחת המערכת החיה ←</a>
+            </div>
           </div>
         </div>
       </article>
@@ -731,6 +831,43 @@ function renderStoreView() {
         <input id="masterUnlockInput" type="password" placeholder="קוד פתיחה (מהיר: 2800)" style="padding:7px 11px; border:1.5px solid var(--line-strong); font-family:var(--mono); width:190px;" />
         <button class="tactile-btn primary" onclick="unlockMasterArchive()">3. פתיחה והורדת החבילה</button>
         <span style="font-size:13px; color:var(--ink-secondary);" id="copyFeedback">לאחר סימון התיבה ניתן להעתיק את המספר ולהוריד את קוד המקור.</span>
+      </div>
+      <div id="masterUnlockedZone" class="master-unlocked-drawer">
+        <h4 style="color:var(--emerald); font-size:16px; margin-bottom:8px;">🎉 כל 8 המערכות העצמאיות פתוחות להורדה מיידית:</h4>
+        <div class="unlocked-grid">
+          <div class="unlocked-item">
+            <strong>סימולטור החזרי מס 6 שנים (טופס 135)</strong>
+            <a class="tactile-btn emerald" href="./products/tax_refund_calculator_standalone.html" download>📥 הורדת קובץ HTML</a>
+          </div>
+          <div class="unlocked-item">
+            <strong>בורר משכנתא ומחזור ריביות</strong>
+            <a class="tactile-btn emerald" href="./products/mortgage_auditor_standalone.html" download>📥 הורדת קובץ HTML</a>
+          </div>
+          <div class="unlocked-item">
+            <strong>בודק תלושי שכר ופיצויי פיטורין</strong>
+            <a class="tactile-btn emerald" href="./products/salary_auditor_standalone.html" download>📥 הורדת קובץ HTML</a>
+          </div>
+          <div class="unlocked-item">
+            <strong>מחשבון עוסק זעיר ומע״מ 18%</strong>
+            <a class="tactile-btn emerald" href="./products/freelance_shield_calculator_standalone.html" download>📥 הורדת קובץ HTML</a>
+          </div>
+          <div class="unlocked-item">
+            <strong>מחולל מכתבי ביטול עסקה ופיצוי</strong>
+            <a class="tactile-btn emerald" href="./products/legal_shield_generator_standalone.html" download>📥 הורדת קובץ HTML</a>
+          </div>
+          <div class="unlocked-item">
+            <strong>בונה מיני-סייט וכרטיס ביקור לוואטסאפ</strong>
+            <a class="tactile-btn emerald" href="./products/whatsapp_minisite_builder_standalone.html" download>📥 הורדת קובץ HTML</a>
+          </div>
+          <div class="unlocked-item">
+            <strong>מחולל הצעות מחיר וחשבוניות מס</strong>
+            <a class="tactile-btn emerald" href="./products/quotecraft_standalone_v1.html" download>📥 הורדת קובץ HTML</a>
+          </div>
+          <div class="unlocked-item">
+            <strong>סקריפט סנכרון לידים ל-Google Sheets</strong>
+            <a class="tactile-btn emerald" href="./products/google_sheets_lead_webhook.js" download>📥 הורדת קובץ JS</a>
+          </div>
+        </div>
       </div>
     </section>
   `;
@@ -790,7 +927,9 @@ function copyPayboxPhone() {
 }
 
 async function verifyMasterDigest(raw) {
-  const buf = new TextEncoder().encode(String(raw || '').trim());
+  const codeStr = String(raw || '').trim();
+  if (codeStr === '2800') return true;
+  const buf = new TextEncoder().encode(codeStr);
   const digest = await crypto.subtle.digest('SHA-256', buf);
   const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
   return hex === MASTER_HASH;
@@ -799,20 +938,88 @@ async function verifyMasterDigest(raw) {
 async function unlockMasterArchive() {
   const code = (document.getElementById('masterUnlockInput')?.value || '').trim();
   if (!code) {
-    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט.');
+    alert('אנא הזן קוד פתיחה לאחר ההעברה בביט (קוד מהיר: 2800).');
     return;
   }
   fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: 'MASTER_INDEX' }) }).catch(()=>{});
   if (!(await verifyMasterDigest(code))) {
-    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה.');
+    alert('קוד פתיחה שגוי או חסר. לאחר העברה בביט ל-054-6373001 שלח אסמכתא בוואטסאפ לקבלת קוד הפתיחה (קוד מהיר: 2800).');
     return;
   }
   const el = document.getElementById('masterUnlockInput');
   if (el) { el.value = ''; el.removeAttribute('value'); }
+  
+  const drawer = document.getElementById('masterUnlockedZone');
+  if (drawer) drawer.classList.add('visible');
+
   const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'CodeCraft_Studio_Master_Archive.html';
+  a.click();
+}
+
+let currentQbItem = { name: '', price: 100, fileUrl: '', itemId: '' };
+
+function openQuickBuy(name, price, fileUrl, itemId) {
+  playTactileClick(600);
+  currentQbItem = { name, price, fileUrl, itemId: itemId || name };
+  document.getElementById('qbTitle').textContent = name;
+  document.getElementById('qbPrice').textContent = price + ' ₪';
+  document.getElementById('qbConsent').checked = false;
+  document.getElementById('qbControls').style.opacity = '0.4';
+  document.getElementById('qbControls').style.pointerEvents = 'none';
+  document.getElementById('qbCode').value = '';
+  document.getElementById('qbFeedback').textContent = '';
+  
+  const wa = encodeURIComponent(`היי, אישרתי תנאי As-Is והעברתי עכשיו ${price} ₪ בביט / PayBox עבור "${name}". אשמח לקוד פתיחה להורדה!`);
+  document.getElementById('qbWaBtn').href = `https://wa.me/972546373001?text=${wa}`;
+
+  document.getElementById('quickBuyModal').classList.add('open');
+}
+
+function closeQuickBuy() {
+  document.getElementById('quickBuyModal').classList.remove('open');
+}
+
+function copyModalBit() {
+  playTactileClick(680);
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_bit', itemId: currentQbItem.itemId, amount: currentQbItem.price }) }).catch(()=>{});
+  const fb = document.getElementById('qbFeedback');
+  if (fb) {
+    fb.innerHTML = '<span style="color:var(--emerald); font-weight:700;">✅ מספר הביט 054-6373001 הועתק! לאחר ההעברה שלח הודעת וואטסאפ או הזן קוד מהיר 2800 להורדה.</span>';
+  }
+}
+
+function copyModalPaybox() {
+  playTactileClick(680);
+  navigator.clipboard.writeText('054-6373001');
+  fetch('/api/event', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ type:'copy_paybox', itemId: currentQbItem.itemId, amount: currentQbItem.price }) }).catch(()=>{});
+  const fb = document.getElementById('qbFeedback');
+  if (fb) {
+    fb.innerHTML = '<span style="color:var(--emerald); font-weight:700;">✅ מספר ה-PayBox 054-6373001 הועתק! לאחר ההעברה שלח הודעת וואטסאפ או הזן קוד מהיר 2800 להורדה.</span>';
+  }
+}
+
+async function unlockModalProduct() {
+  playTactileClick(640);
+  const code = (document.getElementById('qbCode')?.value || '').trim();
+  const fb = document.getElementById('qbFeedback');
+  if (!code) {
+    if (fb) fb.innerHTML = '<span style="color:var(--accent);">אנא הזן קוד פתיחה (קוד מהיר: 2800).</span>';
+    return;
+  }
+  fetch('/api/unlock', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ code, itemId: currentQbItem.itemId }) }).catch(()=>{});
+  const valid = code === '2800' || (await verifyMasterDigest(code));
+  if (!valid) {
+    if (fb) fb.innerHTML = '<span style="color:var(--accent);">קוד פתיחה שגוי. לאחר העברה בביט/PayBox שלח אסמכתא לקבלת קוד (או הזן קוד מהיר: 2800).</span>';
+    return;
+  }
+  if (fb) fb.innerHTML = '<span style="color:var(--emerald); font-weight:700;">🎉 קוד אומת בהצלחה! הקובץ יורד כעת...</span>';
+  const a = document.createElement('a');
+  a.href = currentQbItem.fileUrl;
+  a.download = currentQbItem.fileUrl.split('/').pop() || 'product.html';
   a.click();
 }
 
@@ -862,5 +1069,33 @@ function narratePage() {
 
 renderStoreView();
 </script>
+
+<div id="quickBuyModal" class="quick-modal-backdrop" onclick="if(event.target===this)closeQuickBuy()">
+  <div class="quick-modal">
+    <button class="quick-modal-close" onclick="closeQuickBuy()">✕</button>
+    <span class="eyebrow" id="qbBadge">QUICK 1-CLICK PURCHASE</span>
+    <h3 id="qbTitle" style="font-size:18px; margin-bottom:8px;">רכישה מהירה</h3>
+    <div style="font-family:var(--mono); font-size:22px; color:var(--accent); font-weight:900; margin-bottom:14px;" id="qbPrice">100 ₪</div>
+    
+    <label class="consent-label" style="margin-bottom:14px; background:var(--surface-muted); padding:10px; border:1px solid var(--line-strong); display:flex; gap:8px;">
+      <input type="checkbox" id="qbConsent" onchange="document.getElementById('qbControls').style.opacity = this.checked ? '1' : '0.4'; document.getElementById('qbControls').style.pointerEvents = this.checked ? 'auto' : 'none';" />
+      <span style="font-size:12px;"><strong>אישור תנאי As-Is:</strong> אני מאשר/ת שהמוצר הוא קובץ תבנית עצמאי בשירות עצמי תחת רישיון MIT, ללא שירותי אחסון או אחריות.</span>
+    </label>
+
+    <div id="qbControls" style="opacity:0.4; pointer-events:none; transition:opacity 0.2s;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <button class="tactile-btn emerald" onclick="copyModalBit()">📱 העתק לביט (054-6373001)</button>
+        <button class="tactile-btn emerald" onclick="copyModalPaybox()">📱 העתק ל-PayBox (054-6373001)</button>
+        <a id="qbWaBtn" class="tactile-btn" href="#" target="_blank">💬 שלח אסמכתא בוואטסאפ</a>
+      </div>
+
+      <div style="display:flex; gap:8px; align-items:center;">
+        <input id="qbCode" type="password" placeholder="קוד פתיחה (מהיר: 2800)" style="flex:1; padding:8px 12px; border:1.5px solid var(--line-strong); font-family:var(--mono);" />
+        <button class="tactile-btn primary" onclick="unlockModalProduct()">🔓 פתח והורד קובץ</button>
+      </div>
+      <div id="qbFeedback" style="margin-top:10px; font-size:13px;"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

@@ -44,12 +44,13 @@ export function buildProtectedPreview({
   const safeClient = escapePreviewText(clientName || 'לקוח יקר');
   const safeTitle = escapePreviewText(requestTitle || 'משימה מותאמת אישית');
   const fileName = `preview_${safeId}.html`;
+  const filePath = path.join(previewsDir, fileName);
   
   fs.mkdirSync(previewsDir, { recursive: true });
-  const filePath = path.join(previewsDir, fileName);
   const cleanPhone = bitPhone.replace(/[^0-9]/g, '');
   const intlPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.slice(1) : cleanPhone;
-  const waText = encodeURIComponent(`היי, אישרתי תנאי As-Is והעברתי עכשיו ${priceNIS} ₪ בביט עבור "${safeTitle}" (מזהה ${safeId}). אשמח לקוד הפתיחה להורדת הקוד!`);
+  const cleanTitleForWa = String(requestTitle || 'משימה מותאמת אישית').replace(/[<>&"']/g, '');
+  const waText = encodeURIComponent(`היי, אישרתי תנאי As-Is והעברתי עכשיו ${priceNIS} ₪ בביט / PayBox עבור "${cleanTitleForWa}" (מזהה ${safeId}). אשמח לקוד הפתיחה להורדת הקוד!`);
 
   const html = `<!DOCTYPE html>
 <html lang="he" dir="rtl">
