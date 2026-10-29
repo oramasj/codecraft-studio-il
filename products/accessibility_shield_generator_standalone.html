@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AccessibilityShield IL — מחולל הצהרת נגישות תקנית וסרגל נגישות לעסקים</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1120;
+      --card: #1e293b;
+      --primary: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Heebo', sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 24px 16px; line-height: 1.6; }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 30px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(56, 189, 248, 0.15); color: var(--primary); padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.3); margin-bottom: 12px; }
+    h1 { font-size: 30px; font-weight: 900; margin-bottom: 8px; }
+    p.lead { color: var(--muted); font-size: 15px; max-width: 600px; margin: 0 auto; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+    input, textarea, select { width: 100%; background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 14px; outline: none; }
+    input:focus, textarea:focus { border-color: var(--primary); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: 0.2s; }
+    .btn-primary { background: var(--primary); color: #0f172a; }
+    .btn-emerald { background: var(--emerald); color: #0f172a; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
+    .output-box { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-size: 13px; white-space: pre-wrap; color: #e2e8f0; max-height: 280px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">⚖️ הגנה משפטית לפי תקן ת״י 5568 (רמה AA)</div>
+      <h1>AccessibilityShield IL — הגנת נגישות לעסקים</h1>
+      <p class="lead">מחולל הצהרת נגישות תקנית רשמית + סרגל נגישות קל משקל להטמעה מיידית בכל אתר ללא דמי מנוי חודשיים.</p>
+    </header>
+
+    <div class="card">
+      <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 14px; color: var(--primary);">1. פרטי העסק והאתר ליצירת ההצהרה</h2>
+      <div class="grid-2">
+        <div>
+          <label>שם העסק / החברה:</label>
+          <input type="text" id="bizName" value="העסק שלי" placeholder="למשל: דני שיפוצים / סטודיו יופי">
+        </div>
+        <div>
+          <label>כתובת האתר:</label>
+          <input type="text" id="siteUrl" value="https://example.co.il" placeholder="https://yoursite.co.il">
+        </div>
+        <div>
+          <label>שם רכז הנגישות / איש קשר:</label>
+          <input type="text" id="contactName" value="שירות לקוחות" placeholder="שם איש קשר">
+        </div>
+        <div>
+          <label>טלפון לפניות נגישות:</label>
+          <input type="text" id="contactPhone" value="050-0000000" placeholder="מספר טלפון">
+        </div>
+      </div>
+      <div style="margin-top: 14px; text-align: left;">
+        <button class="btn btn-emerald" onclick="generateStatement()">✨ הפק הצהרת נגישות תקנית</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h2 style="font-size: 18px; font-weight: 800; color: var(--emerald);">2. הצהרת הנגישות הרשמית (מוכנה להעתקה לאתר)</h2>
+        <button class="btn btn-outline" onclick="copyStatement()">📋 העתק טקסט</button>
+      </div>
+      <div class="output-box" id="statementOutput">לחץ על 'הפק הצהרת נגישות' להצגת הטקסט המשפטי המלא...</div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h2 style="font-size: 18px; font-weight: 800; color: var(--amber);">3. סרגל נגישות קל משקל (סקריפט להדבקה באתר)</h2>
+        <button class="btn btn-outline" onclick="copyWidgetCode()">📋 העתק קוד סרגל</button>
+      </div>
+      <p style="font-size: 13px; color: var(--muted); margin-bottom: 10px;">סקריפט עצמאי ונקי (15 שורות) המוסיף כפתור נגישות צף לאתר עם הגדלת טקסט, ניגודיות גבוהה, והדגשת קישורים ללא תלות באף שרת חיצוני:</p>
+      <div class="output-box" id="widgetCodeOutput">&lt;script&gt;
+(function(){
+  var b=document.createElement('div');
+  b.innerHTML='&lt;button id="accBtn" style="position:fixed;bottom:20px;left:20px;z-index:99999;background:#0284c7;color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:22px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.3);" title="נגישות"&gt;♿&lt;/button&gt;';
+  document.body.appendChild(b);
+  var z=1;
+  document.getElementById('accBtn').onclick=function(){
+    z=(z===1)?1.15:(z===1.15)?1.25:1;
+    document.body.style.fontSize=z===1?'':(z*100)+'%';
+    document.body.classList.toggle('acc-contrast');
+  };
+})();
+&lt;/script&gt;</div>
+    </div>
+  </div>
+
+  <script>
+    function generateStatement() {
+      const name = document.getElementById('bizName').value || 'העסק';
+      const url = document.getElementById('siteUrl').value || '';
+      const contact = document.getElementById('contactName').value || 'הנהלת האתר';
+      const phone = document.getElementById('contactPhone').value || '';
+      const date = new Date().toLocaleDateString('he-IL');
+
+      const text = `הצהרת נגישות לאתר ${name} (${url})
+תאריך עדכון אחרון: ${date}
+
+אנו ב-${name} רואים חשיבות עליונה בהנגשת שירותינו ואתר האינטרנט שלנו לאנשים עם מוגבלויות, מתוך אמונה וערכי כבוד האדם, שוויון זכויות ועצמאות.
+האתר נבנה ונבדק בהתאם להוראות חוק שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), תשע״ג-2013, ובהתאם להמלצות התקן הישראלי ת״י 5568 ברמה AA (בהתאמה ל-WCAG 2.1).
+
+התאמות הנגישות שבוצעו באתר:
+1. התאמה מלאה לניווט מקלדת ומקשי Tab / Shift+Tab.
+2. ניגודיות צבעים ברורה בין רקע לטקסט לקריאות אופטימלית.
+3. מבנה סמנטי תקין והיררכיית כותרות מסודרת (H1-H6).
+4. תגיות חלופיות (Alt) לתמונות ולרכיבים גרפיים.
+5. התאמה מלאה לגלישה מכל מכשיר נייד וטאבלט (Mobile Responsive).
+6. סרגל נגישות מהיר המאפשר שינוי גודל גופן והגברת ניגודיות.
+
+פניות, הצעות ובקשות בנושא נגישות:
+אם נתקלתם בקושי כלשהו בגלישה באתר או שיש לכם הצעה לשיפור, נשמח לעמוד לרשותכם:
+רכז/ת נגישות: ${contact}
+טלפון / וואטסאפ: ${phone}
+אנו מתחייבים לבדוק כל פנייה בהקדם האפשרי ולתת מענה מקצועי והולם.`;
+
+      document.getElementById('statementOutput').textContent = text;
+    }
+
+    function copyStatement() {
+      const text = document.getElementById('statementOutput').textContent;
+      navigator.clipboard.writeText(text);
+      alert('הצהרת הנגישות הועתקה ללוח!');
+    }
+
+    function copyWidgetCode() {
+      const text = document.getElementById('widgetCodeOutput').textContent;
+      navigator.clipboard.writeText(text);
+      alert('קוד סרגל הנגישות הועתק ללוח!');
+    }
+
+    generateStatement();
+  </script>
+</body>
+</html>

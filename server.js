@@ -38,6 +38,7 @@ export const PRODUCT_CATALOG = {
   'legal_shield': { file: 'legal_shield_generator_standalone.html', dir: 'products' },
   'whatsapp_minisite': { file: 'whatsapp_minisite_builder_standalone.html', dir: 'products' },
   'sheets_webhook': { file: 'google_sheets_lead_webhook.js', dir: 'products' },
+  'accessibility_shield': { file: 'accessibility_shield_generator_standalone.html', dir: 'products' },
   // תוצרים מורחבים מתיקיית previews
   'clinic_booking': { file: 'preview_CLINIC_BOOKING.html', dir: 'previews' },
   'realestate_pro': { file: 'preview_REALESTATE_PRO.html', dir: 'previews' },
@@ -90,7 +91,10 @@ export const PRODUCT_ALIASES = {
   'landing_page': 'landing_commerce',
   'xplace_216353': 'landing_commerce',
   'xplace_216327': 'sheets_webhook',
-  'xplace_217130': 'realestate_pro'
+  'xplace_217130': 'realestate_pro',
+  'accessibility': 'accessibility_shield',
+  'accessibility_shield': 'accessibility_shield',
+  'acc_shield': 'accessibility_shield'
 };
 
 export function resolveProductKey(rawKey) {

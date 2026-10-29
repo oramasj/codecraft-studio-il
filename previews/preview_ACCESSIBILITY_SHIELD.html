@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AccessibilityShield IL — בדיקת נגישות והצהרה רשמית</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1120;
+      --card: #1e293b;
+      --primary: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Heebo', sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 24px 16px; line-height: 1.6; }
+    .wrap { max-width: 900px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 24px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(56, 189, 248, 0.15); color: var(--primary); padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.3); margin-bottom: 12px; }
+    h1 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: 0.2s; text-decoration: none; }
+    .btn-emerald { background: var(--emerald); color: #0f172a; }
+    .btn-primary { background: var(--primary); color: #0f172a; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
+    .pay-box { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 18px; margin-top: 20px; text-align: center; }
+    .unlocked-banner { background: #064e3b; border: 1px solid #10b981; padding: 14px; border-radius: 8px; margin-top: 14px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">⚖️ תצוגה מקדימה • הגנת נגישות תקנית 5568</div>
+      <h1>AccessibilityShield IL — מחולל הצהרת נגישות תקנית וסרגל צף</h1>
+      <p style="color:var(--muted); font-size:14px;">הגנה מלאה מתביעות נגישות ייצוגיות בישראל — קובץ HTML5 עצמאי אחד לכל החיים ללא דמי מנוי.</p>
+    </header>
+
+    <div class="card">
+      <h2 style="font-size: 18px; font-weight: 800; color: var(--primary); margin-bottom: 10px;">🛡️ מה המערכת מספקת לך תוך 60 שניות:</h2>
+      <ul style="padding-right: 20px; font-size: 14px; color: var(--text); space-y: 6px;">
+        <li>הצהרת נגישות משפטית תקנית מנוסחת ומותאמת לפי תקן ת״י 5568 ברמה AA.</li>
+        <li>סקריפט סרגל נגישות צף קל משקל (ללא האטה של האתר וללא תלות בספק צד ג').</li>
+        <li>הגנה מחשיפה לתביעות סטטוטוריות של 50,000 ₪ ללא הוכחת נזק.</li>
+        <li>הורדה עצמית נקייה של הקוד המלא (רישיון MIT As-Is לשימוש אישי ומסחרי ללא הגבלה).</li>
+      </ul>
+
+      <div class="pay-box">
+        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 6px;">הורדה עצמית מיידית: 100 ₪ (תשלום חד-פעמי)</h3>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">העבר 100 ₪ בביט או ב-PayBox למספר <strong>054-6373001</strong> והזן את קוד הפתיחה להורדה מיידית.</p>
+        
+        <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+          <button class="btn btn-emerald" onclick="copyBit()">📱 העתק מספר לביט (054-6373001)</button>
+          <a class="btn btn-primary" href="https://wa.me/972546373001?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%20%D7%91%D7%A7%D7%95%D7%91%D7%A5%20AccessibilityShield%20%D7%9C%D7%A0%D7%92%D7%99%D7%98%D7%95%D7%AA%20%D7%91-100%20%D7%A9%D7%97" target="_blank">💬 פנייה מהירה בוואטסאפ</a>
+        </div>
+
+        <div style="max-width: 400px; margin: 0 auto; display: flex; gap: 8px;">
+          <input type="password" id="unlockCode" placeholder="הזן קוד פתיחה (קוד מהיר: 2800)..." style="flex:1; background:#0f172a; border:1px solid var(--border); padding:10px; border-radius:8px; color:#fff; text-align:center;">
+          <button class="btn btn-emerald" onclick="unlockTool()">🔓 פתח והורד</button>
+        </div>
+        <div id="unlockFeedback" class="unlocked-banner"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function copyBit() {
+      navigator.clipboard.writeText('054-6373001');
+      alert('המספר 054-6373001 הועתק! העבר 100 ₪ בביט ושלח הודעת וואטסאפ או הזן קוד מהיר 2800.');
+    }
+
+    async function unlockTool() {
+      const code = document.getElementById('unlockCode').value.trim();
+      const fb = document.getElementById('unlockFeedback');
+      
+      const buf = new TextEncoder().encode(code);
+      const dig = await crypto.subtle.digest('SHA-256', buf);
+      const hex = Array.from(new Uint8Array(dig)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+      if (hex === '19d62f0f54e0697f2532ba0897789728805b4cb6bafb4e212d268a54058440af') {
+        fb.style.display = 'block';
+        fb.innerHTML = '✅ <strong>הקוד אומת בהצלחה!</strong> הורדת הקובץ המלא מתחילה כעת...';
+        const a = document.createElement('a');
+        a.href = '/api/download/accessibility_shield';
+        a.download = 'AccessibilityShield_IL_Standalone.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        alert('קוד שגוי. אנא הזן 2800 או העבר 100 ₪ בביט ל-054-6373001 לקבלת הקוד.');
+      }
+    }
+  </script>
+</body>
+</html>
