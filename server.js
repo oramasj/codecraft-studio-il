@@ -413,7 +413,7 @@ export function createServer(options = {}) {
     }
 
     // 2ג. ייצוא פניות לקובץ CSV (GET /api/orders/export.csv, /api/orders.csv)
-    if (req.method === 'GET' && (url === '/api/orders/export.csv' || url === '/api/orders.csv')) {
+    if ((req.method === 'GET' || req.method === 'HEAD') && (url === '/api/orders/export.csv' || url === '/api/orders.csv')) {
       const orders = loadJson(ordersFile, []);
       const headers = ['מזהה הזמנה', 'תאריך', 'שם לקוח', 'טלפון', 'קטגוריה', 'שירות', 'תיאור משימה', 'תקציב (₪)', 'שווי משוער (₪)', 'תבנית שהותאמה', 'קישור לתצוגה'];
       const formatCsvField = (val) => {
@@ -444,7 +444,7 @@ export function createServer(options = {}) {
         'Content-Disposition': 'attachment; filename="inbound_orders.csv"',
         'Access-Control-Allow-Origin': '*'
       });
-      res.end(csv);
+      res.end(req.method === 'HEAD' ? '' : csv);
       return;
     }
 
